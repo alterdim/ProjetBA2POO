@@ -1,8 +1,6 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -26,8 +24,6 @@ public final class Ticket implements Comparable<Ticket> {
                 Preconditions.checkArgument(trip.from().name().equals(trips.get(0).from().name()));
             }
         }
-
-//        this.trips = Objects.requireNonNull(trips); //Can have a non null empty list
 
         this.trips = trips;
         this.text = computeText();

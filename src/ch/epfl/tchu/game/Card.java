@@ -29,7 +29,6 @@ public enum Card {
     public static final List<Card> ALL = List.of(Card.values());
     public static final int COUNT = ALL.size();
     public static final List<Card> CARS = Arrays.asList(BLACK,VIOLET,BLUE,GREEN,YELLOW,ORANGE,RED,WHITE);
-//    public static final List<Card> CARS = ALL.subList(0, COUNT-1);
 
     public static Card of(Color color){
         return Card.valueOf(color.toString());
@@ -37,14 +36,5 @@ public enum Card {
 
     public Color color(){
         return CARS.contains(this) ? this.color : null;
-//Sans constructeur
-//        return CARS.contains(this) ? Color.valueOf(toString()) : null;
-
-        /*if (this.equals(LOCOMOTIVE)){
-            return null;
-        }
-        else {
-            return Color.valueOf(this.toString());
-        }*/
     }
 }
