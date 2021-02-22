@@ -27,6 +27,7 @@ public final class Trip {
     }
 
     public static List<Trip> all(List<Station> from, List<Station> to, int points){
+        //TODO relire (est-ce bien ce qui est demandé)
         Preconditions.checkArgument(!from.isEmpty());
         Preconditions.checkArgument(!to.isEmpty());
         Preconditions.checkArgument(points>0);
