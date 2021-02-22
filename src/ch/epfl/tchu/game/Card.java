@@ -1,5 +1,6 @@
 package ch.epfl.tchu.game;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -9,30 +10,41 @@ import java.util.List;
  * @author Célien Muller (310777)
  */
 public enum Card {
-    BLACK,
-    VIOLET,
-    BLUE,
-    GREEN,
-    YELLOW,
-    ORANGE,
-    RED,
-    WHITE,
-    LOCOMOTIVE;
+    BLACK(Color.BLACK),
+    VIOLET(Color.VIOLET),
+    BLUE(Color.BLUE),
+    GREEN(Color.GREEN),
+    YELLOW(Color.YELLOW),
+    ORANGE(Color.YELLOW),
+    RED(Color.RED),
+    WHITE(Color.WHITE),
+    LOCOMOTIVE(null);
+
+    private final Color color;
+
+    private Card(Color color){
+        this.color=color;
+    }
 
     public static final List<Card> ALL = List.of(Card.values());
     public static final int COUNT = ALL.size();
-    public static final List<Card> CARS = ALL.subList(0, COUNT-2);
+    public static final List<Card> CARS = Arrays.asList(BLACK,VIOLET,BLUE,GREEN,YELLOW,ORANGE,RED,WHITE);
+//    public static final List<Card> CARS = ALL.subList(0, COUNT-1);
 
     public static Card of(Color color){
         return Card.valueOf(color.toString());
     }
 
     public Color color(){
-        if (this.equals(LOCOMOTIVE)){
+        return CARS.contains(this) ? this.color : null;
+//Sans constructeur
+//        return CARS.contains(this) ? Color.valueOf(toString()) : null;
+
+        /*if (this.equals(LOCOMOTIVE)){
             return null;
         }
         else {
             return Color.valueOf(this.toString());
-        }
+        }*/
     }
 }
