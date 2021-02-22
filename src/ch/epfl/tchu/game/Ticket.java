@@ -6,8 +6,11 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
- * Created by cemuelle at 14:02 on 22.02.2021
- * celien.muller@epfl.ch
+ *
+ * Created at 14:02 on 22.02.2021
+ *
+ * @author Louis Gerard (296782)
+ * @author Célien Muller (310777)
  */
 public final class Ticket implements Comparable<Ticket> {
     private final List<Trip> trips;
@@ -35,6 +38,7 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     private String computeText() {
+        //TODO Utiliser StringBuilder
         String fromName = trips.get(0).from().name();
         String toName;
         int points;

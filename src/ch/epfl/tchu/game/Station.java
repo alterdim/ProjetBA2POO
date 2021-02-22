@@ -3,8 +3,10 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 /**
- * Created by cemuelle at 13:40 on 22.02.2021
- * celien.muller@epfl.ch
+ * Created at 13:40 on 22.02.2021
+ *
+ * @author Louis Gerard (296782)
+ * @author Célien Muller (310777)
  */
 
 public class Station {

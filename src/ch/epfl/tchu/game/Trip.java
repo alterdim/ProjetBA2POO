@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by cemuelle at 13:53 on 22.02.2021
- * celien.muller@epfl.ch
+ * Created at 13:53 on 22.02.2021
+ *
+ *  * @author Louis Gerard (296782)
+ *  * @author Célien Muller (310777)
  */
 public final class Trip {
 
