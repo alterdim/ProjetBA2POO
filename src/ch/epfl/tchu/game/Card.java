@@ -22,7 +22,7 @@ public enum Card {
 
     private final Color color;
 
-    private Card(Color color){
+    Card(Color color){
         this.color=color;
     }
 
