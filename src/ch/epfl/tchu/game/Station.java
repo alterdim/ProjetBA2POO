@@ -4,7 +4,7 @@ import ch.epfl.tchu.Preconditions;
 
 /**
  * Created by cemuelle at 13:40 on 22.02.2021
- * dev@deverage.ch
+ * celien.muller@epfl.ch
  */
 
 public class Station {

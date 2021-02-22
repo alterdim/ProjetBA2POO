@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * Created by cemuelle at 13:53 on 22.02.2021
- * dev@deverage.ch
+ * celien.muller@epfl.ch
  */
 public final class Trip {
 

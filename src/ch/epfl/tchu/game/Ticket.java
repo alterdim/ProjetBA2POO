@@ -7,7 +7,7 @@ import java.util.*;
 
 /**
  * Created by cemuelle at 14:02 on 22.02.2021
- * dev@deverage.ch
+ * celien.muller@epfl.ch
  */
 public final class Ticket implements Comparable<Ticket> {
     private final List<Trip> trips;
