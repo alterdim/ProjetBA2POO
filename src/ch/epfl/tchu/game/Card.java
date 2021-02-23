@@ -15,7 +15,7 @@ public enum Card {
     BLUE(Color.BLUE),
     GREEN(Color.GREEN),
     YELLOW(Color.YELLOW),
-    ORANGE(Color.YELLOW),
+    ORANGE(Color.ORANGE),
     RED(Color.RED),
     WHITE(Color.WHITE),
     LOCOMOTIVE(null);
