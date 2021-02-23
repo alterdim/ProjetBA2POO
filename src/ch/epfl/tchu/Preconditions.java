@@ -2,7 +2,7 @@ package ch.epfl.tchu;
 
 /**
  *
- * Lève des exceptions si les conditions ne sont pas satisfaites.
+ * Précondition et exception
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)

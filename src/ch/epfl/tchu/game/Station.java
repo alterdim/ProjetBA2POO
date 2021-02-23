@@ -18,6 +18,7 @@ public final class Station {
     /** Constructeur de Stations.
      * @param id Le numéro de la station. DOIT être unique.
      * @param name Le nom de la station. Peut avoir des doublons pour les gares de pays.
+     * @throws IllegalArgumentException Si l'id est inférieur à zéro
      */
     public Station(int id, String name) {
         Preconditions.checkArgument(id >= 0);

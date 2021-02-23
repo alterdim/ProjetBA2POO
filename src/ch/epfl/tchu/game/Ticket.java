@@ -4,9 +4,6 @@ import ch.epfl.tchu.Preconditions;
 import java.util.*;
 
 /**
- *
- * Gestions des billets
- *
  * Créé à 14:02 le 22.02.2021
  *
  * @author Louis Gerard (296782)

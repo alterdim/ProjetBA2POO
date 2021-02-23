@@ -25,6 +25,10 @@ public enum Card {
 
     private final Color color;
 
+    /**
+     * Constructeur de l'enum
+     * @param color Coleur de l'enum
+     */
     Card(Color color){
         this.color=color;
     }
