@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ *
+ * Trajet
+ *
  * Créé à 13:53 le 22.02.2021
  *
  * @author Louis Gerard (296782)
@@ -22,6 +25,8 @@ public final class Trip {
      * @param from Station de départ.
      * @param to Station d'arrivée.
      * @param points Nombre de points accordés.
+     * @throws IllegalArgumentException Si le nombre de points est négatif.
+     * @throws NullPointerException Si l'une des gares est nulle.
      */
     public Trip(Station from, Station to, int points) {
         Preconditions.checkArgument(points>0);
@@ -35,6 +40,7 @@ public final class Trip {
      * @param to Stations d'arrivée.
      * @param points Points accordés à chaque voyage.
      * @return Renvoie une liste de tous les voyages directs entre deux listes de stations.
+     * @throws IllegalArgumentException si l'une des listes est vide ou si le nombre de point est négatif
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points){
         Preconditions.checkArgument(!from.isEmpty());

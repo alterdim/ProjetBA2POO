@@ -5,6 +5,8 @@ import java.util.*;
 
 /**
  *
+ * Gestions des billets
+ *
  * Créé à 14:02 le 22.02.2021
  *
  * @author Louis Gerard (296782)
@@ -17,6 +19,7 @@ public final class Ticket implements Comparable<Ticket> {
     /**
      * Constructeur de l'objet ticket
      * @param trips : La liste des trajets du ticket.
+     * @throws IllegalArgumentException si dans la liste rentrée comme paramètre est vide ou s'il y a plusieurs gare de départ qui ne portent pas le même nom
      */
     public Ticket(List<Trip> trips) {
 
