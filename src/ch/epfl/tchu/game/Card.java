@@ -8,6 +8,9 @@ import java.util.List;
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
+ *
+ * Enum qui contient les différentes cartes (les voitures de différentes couleurs ainsi que la locomotive)
+ * A chaque carte est associée un couleur.
  */
 public enum Card {
     BLACK(Color.BLACK),
