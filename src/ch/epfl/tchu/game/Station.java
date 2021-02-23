@@ -3,12 +3,13 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 /**
- * Créé à 13:40 le 22.02.2021
+ *  Caractérise une Station, un point sur la carte.
+ *  Fichier créé à 14:28 le 23.02.2021
  *
- * @author Louis Gerard (296782)
- * @author Célien Muller (310777)
+ *  @author Louis Gerard (296782)
+ *  @author Célien Muller (310777)
  *
- * Classe Station qui caractérise une station de train dans le jeu.
+ *
  */
 
 public final class Station {
