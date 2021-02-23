@@ -14,7 +14,12 @@ public final class Ticket implements Comparable<Ticket> {
     private final List<Trip> trips;
     private final String text;
 
+    /**
+     * Constructeur de l'objet ticket
+     * @param trips : La liste des trajets du ticket.
+     */
     public Ticket(List<Trip> trips) {
+
         //Check if not empty
         Preconditions.checkArgument(!trips.isEmpty());
 
@@ -29,9 +34,14 @@ public final class Ticket implements Comparable<Ticket> {
         this.text = computeText();
     }
 
+    /**
+     * Constructeur d'un ticket avec un voyage unique.
+     * @param from : point de départ
+     * @param to : point d'arrivée
+     * @param points : nombre de points du ticket
+     */
     public Ticket(Station from, Station to, int points) {
         this(Collections.singletonList(new Trip(from, to, points)));
-//        this(List.of(new Trip(from, to, points)));
     }
 
     private String computeText() {
@@ -51,10 +61,17 @@ public final class Ticket implements Comparable<Ticket> {
         return text;
     }
 
+    /**
+     * @return Renvoie le texte descriptif du ticket de la forme Départ - Destination
+     */
     public String text() {
         return text;
     }
 
+    /**
+     * @param connectivity La connectivité du joueur à calculer
+     * @return Renvoie le nombre de points calculé du ticket en fonction de la connectivité du joueur
+     */
     public int points(StationConnectivity connectivity){
         List<Integer> points = new ArrayList<>();
         for (Trip trip : trips) {
@@ -65,11 +82,19 @@ public final class Ticket implements Comparable<Ticket> {
         return Collections.max(points);
     }
 
+    /** Compare deux tickets par ordre alphabétique
+     * @param ticket Le ticket à comparer
+     * @return Renvoie un integer négatif si le texte du ticket comparé se trouve plus loin dans l'alphabet,
+     * un integer positif dans le cas contraire, et 0 si les deux textes sont identiques.
+     */
     @Override
     public int compareTo(Ticket ticket) {
         return this.text().compareTo(ticket.text());
     }
 
+    /**
+     * @return Renvoie le texte descriptif du ticket. Préférer .text().
+     */
     @Override
     public String toString() {
         return text();
