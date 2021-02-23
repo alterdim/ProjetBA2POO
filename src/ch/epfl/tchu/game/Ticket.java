@@ -31,26 +31,26 @@ public final class Ticket implements Comparable<Ticket> {
 
     public Ticket(Station from, Station to, int points) {
         this(Collections.singletonList(new Trip(from, to, points)));
+//        this(List.of(new Trip(from, to, points)));
     }
 
     private String computeText() {
-        //TODO Utiliser StringBuilder
-        String fromName = trips.get(0).from().name();
-        String toName;
-        int points;
-        String fromString = fromName + " - ";
+        StringBuilder text = new StringBuilder()
+                .append(trips.get(0).from().name())
+                .append(" - ");
+
         if (trips.size() > 1) {
-            fromString += "{";
+            text.append("{");
         }
         TreeSet<String> destinations = new TreeSet<>();
         for (Trip trip : trips) {
             destinations.add(trip.to().name() + " (" + trip.points() +")");
         }
-        String destinationString = String.join(", ", destinations);
+        text.append(String.join(", ", destinations));
         if (trips.size() > 1) {
-            destinationString += "}";
+            text.append("}");
         }
-        return fromString + destinationString;
+        return text.toString();
     }
 
     public String text() {
