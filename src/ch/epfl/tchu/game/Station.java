@@ -7,6 +7,8 @@ import ch.epfl.tchu.Preconditions;
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
+ *
+ * Classe Station qui caractérise une station de train dans le jeu.
  */
 
 public final class Station {

@@ -11,6 +11,8 @@ import java.util.Objects;
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
+ *
+ * Classe trip. Caractérise deux stations qui sont reliés, utilisé pour la classe Ticket;
  */
 public final class Trip {
 

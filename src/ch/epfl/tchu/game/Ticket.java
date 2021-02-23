@@ -9,6 +9,8 @@ import java.util.*;
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
+ *
+ * Classe Ticket, caractérise les cartes Tickets qui permettent de gagner de points en reliant les trajets indiqués.
  */
 public final class Ticket implements Comparable<Ticket> {
     private final List<Trip> trips;
