@@ -7,6 +7,8 @@ import java.util.List;
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
+ *
+ * Enum qui contient les couleurs.
  */
 public enum Color {
     BLACK,
@@ -18,6 +20,12 @@ public enum Color {
     RED,
     WHITE;
 
+    /**
+     * Liste des couleurs.
+     */
     public static final List<Color> ALL = List.of(Color.values());
+    /**
+     * Nombre de couleurs différentes.
+     */
     public static final int COUNT = ALL.size();
 }
