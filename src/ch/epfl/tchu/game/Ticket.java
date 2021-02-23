@@ -5,7 +5,7 @@ import java.util.*;
 
 /**
  *
- * Created at 14:02 on 22.02.2021
+ * Créé à 14:02 le 22.02.2021
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
@@ -44,20 +44,23 @@ public final class Ticket implements Comparable<Ticket> {
         this(Collections.singletonList(new Trip(from, to, points)));
     }
 
+    /**
+     * @return Renvoie le texte descriptif du ticket de la forme Départ - Destination
+     */
     private String computeText() {
-        String text = trips.get(0).from().name();
-        text = String.format("%s - ", text);
-        if (trips.size() > 1) {
-            text += "{";
-        }
+        String text = String.format("%s - ", trips.get(0).from().name());
+
+        text+= (trips.size() > 1 ? "{" : "");
+
         TreeSet<String> destinations = new TreeSet<>();
         for (Trip trip : trips) {
             destinations.add(trip.to().name() + " (" + trip.points() +")");
         }
+
         text = String.format("%s%s", text, String.join(", ", destinations));
-        if (trips.size() > 1) {
-            text += "}";
-        }
+
+        text+= (trips.size() > 1 ? "}" : "");
+
         return text;
     }
 

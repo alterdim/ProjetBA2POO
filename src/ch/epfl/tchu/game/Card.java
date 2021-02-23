@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created at 13:36 on 22.02.2021
+ * Créé à 13:36 le 22.02.2021
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)

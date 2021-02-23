@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created at 13:53 on 22.02.2021
+ * Créé à 13:53 le 22.02.2021
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)

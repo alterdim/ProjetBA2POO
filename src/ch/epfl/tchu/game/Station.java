@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 /**
- * Created at 13:40 on 22.02.2021
+ * Créé à 13:40 le 22.02.2021
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
