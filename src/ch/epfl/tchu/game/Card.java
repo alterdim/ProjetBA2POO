@@ -26,8 +26,17 @@ public enum Card {
         this.color=color;
     }
 
+    /**
+     * Liste des cartes (couleurs de voitures et locomotive)
+     */
     public static final List<Card> ALL = List.of(Card.values());
+    /**
+     * Nombre de types de cartes
+     */
     public static final int COUNT = ALL.size();
+    /**
+     * Array qui ne contient que les couleurs de voitures (donc pas la locomotive)
+     */
     public static final List<Card> CARS = Arrays.asList(BLACK,VIOLET,BLUE,GREEN,YELLOW,ORANGE,RED,WHITE);
 
     /**
@@ -35,7 +44,12 @@ public enum Card {
      * @return Renvoie la carte de la couleur appropriée
      */
     public static Card of(Color color){
-        return Card.valueOf(color.toString());
+        for (Card c : Card.values()) {
+            if (color.equals(c.color)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     /**
