@@ -35,22 +35,20 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     private String computeText() {
-        StringBuilder text = new StringBuilder()
-                .append(trips.get(0).from().name())
-                .append(" - ");
-
+        String text = trips.get(0).from().name();
+        text = String.format("%s - ", text);
         if (trips.size() > 1) {
-            text.append("{");
+            text += "{";
         }
         TreeSet<String> destinations = new TreeSet<>();
         for (Trip trip : trips) {
             destinations.add(trip.to().name() + " (" + trip.points() +")");
         }
-        text.append(String.join(", ", destinations));
+        text = String.format("%s%s", text, String.join(", ", destinations));
         if (trips.size() > 1) {
-            text.append("}");
+            text += "}";
         }
-        return text.toString();
+        return text;
     }
 
     public String text() {
