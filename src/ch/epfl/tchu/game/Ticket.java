@@ -22,10 +22,10 @@ public final class Ticket implements Comparable<Ticket> {
      */
     public Ticket(List<Trip> trips) {
 
-        //Check if not empty
+        //Check si les trips sont vides
         Preconditions.checkArgument(!trips.isEmpty());
 
-        //Check if dublicates
+        //Check si les trips sont en duplicatats
         if (trips.size()>1){
         for (Trip trip : trips) {
                 Preconditions.checkArgument(trip.from().name().equals(trips.get(0).from().name()));

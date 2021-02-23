@@ -22,7 +22,7 @@ public final class Station {
      * @throws IllegalArgumentException Si l'id est inférieur à zéro
      */
     public Station(int id, String name) {
-        Preconditions.checkArgument(id >= 0);
+        Preconditions.checkArgument(!(id < 0));
         this.id = id;
         this.name = name;
     }
