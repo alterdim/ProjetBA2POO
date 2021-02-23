@@ -30,10 +30,17 @@ public enum Card {
     public static final int COUNT = ALL.size();
     public static final List<Card> CARS = Arrays.asList(BLACK,VIOLET,BLUE,GREEN,YELLOW,ORANGE,RED,WHITE);
 
+    /**
+     * @param color Couleur de la carte à renvoyer
+     * @return Renvoie la carte de la couleur appropriée
+     */
     public static Card of(Color color){
         return Card.valueOf(color.toString());
     }
 
+    /**
+     * @return Renvoie la couleur associé à la voiture donnée en argument, renvoie null pour la locomotive.
+     */
     public Color color(){
         return CARS.contains(this) ? this.color : null;
     }
