@@ -23,6 +23,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
+    SortedBag.Builder<Card> cardsB = new SortedBag.Builder<>();
     public enum Level {
         OVERGROUND,
         UNDERGROUND
@@ -86,5 +87,15 @@ public final class Route {
         else {
             return station1;
         }
+    }
+
+    public List<SortedBag<Card>> possibleClaimCards() {
+        List<SortedBag<Card>> bag = new ArrayList<SortedBag<Card>>();
+        for (int i = 0; i <= length; i++) {
+            //TODO
+        }
+        return null;
+
+
     }
 }
