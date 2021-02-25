@@ -23,7 +23,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
-    SortedBag.Builder<Card> cardsB = new SortedBag.Builder<>();
+    SortedBag.Builder<Card> cardsB;
     public enum Level {
         OVERGROUND,
         UNDERGROUND
@@ -90,24 +90,31 @@ public final class Route {
     }
 
     public List<SortedBag<Card>> possibleClaimCards() {
+        boolean rainbow = true;
+        if (color != null) {
+            rainbow = false;
+        }
         List<SortedBag<Card>> bagList = new ArrayList<SortedBag<Card>>();
-        SortedBag<Card> bag;
-        if (Color.ALL.contains(color)) {
-            for (int i = 0; i < length; i++) {
-                bag = cardsB.build();
-                for (int l = 0; l < i; l++) {
-                    bag = cardsB.add(bag).add(Card.LOCOMOTIVE).build();
-                }
-                while (bag.size() < length) {
-                    bag = cardsB.add(bag).add(Card.of(color)).build();
-                }
+        cardsB = new SortedBag.Builder<>();
+        SortedBag<Card> bag = cardsB.build();
+        for (int i = 0; i <= length; i++) {
+            cardsB = new SortedBag.Builder<>();
+            if (!rainbow) {
+                cardsB.add(i, Card.LOCOMOTIVE);
+                bag = cardsB.add(length - i, Card.of(color)).build();
                 bagList.add(bag);
             }
-        }
-        else {
-            //TODO
+            else {
+                for (Color c : Color.values()) {
+                    cardsB = new SortedBag.Builder<>();
+                    cardsB.add(i, Card.LOCOMOTIVE);
+                    bag = cardsB.add(length - i, Card.of(c)).build();
+                    bagList.add(bag);
+                }
+            }
 
         }
-        return bagList;
+            return bagList;
     }
 }
+
