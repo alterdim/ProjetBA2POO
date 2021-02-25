@@ -16,18 +16,18 @@ public final class Trail {
     private Trail(List<Route> routes) {
         this.routes = routes;
     }
-    public static Trail longest(List<Route> routes) {
-        List<Trail> trails = new ArrayList<>();
-        for (Route r : routes) {
-            trails.add(new Trail(List.of(r)));
-        }
-        while (!trails.isEmpty()) {
-            List<Route> commonRoutes = new ArrayList<>();
-            for (Trail t : trails) {
-                //TODO
-            }
-        }
 
+    public Station station1() {
+        return routes.get(0).station1();
+    }
+
+    public Station station2() {
+        return routes.get(0).station2();
+    }
+
+    public static Trail longest(List<Route> routes) {
+        //TODO
+        return null;
 
     }
 }
