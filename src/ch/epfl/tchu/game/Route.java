@@ -14,6 +14,7 @@ import java.util.Objects;
  *  @author Louis Gerard (296782)
  *  @author Célien Muller (310777)
  *
+ *
  */
 
 public final class Route {
@@ -29,6 +30,14 @@ public final class Route {
         UNDERGROUND
     }
 
+    /**
+     * @param id L'identification unique de la route. Chaine de caractères, pas un int comme les stations !
+     * @param station1 Station de départ
+     * @param station2 Station d'arrivée
+     * @param length Longueur de la route (affecte le nombre de cartes à utiliser pour la capturer)
+     * @param level Level.UNDERGROUND ou Level.OVERGROUND, affecte la règle de capture
+     * @param color Couleur de la route, null si elle est neutre
+     */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         Preconditions.checkArgument(!station1.equals(station2));
         Preconditions.checkArgument(!(length > Constants.MAX_ROUTE_LENGTH));
@@ -46,30 +55,51 @@ public final class Route {
         this.color = color;
     }
 
+    /**
+     * @return Renvoie l'identification textuelle unique de la route
+     */
     public String id() {
         return id;
     }
 
+    /**
+     * @return Renvoie la station de départ
+     */
     public Station station1() {
         return station1;
     }
 
+    /**
+     * @return Renvoie la station d'arrivée
+     */
     public Station station2() {
         return station2;
     }
 
+    /**
+     * @return Renvoie la longueur de la route (int)
+     */
     public int length() {
         return length;
     }
 
+    /**
+     * @return Renvoie le niveau de la route (UNDERGROUND ou OVERGROUND)
+     */
     public Level level() {
         return level;
     }
 
+    /**
+     * @return Renvoie la couleur de la route, ou null s'il n'y en a pas.
+     */
     public Color color() {
         return color;
     }
 
+    /**
+     * @return Renvoie une liste des stations avec dans l'ordre la station 1 puis la 2.
+     */
     public List<Station> stations() {
         List<Station> stationList = new ArrayList<>();
         stationList.add(station1);
@@ -77,6 +107,11 @@ public final class Route {
         return stationList;
     }
 
+    /**
+     * @param station La station de départ ou d'arrivée de la route.
+     * @throws IllegalArgumentException si la station n'est ni l'arrivée ni le départ.
+     * @return Renvoie la station de départ si l'argument est la station d'arrivée et vice-versa.
+     */
     public Station stationOpposite(Station station) {
         boolean isStation1 = station.equals(station1);
         boolean isStation2 = station.equals(station2);
@@ -89,14 +124,20 @@ public final class Route {
         }
     }
 
+    /**
+     * @return Retourne toutes les combinaisons de cartes utilisables pour capturer la route dans une List de SortedBags
+     */
     public List<SortedBag<Card>> possibleClaimCards() {
         boolean rainbow = true;
+        //Si la route ne possède pas le couleur, le flag rainbow s'active pour autoriser toutes les couleurs de cartes.
         if (color != null) {
             rainbow = false;
         }
         List<SortedBag<Card>> bagList = new ArrayList<SortedBag<Card>>();
         SortedBag<Card> bag;
+        //On itère de 0 à la longueur pour commencer par les mains qui utilisent le moins de locomotives.
         for (int i = 0; i <= length; i++) {
+            //A chaque itération, le builder ainsi que le bag sont remis à zéro.
             cardsB = new SortedBag.Builder<>();
             bag = cardsB.build();
             if (!rainbow) {
@@ -107,6 +148,8 @@ public final class Route {
             else {
                 for (Color c : Color.values()) {
                     cardsB = new SortedBag.Builder<>();
+                    // pour éviter les doublons de mains à n locomotives, on arrête la fonction prématurément quand
+                    // arrive i = length.
                     if (i == length) {
                         bag = cardsB.add(i, Card.LOCOMOTIVE).build();
                         bagList.add(bag);

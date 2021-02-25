@@ -59,6 +59,7 @@ public enum Card {
         return null;
     }
 
+
     /**
      * @return Renvoie la couleur associé à la voiture donnée en argument, renvoie null pour la locomotive.
      */
