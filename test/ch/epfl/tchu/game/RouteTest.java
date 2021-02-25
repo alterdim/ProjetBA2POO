@@ -1,5 +1,6 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.SortedBag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,5 +51,18 @@ class RouteTest {
         Station station2 = new Station(2, "station2");
         Route testRoute = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
         System.out.println(testRoute.possibleClaimCards().toString());
+    }
+
+    @Test
+    void additionalClaimCardsCountTest() {
+        SortedBag.Builder builderB = new SortedBag.Builder();
+        SortedBag<Card> bag1 = builderB.add(7, Card.BLUE).build();
+        builderB = new SortedBag.Builder();
+        SortedBag<Card> bag2 = builderB.add(3, Card.BLUE).build();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route testRoute = new Route("Route", station1, station2, 3, Route.Level.UNDERGROUND, null);
+        assertEquals(testRoute.additionalClaimCardsCount(bag1, bag2), 3);
+
     }
 }

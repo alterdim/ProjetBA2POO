@@ -164,5 +164,24 @@ public final class Route {
         }
             return bagList;
     }
+
+    /**
+     * @param claimCards Les cartes utilisées pour capturer le tunnel
+     * @param drawnCards Les trois cartes piochées par le joueur lors de la tentative de capture
+     * @throws IllegalArgumentException si il n'y a pas exactement 3 cartes dans drawnCards ou si la route n'est pas
+     * UNDERGROUND
+     * @return le nombre de cartes à rejouer pour s'emparer du tunnel
+     */
+    public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
+        int requirement = 0;
+        Preconditions.checkArgument(drawnCards.size() == 3 || this.level().equals(Level.UNDERGROUND));
+        for (Card c : drawnCards) {
+            if (claimCards.contains(c)) {
+                requirement++;
+            }
+        }
+        return requirement;
+
+    }
 }
 
