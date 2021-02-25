@@ -95,10 +95,10 @@ public final class Route {
             rainbow = false;
         }
         List<SortedBag<Card>> bagList = new ArrayList<SortedBag<Card>>();
-        cardsB = new SortedBag.Builder<>();
-        SortedBag<Card> bag = cardsB.build();
+        SortedBag<Card> bag;
         for (int i = 0; i <= length; i++) {
             cardsB = new SortedBag.Builder<>();
+            bag = cardsB.build();
             if (!rainbow) {
                 cardsB.add(i, Card.LOCOMOTIVE);
                 bag = cardsB.add(length - i, Card.of(color)).build();
@@ -107,6 +107,11 @@ public final class Route {
             else {
                 for (Color c : Color.values()) {
                     cardsB = new SortedBag.Builder<>();
+                    if (i == length) {
+                        bag = cardsB.add(i, Card.LOCOMOTIVE).build();
+                        bagList.add(bag);
+                        return bagList;
+                    }
                     cardsB.add(i, Card.LOCOMOTIVE);
                     bag = cardsB.add(length - i, Card.of(c)).build();
                     bagList.add(bag);
