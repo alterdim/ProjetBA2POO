@@ -133,13 +133,12 @@ public final class Route {
         if (color != null) {
             rainbow = false;
         }
-        List<SortedBag<Card>> bagList = new ArrayList<SortedBag<Card>>();
+        List<SortedBag<Card>> bagList = new ArrayList<>();
         SortedBag<Card> bag;
         //On itère de 0 à la longueur pour commencer par les mains qui utilisent le moins de locomotives.
         for (int i = 0; i <= length; i++) {
             //A chaque itération, le builder ainsi que le bag sont remis à zéro.
             cardsB = new SortedBag.Builder<>();
-            bag = cardsB.build();
             if (!rainbow) {
                 cardsB.add(i, Card.LOCOMOTIVE);
                 bag = cardsB.add(length - i, Card.of(color)).build();
