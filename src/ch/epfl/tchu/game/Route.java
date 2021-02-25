@@ -90,12 +90,24 @@ public final class Route {
     }
 
     public List<SortedBag<Card>> possibleClaimCards() {
-        List<SortedBag<Card>> bag = new ArrayList<SortedBag<Card>>();
-        for (int i = 0; i <= length; i++) {
-            //TODO
+        List<SortedBag<Card>> bagList = new ArrayList<SortedBag<Card>>();
+        SortedBag<Card> bag;
+        if (Color.ALL.contains(color)) {
+            for (int i = 0; i < length; i++) {
+                bag = cardsB.build();
+                for (int l = 0; l < i; l++) {
+                    bag = cardsB.add(bag).add(Card.LOCOMOTIVE).build();
+                }
+                while (bag.size() < length) {
+                    bag = cardsB.add(bag).add(Card.of(color)).build();
+                }
+                bagList.add(bag);
+            }
         }
-        return null;
+        else {
+            //TODO
 
-
+        }
+        return bagList;
     }
 }
