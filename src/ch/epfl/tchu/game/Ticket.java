@@ -26,7 +26,7 @@ public final class Ticket implements Comparable<Ticket> {
         //Check si les trips sont vides
         Preconditions.checkArgument(!trips.isEmpty());
 
-        //Check si les trips sont en duplicatats
+        //Check si les trips sont en duplicates
         if (trips.size()>1){
         for (Trip trip : trips) {
                 Preconditions.checkArgument(trip.from().name().equals(trips.get(0).from().name()));
@@ -53,7 +53,8 @@ public final class Ticket implements Comparable<Ticket> {
     private String computeText() {
         String text = String.format("%s - ", trips.get(0).from().name());
 
-        text+= (trips.size() > 1 ? "{" : "");
+//        text+= (trips.size() > 1 ? "{" : "");
+        if (trips.size()>1) text+="{";
 
         TreeSet<String> destinations = new TreeSet<>();
         for (Trip trip : trips) {
@@ -62,7 +63,8 @@ public final class Ticket implements Comparable<Ticket> {
 
         text = String.format("%s%s", text, String.join(", ", destinations));
 
-        text+= (trips.size() > 1 ? "}" : "");
+//        text+= (trips.size() > 1 ? "}" : "");
+        if (trips.size()>1) text+="}";
 
         return text;
     }
