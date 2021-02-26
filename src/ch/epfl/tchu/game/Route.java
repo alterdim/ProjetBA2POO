@@ -43,7 +43,6 @@ public final class Route {
      * @param color Couleur de la route, null si elle est neutre
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
-        //TODO change checkArgument for an NullPointerException
         Preconditions.checkArgument(!station1.equals(station2));
         Preconditions.checkArgument(!(length > Constants.MAX_ROUTE_LENGTH));
         Preconditions.checkArgument(!(length < Constants.MIN_ROUTE_LENGTH));
@@ -180,7 +179,7 @@ public final class Route {
         int requirement = 0;
 
         //TODO Relire consigne pour exception (ou /et) Je (Célien) pense et -> && au lieu de ||
-        Preconditions.checkArgument(drawnCards.size() == 3 || this.level().equals(Level.UNDERGROUND));
+        Preconditions.checkArgument(drawnCards.size() == 3 && this.level().equals(Level.UNDERGROUND));
         for (Card c : drawnCards) {
             if (claimCards.contains(c)) {
                 requirement++;

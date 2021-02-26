@@ -20,60 +20,46 @@ class RouteTest {
     @Test
     void FailOnSameStation(){
         Station station1 = new Station(1, "station1");
-        assertThrows(IllegalArgumentException.class, ()-> {
-            new Route("Route", station1, station1, 3, Route.Level.OVERGROUND, null);
-        });
+        assertThrows(IllegalArgumentException.class, ()-> new Route("Route", station1, station1, 3, Route.Level.OVERGROUND, null));
     }
 
     @Test
     void FailWhenLengthUnderLimit(){
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
-        assertThrows(IllegalArgumentException.class, ()-> {
-            new Route("Route", station1, station2, Constants.MIN_ROUTE_LENGTH-1, Route.Level.OVERGROUND, null);
-        });
+        assertThrows(IllegalArgumentException.class, ()-> new Route("Route", station1, station2, Constants.MIN_ROUTE_LENGTH-1, Route.Level.OVERGROUND, null));
     }
     @Test
     void FailWhenLengthUpperLimit(){
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
-        assertThrows(IllegalArgumentException.class, ()-> {
-            new Route("Route", station1, station2, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
-        });
+        assertThrows(IllegalArgumentException.class, ()-> new Route("Route", station1, station2, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null));
     }
 
     @Test
     void FailWhenNullId(){
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
-        assertThrows(NullPointerException.class, ()-> {
-            new Route(null, station1, station2, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
-        });
+        assertThrows(NullPointerException.class, ()-> new Route(null, station1, station2, 3, Route.Level.OVERGROUND, null));
     }
 
     @Test
     void FailWhenNullStation1(){
         Station station2 = new Station(2, "station2");
-        assertThrows(NullPointerException.class, ()-> {
-            new Route("Route", null, station2, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
-        });
+        assertThrows(NullPointerException.class, ()-> new Route("Route", null, station2, 3, Route.Level.OVERGROUND, null));
     }
 
     @Test
     void FailWhenNullStation2(){
         Station station1 = new Station(1, "station1");
-        assertThrows(NullPointerException.class, ()-> {
-            new Route("Route", station1, null, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
-        });
+        assertThrows(NullPointerException.class, ()-> new Route("Route", station1, null, 3, Route.Level.OVERGROUND, null));
     }
 
     @Test
     void FailWhenNullLevel(){
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
-        assertThrows(NullPointerException.class, ()-> {
-            new Route("Route", station1, station2, Constants.MAX_ROUTE_LENGTH+1,null, null);
-        });
+        assertThrows(NullPointerException.class, ()-> new Route("Route", station1, station2, 3,null, null));
     }
 
 
@@ -114,7 +100,7 @@ class RouteTest {
 
 
     @Test
-    void WorkOnstation1() {
+    void WorkOnStation1() {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
@@ -123,7 +109,7 @@ class RouteTest {
     }
 
     @Test
-    void WorkOnstation2() {
+    void WorkOnStation2() {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
@@ -153,7 +139,7 @@ class RouteTest {
     }
 
     @Test
-    void WorkOnNullcolor() {
+    void WorkOnNullColor() {
         Color col = null;
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
@@ -163,7 +149,7 @@ class RouteTest {
     }
 
     @Test
-    void WorkOnAllcolor() {
+    void WorkOnAllColor() {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         for (var color : Color.values()) {
@@ -173,7 +159,7 @@ class RouteTest {
     }
 
     @Test
-    void WorkOnTrivialstations() {
+    void WorkOnTrivialStations() {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
@@ -182,7 +168,7 @@ class RouteTest {
     }
 
     @Test
-    void WorkOnstation1Opposite() {
+    void WorkOnStation1Opposite() {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
@@ -190,7 +176,7 @@ class RouteTest {
         assertEquals(station2, route.stationOpposite(station1));
     }
     @Test
-    void WorkOnstation2Opposite() {
+    void WorkOnStation2Opposite() {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
@@ -228,9 +214,7 @@ class RouteTest {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         var route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
-        assertThrows(IllegalArgumentException.class, ()-> {
-            route.additionalClaimCardsCount(SortedBag.of(3,Card.BLUE), SortedBag.of(3, Card.LOCOMOTIVE));
-        });
+        assertThrows(IllegalArgumentException.class, ()-> route.additionalClaimCardsCount(SortedBag.of(3,Card.BLUE), SortedBag.of(3, Card.LOCOMOTIVE)));
     }
 
     @Test
@@ -238,9 +222,7 @@ class RouteTest {
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         var route = new Route("Route", station1, station2, 3, Route.Level.UNDERGROUND, null);
-        assertThrows(IllegalArgumentException.class, ()-> {
-            route.additionalClaimCardsCount(SortedBag.of(3,Card.BLUE), SortedBag.of(3, Card.LOCOMOTIVE));
-        });
+        assertThrows(IllegalArgumentException.class, ()-> route.additionalClaimCardsCount(SortedBag.of(3,Card.BLUE), SortedBag.of(4, Card.LOCOMOTIVE)));
     }
 
     @Test
