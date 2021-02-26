@@ -1,7 +1,11 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.SortedBag;
+import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,39 +18,191 @@ import static org.junit.jupiter.api.Assertions.*;
 class RouteTest {
 
     @Test
-    void id() {
+    void FailOnSameStation(){
+        Station station1 = new Station(1, "station1");
+        assertThrows(IllegalArgumentException.class, ()-> {
+            new Route("Route", station1, station1, 3, Route.Level.OVERGROUND, null);
+        });
     }
 
     @Test
-    void station1() {
+    void FailWhenLengthUnderLimit(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        assertThrows(IllegalArgumentException.class, ()-> {
+            new Route("Route", station1, station2, Constants.MIN_ROUTE_LENGTH-1, Route.Level.OVERGROUND, null);
+        });
+    }
+    @Test
+    void FailWhenLengthUpperLimit(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        assertThrows(IllegalArgumentException.class, ()-> {
+            new Route("Route", station1, station2, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
+        });
     }
 
     @Test
-    void station2() {
+    void FailWhenNullId(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        assertThrows(NullPointerException.class, ()-> {
+            new Route(null, station1, station2, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
+        });
     }
 
     @Test
-    void length() {
+    void FailWhenNullStation1(){
+        Station station2 = new Station(2, "station2");
+        assertThrows(NullPointerException.class, ()-> {
+            new Route("Route", null, station2, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
+        });
     }
 
     @Test
-    void level() {
+    void FailWhenNullStation2(){
+        Station station1 = new Station(1, "station1");
+        assertThrows(NullPointerException.class, ()-> {
+            new Route("Route", station1, null, Constants.MAX_ROUTE_LENGTH+1, Route.Level.OVERGROUND, null);
+        });
     }
 
     @Test
-    void color() {
+    void FailWhenNullLevel(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        assertThrows(NullPointerException.class, ()-> {
+            new Route("Route", station1, station2, Constants.MAX_ROUTE_LENGTH+1,null, null);
+        });
+    }
+
+
+
+    @Test
+    void WorkOnTrivialId() {
+        String str="Route";
+
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route(str, station1, station2, 3, Route.Level.OVERGROUND, null);
+
+        assertEquals(str, route.id());
+    }
+
+
+    //Vient de StationTest
+    private static final String alphabet = "abcdefghijklmnopqrstuvwxyz";
+    private static String randomName(Random rng, int length) {
+        var sb = new StringBuilder();
+        for (int i = 0; i < length; i++)
+            sb.append(alphabet.charAt(rng.nextInt(alphabet.length())));
+        return sb.toString();
     }
 
     @Test
-    void stations() {
+    void WorkOnRandomId() {
+
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        var rng = TestRandomizer.newRandom();
+        for (int i = 0; i < TestRandomizer.RANDOM_ITERATIONS; i++) {
+            var name = randomName(rng, 1 + rng.nextInt(10));
+            Route route = new Route(name, station1, station2, 3, Route.Level.OVERGROUND, null);
+            assertEquals(name, route.id());
+        }
+    }
+
+
+    @Test
+    void WorkOnstation1() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
+
+        assertEquals(station1, route.station1());
     }
 
     @Test
-    void stationOpposite() {
+    void WorkOnstation2() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
+
+        assertEquals(station2, route.station2());
     }
+
+    @Test
+    void WorkOnTrivialLength() {
+        int len=3;
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("Route", station1, station2, len, Route.Level.OVERGROUND, null);
+
+        assertEquals(len, route.length());
+    }
+
+    @Test
+    void WorkOnAllLevel() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+
+        for (var lev : Route.Level.values()) {
+            Route route = new Route("Route", station1, station2, 3,lev, null);
+            assertEquals(lev, route.level());
+        }
+    }
+
+    @Test
+    void WorkOnNullcolor() {
+        Color col = null;
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, col);
+
+        assertEquals(col, route.color());
+    }
+
+    @Test
+    void WorkOnAllcolor() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        for (var color : Color.values()) {
+            Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, color);
+            assertEquals(color, route.color());
+        }
+    }
+
+    @Test
+    void WorkOnTrivialstations() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
+
+        assertEquals(List.of(station1, station2), route.stations());
+    }
+
+    @Test
+    void WorkOnstation1Opposite() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
+
+        assertEquals(station2, route.stationOpposite(station1));
+    }
+    @Test
+    void WorkOnstation2Opposite() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
+
+        assertEquals(station1, route.stationOpposite(station2));
+    }
+
+    //TODO possibleClaimCards
 
     @Test
     void possibleClaimCards() {
+        //TODO
         Station station1 = new Station(1, "station1");
         Station station2 = new Station(2, "station2");
         Route testRoute = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
@@ -64,5 +220,31 @@ class RouteTest {
         Route testRoute = new Route("Route", station1, station2, 3, Route.Level.UNDERGROUND, null);
         assertEquals(testRoute.additionalClaimCardsCount(bag1, bag2), 3);
 
+    }
+    //TODO claimCardsCount Work
+
+    @Test
+    void FailOnOverGroundadditionalClaimCardsCount(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        var route = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
+        assertThrows(IllegalArgumentException.class, ()-> {
+            route.additionalClaimCardsCount(SortedBag.of(3,Card.BLUE), SortedBag.of(3, Card.LOCOMOTIVE));
+        });
+    }
+
+    @Test
+    void FailOnNotGoogDrawnCardNumberadditionalClaimCardsCount(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        var route = new Route("Route", station1, station2, 3, Route.Level.UNDERGROUND, null);
+        assertThrows(IllegalArgumentException.class, ()-> {
+            route.additionalClaimCardsCount(SortedBag.of(3,Card.BLUE), SortedBag.of(3, Card.LOCOMOTIVE));
+        });
+    }
+
+    @Test
+    void  workOnClaimPoints(){
+        //TODO ajouter test
     }
 }
