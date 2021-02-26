@@ -178,7 +178,6 @@ public final class Route {
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         int requirement = 0;
 
-        //TODO Relire consigne pour exception (ou /et) Je (Célien) pense et -> && au lieu de ||
         Preconditions.checkArgument(drawnCards.size() == 3 && this.level().equals(Level.UNDERGROUND));
         for (Card c : drawnCards) {
             if (claimCards.contains(c)) {
