@@ -192,22 +192,7 @@ public final class Route {
      * @return retourne le nombre de points appropriés vis-à-vis de la longueur de la route.
      */
     public int claimPoints(){
-       switch (length) {
-           case 1:
-               return 1;
-           case 2:
-               return 2;
-           case 3:
-               return 4;
-           case 4:
-               return 7;
-           case 5:
-               return 10;
-           case 6:
-               return 15;
-           default:
-               return 0;
-       }
+       return Constants.ROUTE_CLAIM_POINTS.get(length);
     }
 }
 
