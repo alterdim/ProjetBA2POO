@@ -1,8 +1,6 @@
 package ch.epfl.tchu.game;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -92,7 +90,7 @@ public final class Trail {
         stations.add(stationTo);
         str.append(stationTo.name());
 
-        str.append(" ("+length()+")");
+        str.append(" (").append(length()).append(")");
 
         return str.toString();
 //        return Arrays.toString(stations.toArray());
