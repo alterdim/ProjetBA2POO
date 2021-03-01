@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Chemin (trajet avec plusieurs routes passant par des gares)
  * Fichier créé à 17:32 le 25/02/2021
  *
  * @author Louis Gerard (296782)
@@ -13,10 +14,7 @@ public final class Trail {
     private final List<Route> routes;
     private final Station stationFrom;
     private final Station stationTo;
-
     private final int length;
-
-
 
     private Trail(Station stationFrom, Station stationTo, List<Route> routes, int length) {
         this.stationFrom=stationFrom;
@@ -25,6 +23,11 @@ public final class Trail {
         this.length=length;
     }
 
+    /**
+     * Calcul tous les trajets possible
+     * @param routes Liste de routes appartenant au joueur
+     * @return  Retourne un trajet parmi les plus longs disponibles
+     */
     public static Trail longest(List<Route> routes){
         if (routes.isEmpty()) return new Trail(null, null, null, 0);
 
@@ -61,10 +64,18 @@ public final class Trail {
     }
 
 
+    /**
+     * Recupère la station de départ
+     * @return station de départ du trajet
+     */
     public Station station1() {
         return ((length()!=0) ? stationFrom: null);
     }
 
+    /**
+     * Recupère la station d'arrivée
+     * @return station d'arrivée du trajet
+     */
     public Station station2() {
         return ((length()!=0) ? stationTo: null);
     }
@@ -73,6 +84,10 @@ public final class Trail {
         return length;
     }
 
+    /**
+     *
+     * @return Le nom des gares où le trajet passe (séparée par " - " ainsi que la longueur total du trajet dans le format "(xx)"
+     */
     @Override
     public String toString() {
         if (station1()==null || station2()==null){
