@@ -77,7 +77,26 @@ public final class Trail {
 
     @Override
     public String toString() {
+        List<Station> stations=new ArrayList<>();
+        stations.add(stationFrom);
+        for(Route r:routes){
+            stations.add(r.stationOpposite(stations.get(stations.size()-1)));
+        }
+        stations.remove(stations.size()-1);
+        StringBuilder str=new StringBuilder();
+        for (Station station:stations){
+            str.append(station.name());
+            str.append(" - ");
+        }
+
+        stations.add(stationTo);
+        str.append(stationTo.name());
+
+        str.append(" ("+length()+")");
+
+        return str.toString();
+//        return Arrays.toString(stations.toArray());
         //TODO
-        return stationFrom.name()+" - "+stationTo.name();
+//        return stationFrom.name()+" - "+stationTo.name();
     }
 }
