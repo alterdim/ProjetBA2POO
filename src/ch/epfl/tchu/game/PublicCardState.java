@@ -27,11 +27,11 @@ public class PublicCardState {
      * révélées ou si la taille du deck/de la défausse est négative.
      */
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardSize) {
-        Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARD_SLOTS.size());
+        Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT);
         Preconditions.checkArgument(deckSize >= 0 && discardSize >= 0);
+        this.faceUpCards = faceUpCards;
         this.deckSize = deckSize;
         this.discardSize = discardSize;
-        this.faceUpCards = faceUpCards;
 
     }
 
@@ -55,7 +55,7 @@ public class PublicCardState {
      * @return la carte à l'index donné.
      */
     public Card faceUpCard(int slot) {
-        return faceUpCards.get(Objects.checkIndex(slot, 5));
+        return faceUpCards.get(Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT));
     }
 
     /**
