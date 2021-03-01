@@ -75,6 +75,10 @@ public final class Trail {
 
     @Override
     public String toString() {
+        if (station1()==null || station2()==null){
+            return "";
+        }
+
         List<Station> stations=new ArrayList<>();
         stations.add(stationFrom);
         for(Route r:routes){
@@ -93,8 +97,5 @@ public final class Trail {
         str.append(" (").append(length()).append(")");
 
         return str.toString();
-//        return Arrays.toString(stations.toArray());
-        //TODO
-//        return stationFrom.name()+" - "+stationTo.name();
     }
 }
