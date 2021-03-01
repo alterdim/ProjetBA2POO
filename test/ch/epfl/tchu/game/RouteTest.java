@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -184,16 +185,6 @@ class RouteTest {
         assertEquals(station1, route.stationOpposite(station2));
     }
 
-    //TODO possibleClaimCards
-
-    @Test
-    void possibleClaimCards() {
-        //TODO
-        Station station1 = new Station(1, "station1");
-        Station station2 = new Station(2, "station2");
-        Route testRoute = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
-        System.out.println(testRoute.possibleClaimCards().toString());
-    }
 
     @Test
     void additionalClaimCardsCountTest() {
@@ -207,7 +198,15 @@ class RouteTest {
         assertEquals(testRoute.additionalClaimCardsCount(bag1, bag2), 3);
 
     }
-    //TODO claimCardsCount Work
+
+
+    @Test
+    void possibleClaimCards() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route testRoute = new Route("Route", station1, station2, 3, Route.Level.OVERGROUND, null);
+//        System.out.println(testRoute.possibleClaimCards().toString());
+    }
 
     @Test
     void FailOnOverGroundadditionalClaimCardsCount(){
@@ -226,7 +225,37 @@ class RouteTest {
     }
 
     @Test
-    void  workOnClaimPoints(){
-        //TODO ajouter test
+    void workOnExamplePossibleClaimCards(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        var route = new Route("Route", station1, station2, 2, Route.Level.UNDERGROUND, null);
+//        System.out.println(route.possibleClaimCards().toString());
+    }
+
+    @Test
+    void workOnAdditionalClaimsCard(){
+
+    }
+
+    @Test
+    void workOnTrivialClaimPoints(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        var route = new Route("Route", station1, station2, 2, Route.Level.UNDERGROUND, null);
+        assertEquals(2, route.claimPoints());
+    }
+    @Test
+    void workOnTrivial2ClaimPoints(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        var route = new Route("Route", station1, station2, 6, Route.Level.UNDERGROUND, null);
+        assertEquals(15, route.claimPoints());
+    }
+    @Test
+    void workOnTrivial3ClaimPoints(){
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        var route = new Route("Route", station1, station2, 1, Route.Level.UNDERGROUND, null);
+        assertEquals(1, route.claimPoints());
     }
 }

@@ -29,7 +29,7 @@ public final class Trail {
      * @return  Retourne un trajet parmi les plus longs disponibles
      */
     public static Trail longest(List<Route> routes){
-        if (routes.isEmpty()) return new Trail(null, null, null, 0);
+
 
 
         List<Trail> cs = new ArrayList<>();
@@ -45,22 +45,27 @@ public final class Trail {
 
                 List<Route> rs= new ArrayList<>(routes);
 
+                //Retire toutes les routes déjà utilisée
                 rs.removeAll(c.routes);
+                //Retire les routes qui ne permettent pas de prolonger le chemin
                 rs.removeIf(r -> !r.stations().contains(c.stationTo));
 
                 for (Route r : rs){
+                    //Ajoute la route r au chemin
                     List<Route> routeList = new ArrayList<>(c.routes);
                     routeList.add(r);
+                    //Ajoute a cs2 le nouveau chemin
                     cs2.add(new Trail(c.stationFrom, r.stationOpposite(c.stationTo), routeList, c.length+r.length()));
                 }
 
             }
+            //Si cs2 est vide, cela signifie que l'on a pas pu prolonger le chemin -> nouveau chemin
             if(cs2.isEmpty()){
                 return cs.get(0);
             }
             cs=cs2;
         }
-        return null;
+        return new Trail(null, null, null, 0);
     }
 
 

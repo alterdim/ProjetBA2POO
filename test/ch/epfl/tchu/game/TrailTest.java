@@ -41,7 +41,7 @@ class TrailTest {
 
 
     /*@Test
-    void WorkOnExampleLongest(){
+    void WorkOnExampleDoubleRouteLongest(){
         List<Route> routes = List.of(
                 new Route("NEU_SOL_1", NEU, SOL, 4, Route.Level.OVERGROUND, Color.GREEN),
                 new Route("NEU_YVE_1", NEU, YVE, 2, Route.Level.OVERGROUND, Color.BLACK),
