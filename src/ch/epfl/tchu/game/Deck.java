@@ -48,6 +48,9 @@ public final class Deck<C extends Comparable<C>> {
      * @return éléments dans le tas
      */
     public boolean isEmpty(){
+        System.out.println(cards.size());
+        System.out.println(size());
+        System.out.println(cards.isEmpty());
         return cards.isEmpty();
     }
 
@@ -62,7 +65,7 @@ public final class Deck<C extends Comparable<C>> {
     }
 
     /**
-     * @return Un nouveau tas dans le premier élément
+     * @return Un nouveau tas sans le premier élément
      * @throws IllegalArgumentException Si le tas est vide
      */
     public Deck<C> withoutTopCard() {
