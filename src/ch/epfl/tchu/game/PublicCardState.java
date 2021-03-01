@@ -35,26 +35,46 @@ public class PublicCardState {
 
     }
 
+    /**
+     * @return la somme de la taille de la pioche, la défausse et les cartes visibles.
+     */
     public int totalSize() {
         return discardSize + deckSize + faceUpCards.size();
     }
 
+    /**
+     * @return une copie défensive de la liste des cartes visibles.
+     */
     public List<Card> faceUpCards() {
         return Collections.unmodifiableList(faceUpCards);
     }
 
+    /**
+     * @param slot l'index des cartes visibles à consulter.
+     * @throws IndexOutOfBoundsException si l'index est invalide.
+     * @return la carte à l'index donné.
+     */
     public Card faceUpCard(int slot) {
         return faceUpCards.get(Objects.checkIndex(slot, 5));
     }
 
+    /**
+     * @return la taile du deck.
+     */
     public int deckSize() {
         return deckSize;
     }
 
+    /**
+     * @return true si le deck est vide (0 cartes). Renvoie false sinon.
+     */
     public boolean isDeckEmpty() {
         return deckSize == 0;
     }
 
+    /**
+     * @return la taille de la pile de défausse.
+     */
     public int discardSize() {
         return discardSize;
     }
