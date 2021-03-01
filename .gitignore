@@ -1,2 +1,4 @@
 /.idea/
 *.class
+out/test
+out/production
