@@ -3,12 +3,13 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 /**
+ * Tas de cartes
+ *
  * Créé le 01.03.2021 à 14:11
  *
  * @author Louis Gerard (296782)
@@ -20,28 +21,40 @@ public final class Deck<C extends Comparable<C>> {
 
     private Deck(List<C> cards){
         this.cards=cards;
-
     }
 
-
-    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng){
+    /**
+     * Calcul un tas de cartes
+     * @param <C> élément générique
+     * @param cards liste des cartes
+     * @param rng instance de Random
+     * @return Un Deck
+     */
+    public static <C extends Comparable<C>> Deck of(SortedBag<C> cards, Random rng){
         List<C> cardsList = cards.toList();
         Collections.shuffle(cardsList, rng);
         return new Deck(cardsList);
     }
 
+    /**
+     * Taille du tas
+     * @return taille du tas
+     */
     public int size(){
         return cards.size();
     }
 
+    /**
+     * @return éléments dans le tas
+     */
     public boolean isEmpty(){
         return cards.isEmpty();
     }
 
     /**
      *
-     * @return
-     * @throws IllegalArgumentException
+     * @return Premier élément du tas
+     * @throws IllegalArgumentException si le tas est vide
      */
     public C topCard(){
         Preconditions.checkArgument(!cards.isEmpty());
@@ -49,9 +62,8 @@ public final class Deck<C extends Comparable<C>> {
     }
 
     /**
-     *
-     * @return
-     * @throws IllegalArgumentException
+     * @return Un nouveau tas dans le premier élément
+     * @throws IllegalArgumentException Si le tas est vide
      */
     public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!isEmpty());
@@ -60,9 +72,9 @@ public final class Deck<C extends Comparable<C>> {
 
     /**
      *
-     * @param count
-     * @return
-     * @throws IllegalArgumentException
+     * @param count nombre d'éléments a sélectionner
+     * @return  retourner les count premiers éléments du tas
+     * @throws IllegalArgumentException si le nombre d'élément a sélectionner n'est pas compris dans le tas
      */
     public SortedBag<C> topCards(int count){
         Preconditions.checkArgument(count>=0 && count<=size());
@@ -75,9 +87,9 @@ public final class Deck<C extends Comparable<C>> {
 
     /**
      *
-     * @param count
-     * @return
-     * @throws IllegalArgumentException
+     * @param count  nombre d'éléments a enlever
+     * @return Un tas sans les count premiers éléments
+     * @throws IllegalArgumentException si le nombre d'élément a supprimer n'est pas compris dans le tas
      */
     public Deck<C> withoutTopCards(int count){
         Preconditions.checkArgument(count>=0 && count<=size());
