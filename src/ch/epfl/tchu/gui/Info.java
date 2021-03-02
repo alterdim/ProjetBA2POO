@@ -5,6 +5,8 @@ import ch.epfl.tchu.game.Card;
 
 import java.util.List;
 
+import static ch.epfl.tchu.gui.StringsFr.*;
+
 /**
  * Fichier créé à 14:34 le 02/03/2021
  *
@@ -28,43 +30,41 @@ public class Info {
      */
     public static String cardName(Card card, int count) {
         Preconditions.checkArgument(count > 0);
-        String colorString;
+        StringBuilder colorString=new StringBuilder();
         switch (card) {
             case BLACK:
-                colorString = "noire";
+                colorString.append(BLACK_CARD);
                 break;
             case VIOLET:
-                colorString = "violette";
+                colorString.append(VIOLET_CARD);
                 break;
             case BLUE:
-                colorString = "bleue";
+                colorString.append(BLUE_CARD);
                 break;
             case GREEN:
-                colorString = "verte";
+                colorString.append(GREEN_CARD);
                 break;
             case YELLOW:
-                colorString = "jaune";
+                colorString.append(YELLOW_CARD);
                 break;
             case ORANGE:
-                colorString = "orange";
+                colorString.append(ORANGE_CARD);
                 break;
             case RED:
-                colorString = "rouge";
+                colorString.append(RED_CARD);
                 break;
             case WHITE:
-                colorString = "blanche";
+                colorString.append(WHITE_CARD);
                 break;
             case LOCOMOTIVE:
-                colorString = "locomotive";
+                colorString.append(LOCOMOTIVE_CARD);
                 break;
             default:
-                colorString = "somethingIsWrong !";
+                colorString.append("somethingIsWrong !");
                 throw new IllegalArgumentException();
         }
-        if (count > 1) {
-            colorString+= "s";
-        }
-        return colorString;
+        colorString.append(plural(count));
+        return colorString.toString();
     }
 
     public static String draw(List<String> playerNames, int points) {
