@@ -39,6 +39,15 @@ class TrailTest {
     private static final Station LUC = new Station(16, "Lucerne");
 
 
+    @Test
+    void workOnSmallNumberOfRoutesBigger(){
+        List<Route> routes = new ArrayList<>();
+        routes.add(new Route("F", BER, FRI, 1, Route.Level.OVERGROUND, Color.ORANGE));
+        routes.add(new Route("E", BER, LUC, 1, Route.Level.OVERGROUND, null));//FALSE length (2)
+        routes.add(new Route("B", NEU, SOL, 4, Route.Level.OVERGROUND, Color.GREEN));
+
+        assertEquals("Neuchâtel - Soleure (4)" ,Trail.longest(routes).toString());
+    }
 
     /*@Test
     void WorkOnExampleDoubleRouteLongest(){

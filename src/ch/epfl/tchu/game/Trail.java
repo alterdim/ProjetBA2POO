@@ -2,6 +2,7 @@ package ch.epfl.tchu.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Chemin (trajet avec plusieurs routes passant par des gares)
@@ -30,11 +31,12 @@ public final class Trail {
      */
     public static Trail longest(List<Route> routes){
 
-
+        Trail longestTrail=new Trail(null, null, null, 0);
 
         List<Trail> cs = new ArrayList<>();
 
         for (Route route:routes){
+            if (longestTrail.length< route.length()) longestTrail=new Trail(route.station1(), route.station2(), List.of(route), route.length());
             cs.add(new Trail(route.station1(), route.station2(), List.of(route), route.length()));
             cs.add(new Trail(route.station2(), route.station1(), List.of(route), route.length()));
         }
@@ -54,18 +56,17 @@ public final class Trail {
                     //Ajoute la route r au chemin
                     List<Route> routeList = new ArrayList<>(c.routes);
                     routeList.add(r);
-                    //Ajoute a cs2 le nouveau chemin
-                    cs2.add(new Trail(c.stationFrom, r.stationOpposite(c.stationTo), routeList, c.length+r.length()));
-                }
 
-            }
-            //Si cs2 est vide, cela signifie que l'on a pas pu prolonger le chemin -> nouveau chemin
-            if(cs2.isEmpty()){
-                return cs.get(0);
+                    int length=c.length+r.length();
+                    Trail trail = new Trail(c.stationFrom, r.stationOpposite(c.stationTo), routeList, length);
+                    //Ajoute a cs2 le nouveau chemin
+                    cs2.add(trail);
+                    if (longestTrail.length< length) longestTrail=trail;
+                }
             }
             cs=cs2;
         }
-        return new Trail(null, null, null, 0);
+        return longestTrail;
     }
 
 
