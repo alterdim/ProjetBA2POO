@@ -1,8 +1,12 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.Preconditions;
+import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
+import ch.epfl.tchu.game.Route;
+import ch.epfl.tchu.game.Trail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static ch.epfl.tchu.gui.StringsFr.*;
@@ -68,7 +72,78 @@ public class Info {
     }
 
     public static String draw(List<String> playerNames, int points) {
-        return "a";
+        String names = playerNames.get(0) + AND_SEPARATOR + playerNames.get(1);
+        return String.format(DRAW, names, points);
+    }
+
+    public String willPlayFirst() {
+        return String.format(WILL_PLAY_FIRST, playerName);
+    }
+
+    public String keptTickets(int count) {
+        return String.format(KEPT_N_TICKETS, playerName, count, plural(count));
+    }
+
+    public String canPlay() {
+        return String.format(CAN_PLAY, playerName);
+    }
+
+    public String drewTickets(int count) {
+        return String.format(DREW_TICKETS, playerName, count, plural(count));
+    }
+
+    public String drewBlindCard() {
+        return String.format(DREW_BLIND_CARD, playerName);
+    }
+
+    public String drewVisibleCard(Card card) {
+        return String.format(DREW_VISIBLE_CARD, playerName, cardName(card, 1));
+    }
+
+    public String claimedRoute(Route route, SortedBag<Card> cards) {
+        return String.format(CLAIMED_ROUTE, playerName, generateRouteString(route), cards.toString());
+    }
+
+    public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards) {
+        return String.format(ATTEMPTS_TUNNEL_CLAIM, playerName, generateRouteString(route), initialCards.toString());
+    }
+
+    public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
+        if (additionalCost == 0) {
+            return String.format(ADDITIONAL_CARDS_ARE, drawnCards.toString()) + NO_ADDITIONAL_COST;
+        }
+        return String.format(ADDITIONAL_CARDS_ARE, drawnCards.toString()) + String.format(SOME_ADDITIONAL_COST, additionalCost, plural(additionalCost));
+    }
+
+    public String didNotClaimRoute(Route route) {
+        return String.format(DID_NOT_CLAIM_ROUTE, playerName, generateRouteString(route));
+    }
+
+    public String lastTurnBegins(int carCount) {
+        return String.format(LAST_TURN_BEGINS, playerName, carCount, plural(carCount));
+    }
+
+    public String getsLongestTrailBonus(Trail longestTrail) {
+        return String.format(GETS_BONUS, playerName, longestTrail.station1() + EN_DASH_SEPARATOR + longestTrail.station2());
+    }
+
+    public String won(int points, int loserPoints) {
+        return String.format(WINS, playerName, points, plural(points), loserPoints, plural(loserPoints));
+    }
+
+    private String generateCardString(SortedBag<Card> cards) {
+        String cardString = "";
+        int count;
+        for (Card c: cards.toSet()) {
+            int n = cards.countOf(c);
+            System.out.println(c + " " + n);
+            //TODO
+        }
+    return "todo";
+    }
+
+    private String generateRouteString(Route route) {
+        return route.station1() + EN_DASH_SEPARATOR + route.station2();
     }
 
 }

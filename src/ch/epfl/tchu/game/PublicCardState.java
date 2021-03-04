@@ -75,7 +75,7 @@ public class PublicCardState {
     /**
      * @return la taille de la pile de défausse.
      */
-    public int discardSize() {
+    public int discardsSize() {
         return discardSize;
     }
 }
