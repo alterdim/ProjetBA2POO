@@ -41,7 +41,7 @@ class CardStateTest {
         list.add(Card.YELLOW);
         var ca = Deck.of(list.build(), new Random());
         CardState cardState = CardState.of(ca);
-        cardState.withDrawnFaceUpCard(2);
+//        cardState.withDrawnFaceUpCard(2);
     }
 
     @Test
