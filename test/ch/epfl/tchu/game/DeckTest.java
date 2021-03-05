@@ -25,8 +25,8 @@ class DeckTest {
         cardList.add("C");
         cardList.add("D");
         cardList.add("A");
-        Deck<Card> deck= Deck.of(cardList.build(), new Random());
-        System.out.println(deck.withoutTopCards(1).topCard());
+        Deck<String> deck= Deck.of(cardList.build(), new Random());
+        System.out.println(deck.withoutTopCards(5).topCard());
     }
 
 }
