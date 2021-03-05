@@ -84,4 +84,18 @@ class InfoTest {
     @Test
     void won() {
     }
+
+    @Test
+    void generateCardString() {
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("route", station1, station2, 3, Route.Level.OVERGROUND, Color.BLACK);
+        SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
+        builder.add(2, Card.ORANGE);
+        builder.add(2, Card.RED);
+        builder.add(2, Card.WHITE);
+        builder.add(3, Card.LOCOMOTIVE);
+        Info info = new Info("madameCool");
+        System.out.println(info.attemptsTunnelClaim(route, builder.build()));
+    }
 }

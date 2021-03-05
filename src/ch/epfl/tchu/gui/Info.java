@@ -101,18 +101,18 @@ public class Info {
     }
 
     public String claimedRoute(Route route, SortedBag<Card> cards) {
-        return String.format(CLAIMED_ROUTE, playerName, generateRouteString(route), cards.toString());
+        return String.format(CLAIMED_ROUTE, playerName, generateRouteString(route), generateCardString(cards));
     }
 
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards) {
-        return String.format(ATTEMPTS_TUNNEL_CLAIM, playerName, generateRouteString(route), initialCards.toString());
+        return String.format(ATTEMPTS_TUNNEL_CLAIM, playerName, generateRouteString(route), generateCardString(initialCards));
     }
 
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
         if (additionalCost == 0) {
-            return String.format(ADDITIONAL_CARDS_ARE, drawnCards.toString()) + NO_ADDITIONAL_COST;
+            return String.format(ADDITIONAL_CARDS_ARE, generateCardString(drawnCards)) + NO_ADDITIONAL_COST;
         }
-        return String.format(ADDITIONAL_CARDS_ARE, drawnCards.toString()) + String.format(SOME_ADDITIONAL_COST, additionalCost, plural(additionalCost));
+        return String.format(ADDITIONAL_CARDS_ARE, generateCardString(drawnCards) + String.format(SOME_ADDITIONAL_COST, additionalCost, plural(additionalCost)));
     }
 
     public String didNotClaimRoute(Route route) {
@@ -134,12 +134,24 @@ public class Info {
     private String generateCardString(SortedBag<Card> cards) {
         String cardString = "";
         int count;
-        for (Card c: cards.toSet()) {
-            int n = cards.countOf(c);
-            System.out.println(c + " " + n);
-            //TODO
+        List<Card> presentCards = new ArrayList<>();
+        for (Card c : Card.values()) {
+            if (cards.contains(c)) {
+                presentCards.add(c);
+            }
         }
-    return "todo";
+        Card lastBeforeLast = presentCards.get(presentCards.size()-2); // Permet de prendre l'avant-dernière carte alphabétiquement
+        Card lastCard = presentCards.get(presentCards.size()-1);
+        for (Card c: cards.toSet()) {
+            cardString = String.format("%s%s %s",cardString, cards.countOf(c), cardName(c, cards.countOf(c)));
+            if (c.equals(lastBeforeLast)) {
+                cardString = String.format("%s%s", cardString, AND_SEPARATOR);
+            }
+            else if (!c.equals(lastCard)){
+                cardString = String.format("%s, ", cardString);
+            }
+        }
+    return cardString;
     }
 
     private String generateRouteString(Route route) {
