@@ -35,8 +35,7 @@ public final class CardState extends PublicCardState{
      * @throws IllegalArgumentException si le deck ne contient pas n éléments
      */
     public static CardState of(Deck<Card> deck){
-        //TODO check moins de 5 (compris ou non compris????) cartes
-        Preconditions.checkArgument(deck.size()>FACE_UP_CARDS_COUNT);
+        Preconditions.checkArgument(deck.size()>=FACE_UP_CARDS_COUNT);
 
         return new CardState(deck.topCards(FACE_UP_CARDS_COUNT).toList(), deck.withoutTopCards(FACE_UP_CARDS_COUNT), new SortedBag.Builder<Card>().build());
     }
@@ -71,7 +70,6 @@ public final class CardState extends PublicCardState{
      * @throws IllegalArgumentException  si la pioche est vide
      */
     public Card topDeckCard(){
-        //TODO mettre dans main et/ou dans défausse
         Preconditions.checkArgument(!drawCards.isEmpty());
         return drawCards.topCard();
     }
@@ -83,7 +81,6 @@ public final class CardState extends PublicCardState{
      */
     public CardState withoutTopDeckCard(){
         Preconditions.checkArgument(!drawCards.isEmpty());
-        //TODO doit-on mettre la carte au sommet dans discards?
         return new CardState(faceUpCards(), drawCards.withoutTopCard(), discards);
     }
 
