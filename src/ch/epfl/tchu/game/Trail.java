@@ -2,7 +2,6 @@ package ch.epfl.tchu.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 /**
  * Chemin (trajet avec plusieurs routes passant par des gares)
