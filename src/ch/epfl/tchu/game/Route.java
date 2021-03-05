@@ -41,21 +41,20 @@ public final class Route {
      * @param length Longueur de la route (affecte le nombre de cartes à utiliser pour la capturer)
      * @param level Level.UNDERGROUND ou Level.OVERGROUND, affecte la règle de capture
      * @param color Couleur de la route, null si elle est neutre
+     * @throws IllegalArgumentException si les deux gares sont égal (au sens de equals)
+     * @throws IllegalArgumentException si la longueur n'est pas compris dans les bornes défini dans Constant
+     * @throws NullPointerException si une des gare ou le niveau est null
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         Preconditions.checkArgument(!station1.equals(station2));
         Preconditions.checkArgument(!(length > Constants.MAX_ROUTE_LENGTH));
         Preconditions.checkArgument(!(length < Constants.MIN_ROUTE_LENGTH));
-        Objects.requireNonNull(level);
-        Objects.requireNonNull(station1);
-        Objects.requireNonNull(station2);
-        Objects.requireNonNull(id);
 
-        this.id = id;
-        this.station1 = station1;
-        this.station2 = station2;
+        this.id = Objects.requireNonNull(id);
+        this.station1 = Objects.requireNonNull(station1);
+        this.station2 = Objects.requireNonNull(station2);
         this.length = length;
-        this.level = level;
+        this.level = Objects.requireNonNull(level);
         this.color = color;
     }
 
