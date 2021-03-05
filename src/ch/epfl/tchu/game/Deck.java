@@ -30,7 +30,7 @@ public final class Deck<C extends Comparable<C>> {
      * @param rng instance de Random
      * @return Un Deck
      */
-    public static <C extends Comparable<C>> Deck of(SortedBag<C> cards, Random rng){
+    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng){
         List<C> cardsList = cards.toList();
         Collections.shuffle(cardsList, rng);
         return new Deck<>(cardsList);
