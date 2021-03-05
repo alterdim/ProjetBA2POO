@@ -33,7 +33,7 @@ public final class Deck<C extends Comparable<C>> {
     public static <C extends Comparable<C>> Deck of(SortedBag<C> cards, Random rng){
         List<C> cardsList = cards.toList();
         Collections.shuffle(cardsList, rng);
-        return new Deck(cardsList);
+        return new Deck<>(cardsList);
     }
 
     /**
@@ -45,7 +45,7 @@ public final class Deck<C extends Comparable<C>> {
     }
 
     /**
-     * @return éléments dans le tas
+     * @return true si il y a des éléments dans le tas
      */
     public boolean isEmpty(){
         return cards.isEmpty();
