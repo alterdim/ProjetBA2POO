@@ -99,7 +99,7 @@ class TrailTest {
                 new Route("EB", E, B, 5, Route.Level.OVERGROUND, Color.BLACK),
                 new Route("CD", C, D, 3, Route.Level.OVERGROUND, Color.BLACK)
         );
-        System.out.println(Trail.longest(routes));
+//        System.out.println(Trail.longest(routes));
     }
 
    @Test

@@ -58,7 +58,7 @@ class InfoTest {
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
         builder.add(2, Card.ORANGE);
         builder.add(3, Card.LOCOMOTIVE);
-        System.out.println(info.claimedRoute(route, builder.build()));
+//        System.out.println(info.claimedRoute(route, builder.build()));
     }
 
     @Test
@@ -96,6 +96,6 @@ class InfoTest {
         builder.add(2, Card.WHITE);
         builder.add(3, Card.LOCOMOTIVE);
         Info info = new Info("madameCool");
-        System.out.println(info.attemptsTunnelClaim(route, builder.build()));
+//        System.out.println(info.attemptsTunnelClaim(route, builder.build()));
     }
 }
