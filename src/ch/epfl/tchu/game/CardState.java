@@ -48,9 +48,7 @@ public final class CardState extends PublicCardState{
      * @throws IllegalArgumentException si la pioche est vide
      */
     public CardState withDrawnFaceUpCard(int slot){
-        if (!FACE_UP_CARD_SLOTS.contains(slot)) {
-            throw new IndexOutOfBoundsException();
-        }
+        if (!FACE_UP_CARD_SLOTS.contains(slot)) throw new IndexOutOfBoundsException();
         Preconditions.checkArgument(!drawCards.isEmpty());
 
         SortedBag.Builder<Card> discardList = new SortedBag.Builder<>();

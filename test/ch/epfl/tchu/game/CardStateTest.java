@@ -32,6 +32,19 @@ class CardStateTest {
     }
 
     @Test
+    void withDrawnFaceUpCard2(){
+        SortedBag.Builder<Card> list = new SortedBag.Builder<>();
+        list.add(Card.RED);
+        list.add(Card.GREEN);
+        list.add(Card.ORANGE);
+        list.add(Card.VIOLET);
+        list.add(Card.YELLOW);
+        var ca = Deck.of(list.build(), new Random());
+        CardState cardState = CardState.of(ca);
+        cardState.withDrawnFaceUpCard(2);
+    }
+
+    @Test
     void withDeckRecreatedFromDiscards(){
         SortedBag.Builder<Card> list = new SortedBag.Builder<>();
         list.add(Card.RED);
