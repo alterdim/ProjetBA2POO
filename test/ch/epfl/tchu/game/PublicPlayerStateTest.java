@@ -101,6 +101,48 @@ class PublicPlayerStateTest {
         assertEquals(routes,playerState.routes());
     }
 
+    @Test
+    void WorkOnTrivialCarCount(){
+        Station A = new Station(1, "A");
+        Station B = new Station(2, "B");
+        Station C = new Station(3, "C");
+        Station D = new Station(4, "D");
+        Station E = new Station(5, "E");
+
+        List<Route> routes = List.of(
+                new Route("AB", A, B, 3, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("AC", A, C, 4, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("AD", A, D, 2, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("AE", A, E, 5, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("EB", E, B, 5, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("CD", C, D, 3, Route.Level.OVERGROUND, Color.BLACK)
+        );
+
+        var playerState = new PublicPlayerState(10, 10, routes);
+        assertEquals(Constants.INITIAL_CAR_COUNT-22,playerState.carCount());
+    }
+
+    @Test
+    void WorkOnTrivialCarCountClaimPoints(){
+        Station A = new Station(1, "A");
+        Station B = new Station(2, "B");
+        Station C = new Station(3, "C");
+        Station D = new Station(4, "D");
+        Station E = new Station(5, "E");
+
+        List<Route> routes = List.of(
+                new Route("AB", A, B, 3, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("AC", A, C, 4, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("AD", A, D, 2, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("AE", A, E, 5, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("EB", E, B, 5, Route.Level.OVERGROUND, Color.BLACK),
+                new Route("CD", C, D, 3, Route.Level.OVERGROUND, Color.BLACK)
+        );
+
+        var playerState = new PublicPlayerState(10, 10, routes);
+        assertEquals(37,playerState.claimPoints());
+    }
+
 
 
 }

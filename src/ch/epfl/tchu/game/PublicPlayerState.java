@@ -41,9 +41,14 @@ public class PublicPlayerState {
         this.cardCount=cardCount;
         this.routes=routes;
 
-        //TODO a faire
-        this.carCount=INITIAL_CAR_COUNT;
-        this.claimPoints=3;
+        int car=INITIAL_CAR_COUNT;
+        int points=0;
+        for (Route route:routes){
+            car-=route.length();
+            points+=route.claimPoints();
+        }
+        this.carCount=car;
+        this.claimPoints=points;
     }
 
     /**
@@ -85,4 +90,5 @@ public class PublicPlayerState {
     public int claimPoints(){
         return claimPoints;
     }
+
 }
