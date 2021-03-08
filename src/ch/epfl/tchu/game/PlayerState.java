@@ -87,15 +87,12 @@ public final class PlayerState extends PublicPlayerState {
      * @return vrai s'il peut s'en emparer
      */
     public boolean canClaimRoute(Route route){
-        /*int routeLength= route.length();
-        //Nombre de wagon >= à la longueur de la route et (||)
-        route.possibleClaimCards();
-//        cards.
-
-        if (routeLength<=carCount() *//*|| routeLength<=route.color()*//*){
-            return true;
+        List<SortedBag<Card>> possibleClaimCards = route.possibleClaimCards();
+        for (SortedBag<Card> combination : possibleClaimCards) {
+            if(cards.contains(combination)) {
+                return true;
+            }
         }
-        else return false;*/
-        return true;
+        return false;
     }
 }
