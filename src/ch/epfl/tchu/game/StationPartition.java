@@ -3,7 +3,6 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * Fichier créé à 14:03 le 08/03/2021
@@ -14,6 +13,11 @@ import java.util.HashMap;
 public final class StationPartition implements StationConnectivity{
     private final int[] partition;
 
+    /** Vérifie si deux stations font partie de la même partition de connectivité.
+     * @param s1 Station à vérifier 1
+     * @param s2 Station à vérifier 2
+     * @return True si les deux stations font partie de la partition, false sinon.
+     */
     @Override
     public boolean connected(Station s1, Station s2) {
         return Arrays.asList(partition, true).contains(s1.id()) && Arrays.asList(partition, true).contains(s2.id());
@@ -23,9 +27,15 @@ public final class StationPartition implements StationConnectivity{
         this.partition = partition;
     }
 
+    /**
+     * Builder de StationPartition. Utilise une structure de disjoint set pour relier les stations connectées entre elles.
+     */
     public final static class Builder {
         private final int[] flatPartition;
 
+        /**Constructeur de StationConnectivityBuilder
+         * @param stationCount le nombre de stations qui feront partie de la partition.
+         */
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount>=0 );
             flatPartition = new int[stationCount];
@@ -34,6 +44,11 @@ public final class StationPartition implements StationConnectivity{
             }
         }
 
+        /** "Fusionne" deux sous-partitions de stations et choisit un nouveau représentant arbitrairement.
+         * @param s1 Station 1 à connecter
+         * @param s2 Station 2 à connecter
+         * @return le builder, dont la partition a été mise à jour.
+         */
         public Builder connect(Station s1, Station s2) {
             int rep1 = this.representative(s1.id());
             int rep2 = this.representative(s2.id());
@@ -41,6 +56,9 @@ public final class StationPartition implements StationConnectivity{
             return this;
         }
 
+        /** Build la StationPartition et en profite pour aplatir la représentation.
+         * @return la StationPartition.
+         */
         public StationPartition build() {
             for (int i : flatPartition) {
                 flatPartition[i] = representative(i);
