@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,5 +95,24 @@ public final class PlayerState extends PublicPlayerState {
             }
         }
         return false;
+    }
+
+    /**
+     *
+     * @param route une route
+     * @return la liste de tous les ensembles de cartes que le joueur pourrait utiliser pour prendre possession de la route
+     * @throws IllegalArgumentException si le joueur ne possède pas assez de wagons
+     */
+    public List<SortedBag<Card>> possibleClaimCards(Route route){
+        Preconditions.checkArgument(route.length()<=carCount());
+
+        List<SortedBag<Card>> listPossibleClaimCards = new ArrayList<>();
+        for (SortedBag<Card> combination : route.possibleClaimCards()) {
+            if(cards.contains(combination)) {
+                listPossibleClaimCards.add(combination);
+            }
+        }
+
+        return listPossibleClaimCards;
     }
 }
