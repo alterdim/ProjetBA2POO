@@ -52,7 +52,33 @@ public class PlayerStateTest {
                 .add(Card.GREEN)
                 .build();
 
-        assertEquals(cards2, playerState.withAddedCard(Card.GREEN).tickets());
+        assertEquals(cards2, playerState.withAddedCard(Card.GREEN).cards());
+    }
+
+    @Test
+    void WorkwithAddedCards(){
+        var map = new TestMap();
+        var cards = new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLUE)
+                .add(Card.RED)
+                .add(Card.LOCOMOTIVE)
+
+                .build();
+        var playerState = PlayerState.initial(cards);
+
+        var cards2 = new SortedBag.Builder<Card>()
+                .add(Card.GREEN)
+                .add(Card.WHITE)
+                .add(Card.YELLOW)
+                .build();
+
+        var cards3 = new SortedBag.Builder<Card>()
+                .add(cards)
+                .add(cards2)
+                .build();
+
+        assertEquals(cards3, playerState.withAddedCards(cards2).cards());
     }
 
     private static final class TestMap {
