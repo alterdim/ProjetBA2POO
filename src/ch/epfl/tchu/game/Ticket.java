@@ -53,17 +53,15 @@ public final class Ticket implements Comparable<Ticket> {
     private String computeText() {
         String text = String.format("%s - ", trips.get(0).from().name());
 
-//        text+= (trips.size() > 1 ? "{" : "");
         if (trips.size()>1) text+="{";
 
         TreeSet<String> destinations = new TreeSet<>();
         for (Trip trip : trips) {
-            destinations.add(trip.to().name() + " (" + trip.points() +")");
+            destinations.add(String.format("%s (%s)", trip.to().name(), trip.points()));
         }
 
         text = String.format("%s%s", text, String.join(", ", destinations));
 
-//        text+= (trips.size() > 1 ? "}" : "");
         if (trips.size()>1) text+="}";
 
         return text;
