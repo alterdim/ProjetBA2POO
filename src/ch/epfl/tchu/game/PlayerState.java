@@ -87,6 +87,9 @@ public final class PlayerState extends PublicPlayerState {
      * @return vrai s'il peut s'en emparer
      */
     public boolean canClaimRoute(Route route){
+        if (cards.size() < route.length()) {
+            return false;
+        }
         List<SortedBag<Card>> possibleClaimCards = route.possibleClaimCards();
         for (SortedBag<Card> combination : possibleClaimCards) {
             if(cards.contains(combination)) {
