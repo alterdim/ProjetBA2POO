@@ -70,7 +70,7 @@ public final class Trail {
 
 
     /**
-     * Recupère la station de départ
+     * Récupère la station de départ
      * @return station de départ du trajet
      */
     public Station station1() {
@@ -78,7 +78,7 @@ public final class Trail {
     }
 
     /**
-     * Recupère la station d'arrivée
+     * Récupère la station d'arrivée
      * @return station d'arrivée du trajet
      */
     public Station station2() {
