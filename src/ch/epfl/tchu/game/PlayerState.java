@@ -133,7 +133,7 @@ public final class PlayerState extends PublicPlayerState {
         Preconditions.checkArgument(drawnCards.size() == 3); //3 éléments dans drawncards
         ArrayList<SortedBag<Card>> finalList = new ArrayList<SortedBag<Card>>(); // liste qui sera renvoyée
         //TODO C4EST VRAIMENT DE LA GROSSE MERDE CETTE FONCTION
-
+        return null;
 
     }
 }
