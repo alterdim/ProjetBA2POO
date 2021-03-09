@@ -118,4 +118,22 @@ public final class PlayerState extends PublicPlayerState {
 
         return listPossibleClaimCards;
     }
+
+    /** Fonction qui calcule les cartes à "rejouer" pour s'emparer d'un tunnel et qui renvoie les façons pour le joueur de les jouer.
+     * @param additionalCardsCount le nombre de cartes additionnelles à jouer
+     * @param initialCards les cartes jouées initialement
+     * @param drawnCards les cartes piochées
+     * @return une liste de SortedBags contenant les possibilités de cartes à jouer pour finir la prise d'un tunnel.
+     */
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards,
+                                                         SortedBag<Card> drawnCards) {
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3); //nb de cartes 3>=x>=1
+        Preconditions.checkArgument(!initialCards.isEmpty()); // InitialCards vide
+        Preconditions.checkArgument(initialCards.toMap().keySet().size() <= 2); // MAX 2 types de cartes
+        Preconditions.checkArgument(drawnCards.size() == 3); //3 éléments dans drawncards
+        ArrayList<SortedBag<Card>> finalList = new ArrayList<SortedBag<Card>>(); // liste qui sera renvoyée
+        //TODO C4EST VRAIMENT DE LA GROSSE MERDE CETTE FONCTION
+
+
+    }
 }
