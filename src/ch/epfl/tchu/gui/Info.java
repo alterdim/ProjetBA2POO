@@ -111,7 +111,7 @@ public final class Info {
         if (additionalCost == 0) {
             return String.format(ADDITIONAL_CARDS_ARE, generateCardString(drawnCards)) + NO_ADDITIONAL_COST;
         }
-        return String.format(ADDITIONAL_CARDS_ARE, generateCardString(drawnCards) + String.format(SOME_ADDITIONAL_COST, additionalCost, plural(additionalCost)));
+        return String.format(ADDITIONAL_CARDS_ARE, generateCardString(drawnCards)) + String.format(SOME_ADDITIONAL_COST, additionalCost, plural(additionalCost));
     }
 
     public String didNotClaimRoute(Route route) {
