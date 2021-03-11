@@ -69,10 +69,10 @@ public class PublicPlayerState {
 
     /**
      *
-     * @return les routes dont le joueur s'est emparé
+     * @return les routes dont le joueur s'est emparé, en copie défensive.
      */
     public List<Route> routes(){
-        return routes;
+        return Collections.unmodifiableList(routes);
     }
 
     /**
