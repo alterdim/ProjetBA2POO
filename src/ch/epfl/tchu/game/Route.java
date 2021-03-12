@@ -138,32 +138,50 @@ public final class Route {
         }
         List<SortedBag<Card>> bagList = new ArrayList<>();
         SortedBag<Card> bag;
-        //On itère de 0 à la longueur pour commencer par les mains qui utilisent le moins de locomotives.
-        for (int i = 0; i <= length; i++) {
-            //A chaque itération, le builder ainsi que le bag sont remis à zéro.
+        if (this.level.equals(Level.UNDERGROUND)) {
+            for (int i = 0; i <= length; i++) {
+                //A chaque itération, le builder ainsi que le bag sont remis à zéro.
+                cardsB = new SortedBag.Builder<>();
+                if (!rainbow) {
+                    cardsB.add(i, Card.LOCOMOTIVE);
+                    bag = cardsB.add(length - i, Card.of(color)).build();
+                    bagList.add(bag);
+                }
+                else {
+                    for (Color c : Color.values()) {
+                        cardsB = new SortedBag.Builder<>();
+                        // pour éviter les doublons de mains à n locomotives, on arrête la fonction prématurément quand
+                        // arrive i = length.
+                        if (i == length) {
+                            bag = cardsB.add(i, Card.LOCOMOTIVE).build();
+                            bagList.add(bag);
+                            return bagList;
+                        }
+                        cardsB.add(i, Card.LOCOMOTIVE);
+                        bag = cardsB.add(length - i, Card.of(c)).build();
+                        bagList.add(bag);
+                    }
+                }
+
+            }
+        }
+        else {
             cardsB = new SortedBag.Builder<>();
             if (!rainbow) {
-                cardsB.add(i, Card.LOCOMOTIVE);
-                bag = cardsB.add(length - i, Card.of(color)).build();
+                cardsB.add(length, Card.of(color));
+                bag = cardsB.build();
                 bagList.add(bag);
             }
             else {
                 for (Color c : Color.values()) {
                     cardsB = new SortedBag.Builder<>();
-                    // pour éviter les doublons de mains à n locomotives, on arrête la fonction prématurément quand
-                    // arrive i = length.
-                    if (i == length) {
-                        bag = cardsB.add(i, Card.LOCOMOTIVE).build();
-                        bagList.add(bag);
-                        return bagList;
-                    }
-                    cardsB.add(i, Card.LOCOMOTIVE);
-                    bag = cardsB.add(length - i, Card.of(c)).build();
+                    bag = cardsB.add(length, Card.of(c)).build();
                     bagList.add(bag);
                 }
             }
-
         }
+        //On itère de 0 à la longueur pour commencer par les mains qui utilisent le moins de locomotives.
+
             return bagList;
     }
 
@@ -176,10 +194,9 @@ public final class Route {
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         int requirement = 0;
-
         Preconditions.checkArgument(drawnCards.size() == 3 && this.level().equals(Level.UNDERGROUND));
         for (Card c : drawnCards) {
-            if (claimCards.contains(c)) {
+            if (claimCards.contains(c) || c.equals(Card.LOCOMOTIVE)) {
                 requirement++;
             }
         }
