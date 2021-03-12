@@ -1,6 +1,5 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
@@ -205,7 +204,6 @@ public final class Info {
 
     private String generateCardString(SortedBag<Card> cards) {
         String cardString = "";
-        int count;
         List<Card> presentCards = new ArrayList<>();
         for (Card c : Card.values()) {
             if (cards.contains(c)) {
