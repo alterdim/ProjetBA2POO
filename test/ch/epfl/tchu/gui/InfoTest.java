@@ -179,9 +179,9 @@ class InfoTest {
 
             var name = randomName(rng, 1 + rng.nextInt(10));
             var info = new Info(name);
-            System.out.println(info.getsLongestTrailBonus(longesttrail));
+//            System.out.println(info.getsLongestTrailBonus(longesttrail));
             String testString = "\n" + name +" reçoit un bonus de 10 points pour le plus long trajet" + " (" + station1.name() + StringsFr.EN_DASH_SEPARATOR + station2.name() + ").\n";
-            System.out.println(testString);
+//            System.out.println(testString);
             assertEquals(testString,  info.getsLongestTrailBonus(longesttrail));
 //            assertEquals(name, new Info(name).getsLongestTrailBonus(longesttrail));
 //            assertEquals(name+" reçoit un bonus de 10 points pour le plus long trajet ().\n" , new Info(name).getsLongestTrailBonus(longesttrail));
@@ -209,7 +209,7 @@ class InfoTest {
         stringBuilder.append(StringsFr.EN_DASH_SEPARATOR);
         stringBuilder.append(longesttrail.station2());
         stringBuilder.append(").\n");
-        System.out.println(str);
+//        System.out.println(str);
 //        assertEquals(str, "reçoit un bonus de 10 points pour le plus long trajet (station1 – station2).");
 //        assertEquals(stringBuilder.toString(), info.getsLongestTrailBonus(longesttrail));
         assertEquals(" – ", StringsFr.EN_DASH_SEPARATOR);
