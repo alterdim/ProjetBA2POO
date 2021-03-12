@@ -35,6 +35,7 @@ public final class StationPartition implements StationConnectivity{
 
         /**Constructeur de StationConnectivityBuilder
          * @param stationCount le nombre de stations qui feront partie de la partition.
+         * @throws IllegalArgumentException si stationCount est strictement négatif (< 0)
          */
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount>=0 );
