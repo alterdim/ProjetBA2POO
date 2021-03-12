@@ -20,7 +20,7 @@ public final class StationPartition implements StationConnectivity{
      */
     @Override
     public boolean connected(Station s1, Station s2) {
-        return Arrays.asList(partition, true).contains(s1.id()) && Arrays.asList(partition, true).contains(s2.id());
+        return (Arrays.asList(partition, true).contains(s1.id()) && Arrays.asList(partition, true).contains(s2.id())) || (s1.id() == s2.id());
     }
 
     private StationPartition(int[] partition) {
