@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Représente un joueur
+ *
  * Créé le 15.03.2021 à 14:04
  *
  * @author Louis Gerard (296782)

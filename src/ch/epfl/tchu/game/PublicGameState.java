@@ -43,7 +43,7 @@ public class PublicGameState {
     /**
      * @return Renvoie le nombre de tickets dans la pioche de tickets.
      */
-    public int ticketCount() {
+    public int ticketsCount() {
         return ticketCount;
     }
 
@@ -93,7 +93,7 @@ public class PublicGameState {
     /**
      * @return Renvoie une liste contenant toutes les routes déjà prises par l'un des joueurs (toutes les routse non disponibles)
      */
-    public List<Route> claimedRoute() {
+    public List<Route> claimedRoutes() {
         List<Route> union = new ArrayList<>();
         for (PublicPlayerState p : playerState.values()) {
             union.addAll(p.routes());
