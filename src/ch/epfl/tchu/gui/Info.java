@@ -210,17 +210,24 @@ public final class Info {
                 presentCards.add(c);
             }
         }
-        Card lastBeforeLast = presentCards.get(presentCards.size()-2); // Permet de prendre l'avant-dernière carte alphabétiquement
-        Card lastCard = presentCards.get(presentCards.size()-1);
-        for (Card c: cards.toSet()) {
-            cardString = String.format("%s%s %s",cardString, cards.countOf(c), cardName(c, cards.countOf(c)));
-            if (c.equals(lastBeforeLast)) {
-                cardString = String.format("%s%s", cardString, AND_SEPARATOR);
-            }
-            else if (!c.equals(lastCard)){
-                cardString = String.format("%s, ", cardString);
+        if (presentCards.size() == 1) {
+            Card uniqueColorCard = presentCards.get(0);
+            cardString = String.format("%s %s", cards.countOf(uniqueColorCard), cardName(uniqueColorCard, cards.countOf(uniqueColorCard)));
+        }
+        else {
+            Card lastBeforeLast = presentCards.get(presentCards.size()-2); // Permet de prendre l'avant-dernière carte alphabétiquement
+            Card lastCard = presentCards.get(presentCards.size()-1);
+            for (Card c: cards.toSet()) {
+                cardString = String.format("%s%s %s",cardString, cards.countOf(c), cardName(c, cards.countOf(c)));
+                if (c.equals(lastBeforeLast)) {
+                    cardString = String.format("%s%s", cardString, AND_SEPARATOR);
+                }
+                else if (!c.equals(lastCard)){
+                    cardString = String.format("%s, ", cardString);
+                }
             }
         }
+
     return cardString;
     }
 
