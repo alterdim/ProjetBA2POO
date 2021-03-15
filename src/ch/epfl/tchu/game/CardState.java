@@ -56,8 +56,7 @@ public final class CardState extends PublicCardState{
         discardList.add(faceUpCard(slot));
 
         List<Card> faceUpCards = new ArrayList<>(faceUpCards());
-        faceUpCards.remove(faceUpCard(slot));
-        faceUpCards.add(drawCards.topCard());
+        faceUpCards.set(slot, drawCards.topCard());  //Replace element in position slot
 
         return new CardState(faceUpCards ,drawCards.withoutTopCard(), discardList.build());
     }

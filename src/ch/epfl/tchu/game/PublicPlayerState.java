@@ -39,7 +39,7 @@ public class PublicPlayerState {
 
         this.ticketCount=ticketCount;
         this.cardCount=cardCount;
-        this.routes=routes;
+        this.routes=List.copyOf(routes);
 
         int car=INITIAL_CAR_COUNT;
         int points=0;
@@ -72,7 +72,7 @@ public class PublicPlayerState {
      * @return les routes dont le joueur s'est emparé, en copie défensive.
      */
     public List<Route> routes(){
-        return Collections.unmodifiableList(routes);
+        return routes;
     }
 
     /**
