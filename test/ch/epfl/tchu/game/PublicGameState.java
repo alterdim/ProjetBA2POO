@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
  */
-public class PublicGameState {
+public final class PublicGameState {
     private final int ticketCount;
     private final PublicCardState cardState;
     private final PlayerId currentPlayerId;
