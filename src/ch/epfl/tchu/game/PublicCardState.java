@@ -29,7 +29,7 @@ public class PublicCardState {
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardSize) {
         Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT);
         Preconditions.checkArgument(deckSize >= 0 && discardSize >= 0);
-        this.faceUpCards = faceUpCards;
+        this.faceUpCards = List.copyOf(faceUpCards);
         this.deckSize = deckSize;
         this.discardSize = discardSize;
 
@@ -46,7 +46,7 @@ public class PublicCardState {
      * @return une copie défensive de la liste des cartes visibles.
      */
     public List<Card> faceUpCards() {
-        return Collections.unmodifiableList(faceUpCards);
+        return faceUpCards;
     }
 
     /**
