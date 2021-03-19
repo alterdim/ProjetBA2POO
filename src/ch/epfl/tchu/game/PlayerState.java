@@ -132,9 +132,9 @@ public final class PlayerState extends PublicPlayerState {
      * @param initialCards         les cartes jouées initialement
      * @param drawnCards           les cartes piochées
      * @return une liste de SortedBags contenant les possibilités de cartes à jouer pour finir la prise d'un tunnel.
+     * @throws IllegalArgumentException si le nombre de carte pas compris entre 1 et 3 (inclus), si ensemble cartes initiales vide ou contient plus de 2 types de cartes différents, l'ensemble des cartes tirées ne contient pas exactement 3 cartes
      */
-    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards,
-                                                         SortedBag<Card> drawnCards) {
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3); //nb de cartes 3>=x>=1
         Preconditions.checkArgument(!initialCards.isEmpty()); // InitialCards vide
         Preconditions.checkArgument(initialCards.toMap().keySet().size() <= 2); // MAX 2 types de cartes
