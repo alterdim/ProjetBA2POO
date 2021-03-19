@@ -77,8 +77,10 @@ public final class StationPartition implements StationConnectivity{
          */
         public StationPartition build() {
             int[] newPartition = new int[flatPartition.length];
+            int a=0;
             for (int i : flatPartition) {
-                newPartition[i] = representative(flatPartition, i);
+                newPartition[a] = representative(flatPartition, i);
+                a++;
             }
             return new StationPartition(newPartition);
         }
