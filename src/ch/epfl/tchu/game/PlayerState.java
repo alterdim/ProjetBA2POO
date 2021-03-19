@@ -149,10 +149,8 @@ public final class PlayerState extends PublicPlayerState {
             possibleCards = builder.build(); //list of cards the player can add to capture the route for good
         }
         builder = new SortedBag.Builder<>(); //clean the builder
-        List<Card> reducedHand = cards.difference(initialCards).toList();
-        if (reducedHand.size() < additionalCardsCount) {
-            return new ArrayList<>();
-        }
+        List<Card> reducedHand = cards.toList();
+
         for (Card c : Card.values()) {
             if (initialCards.contains(c)) {
                 removeMultipleFromList(reducedHand, c, initialCards.countOf(c));
@@ -160,6 +158,9 @@ public final class PlayerState extends PublicPlayerState {
             if (!possibleCards.contains(c)) {
                 removeMultipleFromList(reducedHand, c, initialCards.countOf(c));
             }
+        }
+        if (reducedHand.size()  < additionalCardsCount) {
+            return new ArrayList<>();
         }
         for (Card c : reducedHand) {
             builder.add(c);

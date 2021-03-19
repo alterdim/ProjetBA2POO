@@ -84,7 +84,7 @@ public final class Ticket implements Comparable<Ticket> {
             //ajoute les points du voyage (positif ou négatif)
             points.add(trip.points(connectivity));
         }
-        //Récupère l'élément avec le plus de points dans la liste
+        //Récupère l'élément avec le plus de points dans la list
         return Collections.max(points);
     }
 
