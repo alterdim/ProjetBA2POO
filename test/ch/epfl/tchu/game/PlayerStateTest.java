@@ -419,10 +419,8 @@ public class PlayerStateTest {
     @Test
     void workticketPoints() {
         var map = new TestMap();
-        Station station1 = new Station(1, "station1");
-        Station station2 = new Station(2, "station2");
-        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.ORANGE);
-
+        Route route1 = new Route("rte1", map.LAU, map.BER, 3, Route.Level.OVERGROUND, Color.BLUE);
+        Route route2 = new Route("rte2", map.LAU, map.STG, 3, Route.Level.OVERGROUND, Color.BLUE);
 
         var cardsplayer = new SortedBag.Builder<Card>()
                 .add(Card.ORANGE)
@@ -433,9 +431,9 @@ public class PlayerStateTest {
 
         var tickets = new SortedBag.Builder<Ticket>()
                 .add(map.LAU_BER)//2
-                .add(map.BER_NEIGHBORS)//6, 11, 8, 5
+//                .add(map.BER_NEIGHBORS)//6, 11, 8, 5
                 .add(map.LAU_STG)//13
-                .add(map.FR_NEIGHBORS)//5, 14, 11, 0
+//                .add(map.FR_NEIGHBORS)//5, 14, 11
                 .build();
 
         var cardsUsed = new SortedBag.Builder<Card>()
@@ -446,8 +444,16 @@ public class PlayerStateTest {
 
         var playerState = new PlayerState(tickets, cardsplayer, List.of());
 
-        //-2;-5;-13;-0
-        assertEquals(-20, playerState.ticketPoints());
+        //-2;-5;-13;-5
+        assertEquals(-25, playerState.ticketPoints());
+
+        var playerState2 = new PlayerState(tickets, cardsplayer, List.of(route1));
+        //+2-5-13-5
+        assertEquals(-21, playerState2.ticketPoints());
+        var playerState3 = new PlayerState(tickets, cardsplayer, List.of(route1, route2));
+        //+2-5+13-5
+        assertEquals(5, playerState3.ticketPoints());
+
     }
 
 
