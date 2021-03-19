@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StationPartitionTest {
 
     public final Station PAR = new Station(0, "Paris");
-    public final Station LYO = new Station(1, "Berne");
-    public final Station BOR = new Station(2, "Berne");
-    public final Station MAR = new Station(3, "Berne");
-    public final Station TOU = new Station(4, "Berne");
-    public final Station NIC = new Station(5, "Berne");
-    public final Station BRE = new Station(6, "Berne");
-    public final Station NAN = new Station(7, "Berne");
+    public final Station LYO = new Station(1, "Lyon");
+    public final Station BOR = new Station(2, "Bordeaux");
+    public final Station MAR = new Station(3, "Marseille");
+    public final Station TOU = new Station(4, "Toulouse");
+    public final Station NIC = new Station(5, "Nice");
+    public final Station BRE = new Station(6, "Brest");
+    public final Station NAN = new Station(7, "Nantes");
 
 
     @Test
@@ -42,6 +42,7 @@ public class StationPartitionTest {
 //        System.out.println(Arrays.toString(builder.flatPartition));
 
         builder.connect(MAR, LYO);
+//        System.out.println(Arrays.toString(builder.flatPartition));
 
 
     }
@@ -57,6 +58,7 @@ public class StationPartitionTest {
         builder.connect(BOR,BRE);
 
         builder.connect(MAR, LYO);
+//        System.out.println(Arrays.toString(builder.build().partition));
     }
 
     @Test
@@ -71,6 +73,13 @@ public class StationPartitionTest {
         builder.connect(MAR, LYO);
 
         assertTrue(builder.build().connected(PAR,NIC));
+        assertTrue(builder.build().connected(PAR,BRE));
+        assertTrue(builder.build().connected(NAN,PAR));
+        assertTrue(builder.build().connected(LYO,MAR));
+
+        assertFalse(builder.build().connected(TOU, PAR));
+        assertFalse(builder.build().connected(LYO, TOU));
+        assertFalse(builder.build().connected(LYO, PAR));
     }
 
 }

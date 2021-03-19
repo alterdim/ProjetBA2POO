@@ -339,7 +339,7 @@ public class PlayerStateTest {
                 .add(Card.LOCOMOTIVE)
                 .build();
 
-        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
+//        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
     }
 
 
@@ -376,7 +376,7 @@ public class PlayerStateTest {
                 .add(Card.LOCOMOTIVE)
                 .build();
 
-        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
+//        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
     }
 
     @Test
@@ -415,7 +415,7 @@ public class PlayerStateTest {
                 .add(Card.LOCOMOTIVE)
                 .build();
 
-        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
+//        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
     }
 
 
@@ -471,9 +471,9 @@ public class PlayerStateTest {
 
         var tickets = new SortedBag.Builder<Ticket>()
                 .add(map.LAU_BER)//2
-//                .add(map.BER_NEIGHBORS)//6, 11, 8, 5
+                .add(map.BER_NEIGHBORS)//6, 11, 8, 5
                 .add(map.LAU_STG)//13
-//                .add(map.FR_NEIGHBORS)//5, 14, 11
+                .add(map.FR_NEIGHBORS)//5, 14, 11
                 .build();
 
         var cardsUsed = new SortedBag.Builder<Card>()
