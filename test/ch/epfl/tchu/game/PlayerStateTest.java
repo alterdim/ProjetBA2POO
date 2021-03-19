@@ -379,6 +379,46 @@ public class PlayerStateTest {
         System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
     }
 
+    @Test
+    void workPossibleAdditionalCards3(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 2, Route.Level.UNDERGROUND, null);
+
+
+        var cardsplayer = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .add(Card.RED)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.DE_IT)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cardsplayer, List.of());
+
+
+        var iniCards = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        var drawnCards = new SortedBag.Builder<Card>()
+                .add(Card.YELLOW)
+                .add(Card.BLUE)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
+    }
+
+
 
     @Test
     void workWithClaimedRoute(){
@@ -491,6 +531,7 @@ public class PlayerStateTest {
         public final Ticket LAU_BER = new Ticket(LAU, BER, 2);
         public final Ticket BER_NEIGHBORS = ticketToNeighbors(List.of(BER), 6, 11, 8, 5);
         public final Ticket FR_NEIGHBORS = ticketToNeighbors(FR, 5, 14, 11, 0);
+        public final Ticket DE_IT = new Ticket(DE1, IT1, 4);
 
         private Ticket ticketToNeighbors(List<Station> from, int de, int at, int it, int fr) {
             var trips = new ArrayList<Trip>();

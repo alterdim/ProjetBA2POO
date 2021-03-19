@@ -20,12 +20,27 @@ public final class StationPartition implements StationConnectivity{
      */
     @Override
     public boolean connected(Station s1, Station s2) {
-        return (Arrays.asList(partition, true).contains(s1.id()) && Arrays.asList(partition, true).contains(s2.id())) || (s1.id() == s2.id());
+        if (s1.id() > partition.length || s2.id() > partition.length) {
+            return s1.id() == s2.id();
+        }
+        return (representative(partition, s1.id()) == representative(partition, s2.id()));
     }
 
     private StationPartition(int[] partition) {
         this.partition = partition;
     }
+
+    private static int representative(int[] list, int stationId) {
+        if (list[stationId] == stationId) {
+            return stationId;
+        }
+        else {
+            return representative(list, list[stationId]);
+        }
+
+    }
+
+
 
     /**
      * Builder de StationPartition. Utilise une structure de disjoint set pour relier les stations connectées entre elles.
@@ -51,8 +66,8 @@ public final class StationPartition implements StationConnectivity{
          * @return le builder, dont la partition a été mise à jour.
          */
         public Builder connect(Station s1, Station s2) {
-            int rep1 = this.representative(s1.id());
-            int rep2 = this.representative(s2.id());
+            int rep1 = representative(flatPartition, s1.id());
+            int rep2 = representative(flatPartition, s2.id());
             flatPartition[rep1] = rep2;
             return this;
         }
@@ -61,21 +76,16 @@ public final class StationPartition implements StationConnectivity{
          * @return la StationPartition.
          */
         public StationPartition build() {
+            int[] newPartition = new int[flatPartition.length];
             for (int i : flatPartition) {
-                flatPartition[i] = representative(i);
+                newPartition[i] = representative(flatPartition, i);
             }
-            return new StationPartition(flatPartition);
+            return new StationPartition(newPartition);
         }
 
-        private int representative(int stationId) {
-            if (flatPartition[stationId] == stationId) {
-                return stationId;
-            }
-            else {
-                return representative(flatPartition[stationId]);
-            }
 
-        }
+
+
     }
 
 
