@@ -42,7 +42,6 @@ public class StationPartitionTest {
 //        System.out.println(Arrays.toString(builder.flatPartition));
 
         builder.connect(MAR, LYO);
-        System.out.println(Arrays.toString(builder.flatPartition));
 
 
     }
@@ -58,7 +57,6 @@ public class StationPartitionTest {
         builder.connect(BOR,BRE);
 
         builder.connect(MAR, LYO);
-        System.out.println(Arrays.toString(builder.build().partition));
     }
 
     @Test
