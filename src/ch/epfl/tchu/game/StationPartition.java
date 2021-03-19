@@ -20,7 +20,7 @@ public final class StationPartition implements StationConnectivity{
      */
     @Override
     public boolean connected(Station s1, Station s2) {
-        if (s1.id() > partition.length || s2.id() > partition.length) {
+        if (s1.id() >= partition.length || s2.id() >= partition.length) {
             return s1.id() == s2.id();
         }
         return (representative(partition, s1.id()) == representative(partition, s2.id()));
