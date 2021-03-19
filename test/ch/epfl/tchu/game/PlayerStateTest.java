@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class PlayerStateTest {
     @Test
-    void WorkwithAddedTickets(){
+    void workWithAddedTickets(){
         var map = new TestMap();
         var cards = new SortedBag.Builder<Card>()
                 .add(Card.BLACK)
@@ -36,7 +36,7 @@ public class PlayerStateTest {
     }
 
     @Test
-    void WorkwithAddedCard(){
+    void workWithAddedCard(){
         var map = new TestMap();
         var cards = new SortedBag.Builder<Card>()
                 .add(Card.BLACK)
@@ -56,14 +56,13 @@ public class PlayerStateTest {
     }
 
     @Test
-    void WorkwithAddedCards(){
+    void workWithAddedCards(){
         var map = new TestMap();
         var cards = new SortedBag.Builder<Card>()
                 .add(Card.BLACK)
                 .add(Card.BLUE)
                 .add(Card.RED)
                 .add(Card.LOCOMOTIVE)
-
                 .build();
         var playerState = PlayerState.initial(cards);
 
@@ -80,6 +79,383 @@ public class PlayerStateTest {
 
         assertEquals(cards3, playerState.withAddedCards(cards2).cards());
     }
+
+    @Test
+    void workCanClaimRoute(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.BLACK);
+
+
+        var cards = new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cards, List.of());
+        assertTrue(playerState.canClaimRoute(route));
+    }
+
+    @Test
+    void workOvergroundPossibleClaimCards(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.BLACK);
+
+
+        var cards = new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+        var playerState = new  PlayerState(tickets, cards, List.of());
+
+        assertEquals(List.of(cards) ,playerState.possibleClaimCards(route));
+    }
+
+    @Test
+    void workUndergroundPossibleClaimCards(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.UNDERGROUND, Color.BLACK);
+
+
+        var cards = new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.LOCOMOTIVE)
+                .add(Card.LOCOMOTIVE)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+        var playerState = new  PlayerState(tickets, cards, List.of());
+
+
+
+        assertEquals(List.of(new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .build(), new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.LOCOMOTIVE)
+                .build(),new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.LOCOMOTIVE)
+                .add(Card.LOCOMOTIVE)
+                .build(),new SortedBag.Builder<Card>()
+                .add(Card.LOCOMOTIVE)
+                .add(Card.LOCOMOTIVE)
+                .add(Card.LOCOMOTIVE)
+                .build()) ,playerState.possibleClaimCards(route));
+    }
+
+    @Test
+    void failNumberPossibleAdditionalCards(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.BLACK);
+
+
+        var cards = new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cards, List.of());
+
+
+        var iniCards = new SortedBag.Builder<Card>()
+                .add(Card.BLUE)
+                .add(Card.YELLOW)
+                .add(Card.YELLOW)
+                .build();
+
+        var drawnCards = new SortedBag.Builder<Card>()
+                .add(Card.BLUE)
+                .add(Card.GREEN)
+                .add(Card.ORANGE)
+                .build();
+
+        assertThrows(IllegalArgumentException.class, ()->
+                playerState.possibleAdditionalCards(0, iniCards, drawnCards)
+        );
+        assertThrows(IllegalArgumentException.class, ()->
+                playerState.possibleAdditionalCards(4, iniCards, drawnCards)
+        );
+    }
+
+    @Test
+    void failIniPossibleAdditionalCards(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.BLACK);
+
+
+        var cards = new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cards, List.of());
+
+
+        var iniCards = new SortedBag.Builder<Card>()
+                .add(Card.BLUE)
+                .add(Card.YELLOW)
+                .add(Card.GREEN)
+                .build();
+
+        var drawnCards = new SortedBag.Builder<Card>()
+                .add(Card.BLUE)
+                .add(Card.GREEN)
+                .add(Card.ORANGE)
+                .build();
+
+        assertThrows(IllegalArgumentException.class, ()->
+                playerState.possibleAdditionalCards(1, new SortedBag.Builder<Card>().build(), drawnCards)
+        );
+        assertThrows(IllegalArgumentException.class, ()->
+                playerState.possibleAdditionalCards(3, iniCards, drawnCards)
+        );
+    }
+
+    @Test
+    void failCardNumPossibleAdditionalCards(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.BLACK);
+
+
+        var cards = new SortedBag.Builder<Card>()
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .add(Card.BLACK)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cards, List.of());
+
+
+        var iniCards = new SortedBag.Builder<Card>()
+                .add(Card.BLUE)
+                .add(Card.YELLOW)
+                .add(Card.YELLOW)
+                .build();
+
+        var drawnCards = new SortedBag.Builder<Card>()
+                .add(Card.BLUE)
+                .add(Card.GREEN)
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .build();
+
+        assertThrows(IllegalArgumentException.class, ()->
+                playerState.possibleAdditionalCards(1, iniCards, drawnCards)
+        );
+    }
+
+    @Test
+    void workPossibleAdditionalCards(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.BLUE);
+
+
+        var cardsplayer = new SortedBag.Builder<Card>()
+                //TODO si un seul élément dans la main du joueur erreur si besoin de 1 nouvel carte
+                .add(Card.ORANGE)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cardsplayer, List.of());
+
+
+        var iniCards = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .build();
+
+        var drawnCards = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.GREEN)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
+    }
+
+
+    @Test
+    void workPossibleAdditionalCards2(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.BLUE);
+
+
+        var cardsplayer = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cardsplayer, List.of());
+
+
+        var iniCards = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .build();
+
+        var drawnCards = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.GREEN)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        System.out.println(playerState.possibleAdditionalCards(iniCards.size(), iniCards, drawnCards));
+    }
+
+
+    @Test
+    void workWithClaimedRoute(){
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.ORANGE);
+
+
+        var cardsplayer = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)
+                .add(map.BER_NEIGHBORS)
+                .add(map.LAU_STG)
+                .add(map.FR_NEIGHBORS)
+                .build();
+
+        var cardsUsed = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .build();
+
+        var playerState = new  PlayerState(tickets, cardsplayer, List.of());
+
+        playerState = playerState.withClaimedRoute(route, cardsUsed);
+
+        assertEquals(new SortedBag.Builder<Card>().add(Card.LOCOMOTIVE).build(), playerState.cards());
+        assertEquals(List.of(route), playerState.routes());
+    }
+
+    @Test
+    void workticketPoints() {
+        var map = new TestMap();
+        Station station1 = new Station(1, "station1");
+        Station station2 = new Station(2, "station2");
+        Route route = new Route("rte", station1, station2, 3, Route.Level.OVERGROUND, Color.ORANGE);
+
+
+        var cardsplayer = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .add(Card.LOCOMOTIVE)
+                .build();
+
+        var tickets = new SortedBag.Builder<Ticket>()
+                .add(map.LAU_BER)//2
+                .add(map.BER_NEIGHBORS)//6, 11, 8, 5
+                .add(map.LAU_STG)//13
+                .add(map.FR_NEIGHBORS)//5, 14, 11, 0
+                .build();
+
+        var cardsUsed = new SortedBag.Builder<Card>()
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .add(Card.ORANGE)
+                .build();
+
+        var playerState = new PlayerState(tickets, cardsplayer, List.of());
+
+        //-2;-5;-13;-0
+        assertEquals(-20, playerState.ticketPoints());
+    }
+
+
+
+
+
+
+    //TODO end of tests
 
     private static final class TestMap {
         // Stations - cities
