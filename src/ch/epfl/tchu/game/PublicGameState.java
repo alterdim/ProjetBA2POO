@@ -26,16 +26,12 @@ public class PublicGameState {
      * @param currentPlayerId L'identification du joueur en cours.
      * @param playerState La partie publique de l'état des joueurs.
      * @param lastPlayer Le dernier joueur.
-     * @throws IllegalArgumentException  si la taille de la pioche est strictement négative ou si playerState ne contient pas exactement deux paires clef/valeur
-     * @throws NullPointerException si l'un des autres arguments (lastPlayer excepté) est nul
      */
     public PublicGameState(int ticketCount, PublicCardState cardState,
                            PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
-        Preconditions.checkArgument(ticketCount >= 0);
-        Preconditions.checkArgument(playerState.size() == PlayerId.COUNT);
-        Objects.requireNonNull(cardState);
+        Preconditions.checkArgument(cardState.deckSize() >= 0);
+        Preconditions.checkArgument(playerState.size() == 2);
         Objects.requireNonNull(currentPlayerId);
-        Objects.requireNonNull(playerState);
         this.ticketCount = ticketCount;
         this.cardState = cardState;
         this.currentPlayerId = currentPlayerId;
@@ -55,7 +51,7 @@ public class PublicGameState {
      * @return Renvoie vrai si il y a plus d'un ticket dans la pioche des tickets.
      */
     public boolean canDrawTickets() {
-        return ticketCount > 0;
+        return ticketCount != 0;
     }
 
     /**
@@ -71,7 +67,6 @@ public class PublicGameState {
     public boolean canDrawCards() {
         return (cardState.totalSize() >= 5);
     }
-    //TODO replace 5 by a constant
 
     /**
      * @return Renvoie l'identité du joueur actuel.
