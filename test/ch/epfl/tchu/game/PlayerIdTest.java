@@ -14,6 +14,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Célien Muller (310777)
  */
 class PlayerIdTest {
+    //Given test
+    @Test
+    void playerIdAllIsDefinedCorrectly() {
+        assertEquals(List.of(PlayerId.PLAYER_1, PlayerId.PLAYER_2), PlayerId.ALL);
+    }
+
+    @Test
+    void playerIdNextWorks() {
+        assertEquals(PlayerId.PLAYER_2, PlayerId.PLAYER_1.next());
+        assertEquals(PlayerId.PLAYER_1, PlayerId.PLAYER_2.next());
+    }
+
+    //Personal test
     @Test
     void workOnALL(){
         assertEquals(List.of(PLAYER_1, PLAYER_2), ALL);
