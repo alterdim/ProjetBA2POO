@@ -43,7 +43,7 @@ public class PublicCardState {
     }
 
     /**
-     * @return une copie défensive de la liste des cartes visibles.
+     * @return la liste des cartes visibles.
      */
     public List<Card> faceUpCards() {
         return faceUpCards;
