@@ -95,7 +95,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return vrai s'il peut s'en emparer
      */
     public boolean canClaimRoute(Route route) {
-        if (cards.size() < route.length()) {
+        if (carCount() < route.length()) {
             return false;
         }
         List<SortedBag<Card>> possibleClaimCards = route.possibleClaimCards();
@@ -156,7 +156,7 @@ public final class PlayerState extends PublicPlayerState {
                 removeMultipleFromList(reducedHand, c, initialCards.countOf(c));
             }
             if (!possibleCards.contains(c)) {
-                removeMultipleFromList(reducedHand, c, initialCards.countOf(c));
+                reducedHand.removeAll(Collections.singletonList(c));
             }
         }
         if (reducedHand.size()  < additionalCardsCount) {
@@ -165,6 +165,10 @@ public final class PlayerState extends PublicPlayerState {
         for (Card c : reducedHand) {
             builder.add(c);
         }
+        if (cards.contains(Card.LOCOMOTIVE)) {
+            builder.add(additionalCardsCount, Card.LOCOMOTIVE);
+        }
+
         options = new ArrayList<>(builder.build().subsetsOfSize(additionalCardsCount));
         options.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE))); // tri par nombre de locomotives
         return options;
