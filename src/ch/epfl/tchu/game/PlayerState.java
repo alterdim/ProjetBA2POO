@@ -40,7 +40,7 @@ public final class PlayerState extends PublicPlayerState {
      * @throws IllegalArgumentException si le nombre de cartes initiales ne vaut pas 4
      */
     public static PlayerState initial(SortedBag<Card> initialCards) {
-        Preconditions.checkArgument(initialCards.size() == 4);
+        Preconditions.checkArgument(initialCards.size() == Constants.INITIAL_CARDS_COUNT);
         return new PlayerState(new SortedBag.Builder<Ticket>().build(), initialCards, List.of());
     }
 
@@ -135,7 +135,7 @@ public final class PlayerState extends PublicPlayerState {
      * @throws IllegalArgumentException si le nombre de carte pas compris entre 1 et 3 (inclus), si ensemble cartes initiales vide ou contient plus de 2 types de cartes différents, l'ensemble des cartes tirées ne contient pas exactement 3 cartes
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
-        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3); //nb de cartes 3>=x>=1
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS); //nb de cartes 3>=x>=1
         Preconditions.checkArgument(!initialCards.isEmpty()); // InitialCards vide
         Preconditions.checkArgument(initialCards.toMap().keySet().size() <= 2); // MAX 2 types de cartes
         Preconditions.checkArgument(drawnCards.size() == 3); //3 éléments dans drawncards
