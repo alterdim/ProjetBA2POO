@@ -26,12 +26,16 @@ public class PublicGameState {
      * @param currentPlayerId L'identification du joueur en cours.
      * @param playerState La partie publique de l'état des joueurs.
      * @param lastPlayer Le dernier joueur.
+     * @throws IllegalArgumentException  si la taille de la pioche est strictement négative ou si playerState ne contient pas exactement deux paires clef/valeur
+     * @throws NullPointerException si l'un des autres arguments (lastPlayer excepté) est nul
      */
     public PublicGameState(int ticketCount, PublicCardState cardState,
                            PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
-        Preconditions.checkArgument(cardState.deckSize() >= 0);
-        Preconditions.checkArgument(playerState.size() == 2);
+        Preconditions.checkArgument(ticketCount >= 0);
+        Preconditions.checkArgument(playerState.size() == PlayerId.COUNT);
+        Objects.requireNonNull(cardState);
         Objects.requireNonNull(currentPlayerId);
+        Objects.requireNonNull(playerState);
         this.ticketCount = ticketCount;
         this.cardState = cardState;
         this.currentPlayerId = currentPlayerId;
@@ -91,7 +95,7 @@ public class PublicGameState {
     }
 
     /**
-     * @return Renvoie une liste contenant toutes les routes déjà prises par l'un des joueurs (toutes les routse non disponibles)
+     * @return Renvoie une liste contenant toutes les routes déjà prises par l'un des joueurs (toutes les routes non disponibles)
      */
     public List<Route> claimedRoutes() {
         List<Route> union = new ArrayList<>();
