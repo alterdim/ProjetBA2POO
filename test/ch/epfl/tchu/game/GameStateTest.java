@@ -273,9 +273,9 @@ class GameStateTest{
         SortedBag<Card> cardPlayer = SortedBag.of(ini.playerState(ini.currentPlayerId()).cards()).union(SortedBag.of(c));
 
         Card newCard=ini.topCard();
-        System.out.println(ini.cardState().faceUpCards());
+//        System.out.println(ini.cardState().faceUpCards());
         ini = ini.withDrawnFaceUpCard(3);
-        System.out.println(ini.cardState().faceUpCards());
+//        System.out.println(ini.cardState().faceUpCards());
 
         var faceUpCards = new ArrayList<>(ini.cardState().faceUpCards());
         faceUpCards.set(3, newCard);
