@@ -3,7 +3,6 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.sql.PreparedStatement;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
