@@ -6,396 +6,365 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Créé le 22.03.2021 à 08:48
+ * Créé le 22.03.2021 à 14:39
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
  */
-class PublicGameStateTest {
+class GameStateTest{
     @Test
-    void failWithPublicGameStateNegativeDeckSize(){
+    void workInitial(){
 
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(-1, publicC, PlayerId.PLAYER_1, map, null);
-        });
+        var chMap= new  ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+        .add(chMap.BER_C)
+        .add(chMap.AT_C)
+        .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
     }
 
     @Test
-    void failWithPublicGameStateLessPair(){
+    void workInitialCardNumber(){
 
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
+        var chMap= new  ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
 
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
-        });
+//        assertEquals(Constants.ALL_CARDS.size(), ini.);
     }
 
     @Test
-    void failWithPublicGameStateMorePair(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var play1 = new PublicPlayerState(0, 0, List.of());
-        map.put(PlayerId.PLAYER_1, play1);
-        var play2 = new PublicPlayerState(0, 0, List.of());
-        map.put(PlayerId.PLAYER_2, play2);
-        var play3 = new PublicPlayerState(0, 0, List.of());
-        map.put(PlayerId.PLAYER_1, play1);
-
-        /*System.out.println(map.size());
-        System.out.println(map.toString());*/
-
-        //TODO useless check?
-        /*assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
-        });*/
+    void playerState(){
+        var chMap= new  ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+//        ini.playerState(PlayerId.PLAYER_1)
     }
 
     @Test
-    void failWithPublicGameStateZeroPair(){
+    void currentPlayerState(){
+        var chMap= new  ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
 
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
-        });
+        assertEquals(ini.playerState(ini.currentPlayerId()), ini.currentPlayerState());
     }
 
     @Test
-    void failWithPublicGameStateNullElement(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        //with ticketCount null error because int cannot be null (Integer can)
-
-        assertThrows(NullPointerException.class, () -> {
-            new PublicGameState(0, null, PlayerId.PLAYER_1, map, null);
-        });
-        assertThrows(NullPointerException.class, () -> {
-            new PublicGameState(0, publicC, null, map, null);
-        });
-        assertThrows(NullPointerException.class, () -> {
-            new PublicGameState(0, publicC, PlayerId.PLAYER_1, null, null);
-        });
-    }
-
-    @Test
-    void workWithPublicGameState(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
-        new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, PlayerId.PLAYER_2);
-    }
-
-
-    @Test
-    void workTicketsCount(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
-
-    }
-
-    @Test
-    void workTicketCount(){
-        int tickets=10;
-
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-       var publicGameState =  new PublicGameState(tickets, publicC, PlayerId.PLAYER_1, map, null);
-
-       assertEquals(tickets, publicGameState.ticketsCount());
-    }
-
-    @Test
-    void workCanDrawTickets(){
-        int tickets=10;
-
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(tickets, publicC, PlayerId.PLAYER_1, map, null);
-
-        assertTrue(publicGameState.canDrawTickets());
-        var publicGameState2 =  new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
-        assertFalse(publicGameState2.canDrawTickets());
-    }
-
-    @Test
-    void workCardState(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, null);
-        assertEquals(publicC ,publicGameState.cardState());
-    }
-
-
-    @Test
-    void workCanDrawCards(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 1,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, null);
-        assertTrue(publicGameState.canDrawCards());
-
-        //TODO is it possible to have less than 5 card?
-    }
-
-    @Test
-    void workCurrentPlayerId(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, null);
-        assertEquals(PlayerId.PLAYER_1 ,publicGameState.currentPlayerId());
-
-        var publicGameState2 =  new PublicGameState(10, publicC, PlayerId.PLAYER_2, map, null);
-        assertEquals(PlayerId.PLAYER_2 ,publicGameState2.currentPlayerId());
-    }
-
-    @Test
-    void workPlayerState(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var play1 = new PublicPlayerState(0, 0, List.of());
-        map.put(PlayerId.PLAYER_1, play1);
-        var play2 = new PublicPlayerState(0, 0, List.of());
-        map.put(PlayerId.PLAYER_2, play2);
-
-        var publicGameState =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, null);
-        assertEquals(play1,publicGameState.playerState(PlayerId.PLAYER_1));
-        assertEquals(play2,publicGameState.playerState(PlayerId.PLAYER_2));
-    }
-
-    @Test
-    void workCurrentPlayerState(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var play1 = new PublicPlayerState(0, 0, List.of());
-        map.put(PlayerId.PLAYER_1, play1);
-        var play2 = new PublicPlayerState(0, 0, List.of());
-        map.put(PlayerId.PLAYER_2, play2);
-
-        var publicGameState =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, null);
-        var publicGameState2 =  new PublicGameState(10, publicC, PlayerId.PLAYER_2, map, null);
-        assertEquals(play1,publicGameState.currentPlayerState());
-        assertEquals(play2,publicGameState2.currentPlayerState());
-    }
-
-    @Test
-    void workClaimedRoutes(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
+    void failTopTickets() {
         var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
 
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var rt1=List.of(chMap.BAD_BAL_1, chMap.BEL_LUG_2, chMap.AT1_STG_1, chMap.BEL_LOC_1);
-        var rtAll= new ArrayList<>(rt1);
-        var play1 = new PublicPlayerState(0, 0, rt1);
-        map.put(PlayerId.PLAYER_1, play1);
-        var rt2=List.of(chMap.BAD_ZUR_1, chMap.BRI_INT_1, chMap.AT2_VAD_1);
-        var play2 = new PublicPlayerState(0, 0, rt2);
-        map.put(PlayerId.PLAYER_2, play2);
+        assertThrows(IllegalArgumentException.class, () -> {
+            ini.topTickets(bag.size()+1);
+        });
 
-       rtAll.addAll(rt2);
-
-        var publicGameState =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, null);
-        assertEquals(rtAll,publicGameState.claimedRoutes());
+        assertThrows(IllegalArgumentException.class, () -> {
+            ini.topTickets(-1);
+        });
     }
 
     @Test
-    void workLastPlayer(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
+    void workTopTickets() {
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
 
-        var publicC = new PublicCardState(cards, 1,0);
+        SortedBag<Ticket> bag2 = new SortedBag.Builder<Ticket>().build();
 
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PlayerId.PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PlayerId.PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, null);
-        assertEquals(null, publicGameState.lastPlayer());
-
-        var publicGameState2 =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, PlayerId.PLAYER_2);
-        assertEquals(PlayerId.PLAYER_2, publicGameState2.lastPlayer());
-        var publicGameState3 =  new PublicGameState(10, publicC, PlayerId.PLAYER_1, map, PlayerId.PLAYER_1);
-        assertEquals(PlayerId.PLAYER_1, publicGameState3.lastPlayer());
+        assertEquals(bag, ini.topTickets(bag.size()));
+        assertEquals(bag2, ini.topTickets(0));
     }
+
+    @Test
+    void failWithoutTopTickets() {
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ini.withoutTopTickets(ini.ticketsCount()+1);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            ini.withoutTopTickets(-1);
+        });
+    }
+
+    @Test
+    void workWithoutTopTickets() {
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        SortedBag<Ticket> bag2 = new SortedBag.Builder<Ticket>().build();
+        assertEquals(bag2, ini.withoutTopTickets(bag.size()).topTickets(0));
+    }
+
+    @Test
+    void workTopCard() {
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        assertEquals(Card.VIOLET, ini.topCard());
+
+    }
+
+    @Test
+    void workWithoutTopCard() {
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        SortedBag<Card> bag2 = new SortedBag.Builder<Card>().build();
+
+//        System.out.println(ini.withoutTopCard());
+    }
+
+
+    @Test
+    void withMoreDiscardedCards(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        SortedBag<Card> cards = new SortedBag.Builder<Card>().add(Card.BLUE).add(Card.BLACK).build();
+
+        assertEquals(cards.size(), ini.withMoreDiscardedCards(cards).cardState().discardsSize());
+    }
+
+    @Test
+    void withCardsDeckRecreatedIfNeeded(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        var cards = new SortedBag.Builder<Card>();
+        var s= ini.cardState().deckSize();
+
+        for (int i=0; i<s; i++){
+            cards.add(ini.topCard());
+            ini = ini.withoutTopCard();
+        }
+
+        ini=ini.withMoreDiscardedCards(cards.build());
+        assertTrue(ini.cardState().isDeckEmpty());
+        assertEquals(0, ini.cardState().deckSize());
+        ini=ini.withCardsDeckRecreatedIfNeeded(TestRandomizer.newRandom());
+        assertEquals(s, ini.cardState().deckSize());
+        assertFalse(ini.cardState().isDeckEmpty());
+    }
+
+    @Test
+    void withInitiallyChosenTickets(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = SortedBag.of(chMap.ALL_TICKETS);
+        GameState ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        assertEquals(0,ini.playerState(PlayerId.PLAYER_1).tickets().size());
+
+        SortedBag<Ticket> ticketsChosen = new SortedBag.Builder<Ticket>()
+                .add(chMap.OLT_SCE)
+                .add(chMap.AT_C)
+                .add(chMap.BER_C).build();
+//        System.out.println(ini.playerState(PlayerId.PLAYER_1).tickets().toList());
+        ini=ini.withInitiallyChosenTickets(PlayerId.PLAYER_1, ticketsChosen);
+//        System.out.println(ini.playerState(PlayerId.PLAYER_1).tickets().toList());
+
+        assertEquals(ticketsChosen.size(),ini.playerState(PlayerId.PLAYER_1).tickets().size());
+
+        GameState finalIni = ini;
+        assertThrows(IllegalArgumentException.class, () -> {
+            finalIni.withInitiallyChosenTickets(PlayerId.PLAYER_1, SortedBag.of());
+        });
+    }
+
+    @Test
+    void withChosenAdditionalTickets(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> tickets = SortedBag.of(chMap.ALL_TICKETS);
+        SortedBag<Ticket> ticketsChosen = new SortedBag.Builder<Ticket>()
+                .add(chMap.OLT_SCE)
+                .add(chMap.AT_C)
+                .add(chMap.BER_C).build();
+        var ini = GameState.initial(tickets, TestRandomizer.newRandom());
+
+        GameState finalIni = ini;
+        assertThrows(IllegalArgumentException.class, ()->{
+            finalIni.withChosenAdditionalTickets(finalIni.topTickets(3), SortedBag.of(new Ticket(chMap.LUC, chMap.AT1, 6)));
+        });
+
+        SortedBag<Ticket> ticketTop = new SortedBag.Builder<Ticket>()
+                .add(ticketsChosen)
+                .add(chMap.BAL_BER)
+                .add(chMap.BAL_STG).build();
+
+        ini = ini.withChosenAdditionalTickets(ticketTop, ticketsChosen);
+        assertEquals(ticketsChosen, ini.playerState(ini.currentPlayerId()).tickets());
+        assertEquals(tickets.size()-ticketTop.size(), ini.ticketsCount());
+        ini = ini.withChosenAdditionalTickets(SortedBag.of(), SortedBag.of());
+    }
+
+
+    @Test
+    void withDrawnFaceUpCard(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = new SortedBag.Builder<Ticket>()
+                .add(chMap.BER_C)
+                .add(chMap.AT_C)
+                .add(chMap.BAL_BER).build();
+        var ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        var cards = new SortedBag.Builder<Card>();
+        var s= ini.cardState().deckSize();
+
+        for (int i=0; i<s; i++){
+            cards.add(ini.topCard());
+            ini = ini.withoutTopCard();
+        }
+        ini=ini.withMoreDiscardedCards(cards.build());
+
+
+        GameState finalIni = ini;
+        assertThrows(IllegalArgumentException.class, ()->{
+            finalIni.withDrawnFaceUpCard(2);
+        });
+
+        ini = ini.withCardsDeckRecreatedIfNeeded(TestRandomizer.newRandom());
+        Card c = ini.cardState().faceUpCard(3);
+        SortedBag<Card> cardPlayer = SortedBag.of(ini.playerState(ini.currentPlayerId()).cards()).union(SortedBag.of(c));
+
+        Card newCard=ini.topCard();
+        System.out.println(ini.cardState().faceUpCards());
+        ini = ini.withDrawnFaceUpCard(3);
+        System.out.println(ini.cardState().faceUpCards());
+
+        var faceUpCards = new ArrayList<>(ini.cardState().faceUpCards());
+        faceUpCards.set(3, newCard);
+        assertEquals(cardPlayer ,ini.playerState(ini.currentPlayerId()).cards());
+        assertEquals(faceUpCards, ini.cardState().faceUpCards());
+    }
+
+    @Test
+    void withClaimedRoute(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = SortedBag.of(chMap.ALL_TICKETS);
+        GameState ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        ini=ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(List.of(Card.BLUE, Card.BLACK)));
+    }
+
+    @Test
+    void lastTurnBegins(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = SortedBag.of(chMap.ALL_TICKETS);
+        GameState ini = GameState.initial(bag, TestRandomizer.newRandom());
+
+        assertFalse(ini.lastTurnBegins());
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+
+        assertTrue(ini.lastTurnBegins());
+        ini=ini.forNextTurn();
+        assertFalse(ini.lastTurnBegins());
+    }
+
+    @Test
+    void forNextTurn(){
+        var chMap = new ChMap();
+        SortedBag<Ticket> bag = SortedBag.of(chMap.ALL_TICKETS);
+        GameState ini = GameState.initial(bag, TestRandomizer.newRandom());
+        ini=ini.forNextTurn();
+        assertFalse(ini.lastTurnBegins());
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+        ini = ini.withClaimedRoute(chMap.AT1_STG_1, SortedBag.of(Card.LOCOMOTIVE));
+
+        assertTrue(ini.lastTurnBegins());
+        ini=ini.forNextTurn();
+        assertFalse(ini.lastTurnBegins());
+    }
+
+
 
 
 

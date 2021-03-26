@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
+import java.sql.PreparedStatement;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
@@ -42,7 +43,7 @@ public final class GameState extends PublicGameState {
     /**
      * @param tickets Les tickets à mettre en jeu.
      * @param rng Le générateur de nombre aléatoires
-     * @return Retourne un gamestate initial pour les débuts de partie. Le premier joueur est déjà choisi au hasard et
+     * @return Retourne un gameState initial pour les débuts de partie. Le premier joueur est déjà choisi au hasard et
      * les cartes distribuées.
      */
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
@@ -52,10 +53,10 @@ public final class GameState extends PublicGameState {
         }
         Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
         Deck<Card> cardDeck = Deck.of(Constants.ALL_CARDS, rng);
-        SortedBag<Card> initialCardsPlayer1 = cardDeck.topCards(4);
-        cardDeck = cardDeck.withoutTopCards(4);
-        SortedBag<Card> initialCardsPlayer2 = cardDeck.topCards(4);
-        cardDeck = cardDeck.withoutTopCards(4);
+        SortedBag<Card> initialCardsPlayer1 = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
+        cardDeck = cardDeck.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
+        SortedBag<Card> initialCardsPlayer2 = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
+        cardDeck = cardDeck.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
         Map<PlayerId, PlayerState> playerStateMap = new EnumMap<>(PlayerId.class);
         playerStateMap.put(PlayerId.PLAYER_1, PlayerState.initial(initialCardsPlayer1));
         playerStateMap.put(PlayerId.PLAYER_2, PlayerState.initial(initialCardsPlayer2));
@@ -76,7 +77,7 @@ public final class GameState extends PublicGameState {
 
     /**
      * @param playerId L'identité du joueur.
-     * @return Retourne la TOTALITE du playerstate et pas seulement la partie publique !!
+     * @return Retourne la TOTALITÉ du playerState et pas seulement la partie publique !!
      */
     @Override
     public PlayerState playerState(PlayerId playerId) {
@@ -84,7 +85,7 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * @return Retourne la TOTALITE du PlayerState du joueur en cours, pas seulement la partie publique !!
+     * @return Retourne la TOTALITÉ du PlayerState du joueur en cours, pas seulement la partie publique !!
      */
     @Override
     public PlayerState currentPlayerState() {
@@ -94,7 +95,7 @@ public final class GameState extends PublicGameState {
     /**
      * @throws IllegalArgumentException si count n'est pas compris entre zéro et la taille du deck de tickets.
      * @param count le nombre de tickets à "regarder".
-     * @return Renvoie un sortedbag contenant les count tickets du haut de la pioche.
+     * @return Renvoie un sortedBag contenant les count tickets du haut de la pioche.
      */
     public SortedBag<Ticket> topTickets(int count) {
         Preconditions.checkArgument(count >= 0 && count <= ticketDeck.size());
@@ -122,7 +123,7 @@ public final class GameState extends PublicGameState {
 
     /**
      * @throws IllegalArgumentException si la pioche est vide.
-     * @return Un gamestate identique sans la carte du dessus de la pioche.
+     * @return Un gameState identique sans la carte du dessus de la pioche.
      */
     public GameState withoutTopCard() {
         Preconditions.checkArgument(!cardState.isDeckEmpty());
@@ -139,7 +140,7 @@ public final class GameState extends PublicGameState {
 
     /**
      * @param rng Le générateur de nombres aléatoires.
-     * @return Un gamestate identique (this) si
+     * @return Un gameState identique (this) si
      */
     public GameState withCardsDeckRecreatedIfNeeded(Random rng) {
         if (!cardState.isDeckEmpty()) {
@@ -151,9 +152,11 @@ public final class GameState extends PublicGameState {
     /**
      * @param playerId Le joueur auquel ajouter des tickets.
      * @param chosenTickets Les tickets à ajouter.
-     * @return Un gamestate identique mais dont le joueur choisi a reçu de nouveaux tickets.
+     * @return Un gameState identique mais dont le joueur choisi a reçu de nouveaux tickets.
+     * @throws IllegalArgumentException si le joueur possède déjà au moins un billet
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
+        Preconditions.checkArgument(playerState(playerId).ticketCount()==0);
         playerStateMap.put(playerId, playerState(playerId).withAddedTickets(chosenTickets));
         return new GameState(ticketDeck, cardState, currentPlayerId(), playerStateMap, lastPlayer());
     }
@@ -167,7 +170,7 @@ public final class GameState extends PublicGameState {
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
         Deck<Ticket> newDeck = ticketDeck.withoutTopCards(drawnTickets.size());
-        withInitiallyChosenTickets(currentPlayerId(), chosenTickets);
+        playerStateMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
         return new GameState(newDeck, cardState, currentPlayerId(), playerStateMap, lastPlayer());
     }
 
@@ -186,7 +189,7 @@ public final class GameState extends PublicGameState {
 
     /**
      * @throws IllegalArgumentException s'il n'est pas possible de piocher des cartes actuellement (voir canDrawCards())
-     * @return Retourne un gamestate identique où la carte du haut de la pioche a été piochée par le joueur courant.
+     * @return Retourne un gameState identique où la carte du haut de la pioche a été piochée par le joueur courant.
      */
     public GameState withBlindlyDrawnCard() {
         Preconditions.checkArgument(canDrawCards());
@@ -203,6 +206,7 @@ public final class GameState extends PublicGameState {
      * @return Un GameState identique où le joueur courant à utilisé cards pour s'emparer de route.
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
+        //TODO vérifier si le joueur possède les cartes Question piazza @509
         playerStateMap.put(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
         return new GameState(ticketDeck, cardState.withMoreDiscardedCards(cards), currentPlayerId(), playerStateMap, lastPlayer());
     }
@@ -222,17 +226,10 @@ public final class GameState extends PublicGameState {
      * si le dernier tour est enclenché (voir lastTurnBegins)
      */
     public GameState forNextTurn() {
-        PlayerId nextPlayer;
-        if (currentPlayerId().equals(PlayerId.PLAYER_1)) {
-            nextPlayer = PlayerId.PLAYER_2;
-        }
-        else {
-            nextPlayer = PlayerId.PLAYER_1;
-        }
         if (lastTurnBegins()) {
-            return new GameState(ticketDeck, cardState, nextPlayer, playerStateMap, currentPlayerId());
+            return new GameState(ticketDeck, cardState, currentPlayerId().next(), playerStateMap, currentPlayerId());
         }
-        return new GameState(ticketDeck, cardState, nextPlayer, playerStateMap, lastPlayer());
+        return new GameState(ticketDeck, cardState, currentPlayerId().next(), playerStateMap, lastPlayer());
     }
 
 
