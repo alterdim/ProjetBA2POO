@@ -3,10 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Fichier créé à 14:16 le 15/03/2021
@@ -37,7 +34,6 @@ public final class GameState extends PublicGameState {
         this.cardState = cardState;
         this.ticketDeck = ticketDeck;
         this.playerStateMap = playerState;
-
     }
 
     /**
@@ -147,8 +143,9 @@ public final class GameState extends PublicGameState {
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(playerState(playerId).ticketCount()==0);
-        playerStateMap.put(playerId, playerState(playerId).withAddedTickets(chosenTickets));
-        return new GameState(ticketDeck, cardState, currentPlayerId(), playerStateMap, lastPlayer());
+        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        newMap.put(playerId, playerState(playerId).withAddedTickets(chosenTickets));
+        return new GameState(ticketDeck, cardState, currentPlayerId(), newMap, lastPlayer());
     }
 
     /**
@@ -160,8 +157,9 @@ public final class GameState extends PublicGameState {
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
         Deck<Ticket> newDeck = ticketDeck.withoutTopCards(drawnTickets.size());
-        playerStateMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
-        return new GameState(newDeck, cardState, currentPlayerId(), playerStateMap, lastPlayer());
+        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        newMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
+        return new GameState(newDeck, cardState, currentPlayerId(), newMap, lastPlayer());
     }
 
     /**
@@ -188,8 +186,9 @@ public final class GameState extends PublicGameState {
         Preconditions.checkArgument(canDrawCards());
         Card drawnCard = cardState.topDeckCard();
         CardState newCardState = cardState.withoutTopDeckCard();
-        playerStateMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(drawnCard));
-        return new GameState(ticketDeck, newCardState, currentPlayerId(), playerStateMap, lastPlayer());
+        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        newMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(drawnCard));
+        return new GameState(ticketDeck, newCardState, currentPlayerId(), newMap, lastPlayer());
 
     }
 
@@ -200,8 +199,9 @@ public final class GameState extends PublicGameState {
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
         //TODO vérifier si le joueur possède les cartes Question piazza @509
-        playerStateMap.put(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
-        return new GameState(ticketDeck, cardState.withMoreDiscardedCards(cards), currentPlayerId(), playerStateMap, lastPlayer());
+        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        newMap.put(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
+        return new GameState(ticketDeck, cardState.withMoreDiscardedCards(cards), currentPlayerId(), newMap, lastPlayer());
     }
 
     /**
