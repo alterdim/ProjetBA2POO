@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
@@ -41,24 +42,20 @@ public final class CardState extends PublicCardState{
     }
 
     /**
-     *  Retourne un cardState avec la carte donnée dans l'index mise dans la défausse et remplacée par la première carte de la pioche
+     *  Retourne un cardState avec la carte donnée dans l'index supprimée de la liste et remplacée par la première carte de la pioche
      * @param slot index d'un carte visible
      * @return retourne une CardState
      * @throws IndexOutOfBoundsException si le paramètre n'est pas l'index d'une carte visible
      * @throws IllegalArgumentException si la pioche est vide
      */
     public CardState withDrawnFaceUpCard(int slot){
-        if (!FACE_UP_CARD_SLOTS.contains(slot)) throw new IndexOutOfBoundsException();
+        Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
+//        if (!FACE_UP_CARD_SLOTS.contains(slot)) throw new IndexOutOfBoundsException();
         Preconditions.checkArgument(!drawCards.isEmpty());
-
-        SortedBag.Builder<Card> discardList = new SortedBag.Builder<>();
-        discardList.add(discards);
-        discardList.add(faceUpCard(slot));
 
         List<Card> faceUpCards = new ArrayList<>(faceUpCards());
         faceUpCards.set(slot, drawCards.topCard());  //Replace element in position slot
-
-        return new CardState(faceUpCards ,drawCards.withoutTopCard(), discardList.build());
+        return new CardState(faceUpCards ,drawCards.withoutTopCard(), discards);
     }
 
     /**
