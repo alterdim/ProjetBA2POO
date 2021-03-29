@@ -630,16 +630,20 @@ class PublicGameStateTest {
         cards.add(Card.WHITE);
         cards.add(Card.GREEN);
 
-        var publicC = new PublicCardState(cards, 1,0);
+        var publicC = new PublicCardState(cards, 5,0);
 
         Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
         map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
         map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
 
         var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
+
         assertTrue(publicGameState.canDrawCards());
 
-        //TODO is it possible to have less than 5 card?
+        publicC = new PublicCardState(cards, 4,0);
+        publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
+
+        assertFalse(publicGameState.canDrawCards());
     }
 
     @Test

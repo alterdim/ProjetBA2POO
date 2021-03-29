@@ -6,6 +6,7 @@ import ch.epfl.tchu.SortedBag;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 /**
  * Fichier créé à 14:16 le 15/03/2021
@@ -32,7 +33,7 @@ public final class GameState extends PublicGameState {
      */
     private GameState(Deck<Ticket> ticketDeck, CardState cardState, PlayerId currentPlayerId,
                       Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
-        super(ticketDeck.size(), cardState, currentPlayerId, makePublic(playerState), lastPlayer);
+        super(ticketDeck.size(), cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
         this.cardState = cardState;
         this.ticketDeck = ticketDeck;
         this.playerStateMap = playerState;
@@ -62,16 +63,6 @@ public final class GameState extends PublicGameState {
         CardState cardState = CardState.of(cardDeck);
 
         return new GameState(ticketDeck, cardState, firstPlayer, playerStateMap, null);
-    }
-
-    private static Map<PlayerId, PublicPlayerState> makePublic(Map<PlayerId, PlayerState> playerState) {
-        PlayerState oldValue;
-        Map<PlayerId, PublicPlayerState> publicState = new EnumMap<>(PlayerId.class);
-        for (PlayerId p : playerState.keySet()) {
-            oldValue = playerState.get(p);
-            publicState.put(p, new PublicPlayerState(oldValue.ticketCount(), oldValue.cardCount(), oldValue.routes()));
-        }
-        return publicState;
     }
 
     /**
@@ -180,10 +171,13 @@ public final class GameState extends PublicGameState {
      */
     public GameState withDrawnFaceUpCard(int slot) {
         Preconditions.checkArgument(canDrawCards());
-        Card oldCard = cardState.faceUpCard(slot);
-        CardState newCardState = cardState.withDrawnFaceUpCard(slot);
-        playerStateMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(oldCard));
-        return new GameState(ticketDeck, newCardState, currentPlayerId(), playerStateMap, lastPlayer());
+
+        Card c = cardState().faceUpCard(slot);
+        CardState newCardState=cardState.withDrawnFaceUpCard(slot);
+        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        newMap.put(currentPlayerId(), currentPlayerState().withAddedCard(c));
+
+        return new GameState(ticketDeck, newCardState,currentPlayerId(), newMap, lastPlayer());
     }
 
     /**
