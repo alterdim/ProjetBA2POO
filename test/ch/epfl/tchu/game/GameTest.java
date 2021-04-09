@@ -23,7 +23,7 @@ class GameTest {
 
     @Test
     void play(){
-        Game.play(Map.of(PlayerId.PLAYER_1 ,new TestPlayer(1, new ChMap().ALL_ROUTES), PlayerId.PLAYER_2 ,new TestPlayer(2, new ChMap().ALL_ROUTES)), Map.of(PlayerId.PLAYER_1, "PLAYER ONE", PlayerId.PLAYER_2, "PLAYER TWO"), SortedBag.of(new ChMap().ALL_TICKETS), new Random());
+        Game.play(Map.of(PlayerId.PLAYER_1 ,new TestPlayer(new Random().nextLong(), new ChMap().ALL_ROUTES), PlayerId.PLAYER_2 ,new TestPlayer(new Random().nextLong(), new ChMap().ALL_ROUTES)), Map.of(PlayerId.PLAYER_1, "PLAYER ONE", PlayerId.PLAYER_2, "PLAYER TWO"), SortedBag.of(new ChMap().ALL_TICKETS), new Random());
     }
 
 
@@ -90,9 +90,9 @@ class GameTest {
 //            List<Route> claimableRoutes = allRoutes.stream().filter(route -> ownState.canClaimRoute(route)).collect(Collectors.toList());
             List<Route> claimableRoutes = new ArrayList<>();
             for (Route r:allRoutes){
-                if (ownState.canClaimRoute(r)){
+                if (ownState.canClaimRoute(r) && !gameState.claimedRoutes().contains(r)){
                     claimableRoutes.add(r);
-                    System.out.println(r.id());
+//                    System.out.println(r.id());
                 }
             }
 

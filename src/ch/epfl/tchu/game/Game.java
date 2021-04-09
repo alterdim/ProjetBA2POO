@@ -39,6 +39,7 @@ public final class Game {
         Route claimedRoute;
         //Initialiser le jeu
         GameState gameState = GameState.initial(tickets, rng);
+
         Map<PlayerId, Info> playerInfos = new HashMap<>();
         Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
 //        Map<PlayerId, PlayerState> playerStates = new HashMap<>();
@@ -75,6 +76,7 @@ public final class Game {
             currentPlayer = players.get(gameState.currentPlayerId());
             turnKind = currentPlayer.nextTurn();
             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay());
+            System.out.println("current player Cards  : "+gameState.currentPlayerState().cards());
             if (gameState.lastTurnBegins()) {
                 tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()));
 //                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(playerStates.get(gameState.currentPlayerId()).carCount()));
@@ -130,12 +132,19 @@ public final class Game {
                                 tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
                                 break;
                             }
+                            //claims avec carte + cartes additionnels
                             else {
-                                gameState = gameState.withClaimedRoute(claimedRoute, chosenCards);
+                                gameState = gameState.withClaimedRoute(claimedRoute, chosenCards.union(claimCards));
                                 tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
                             }
                         }
+                        //claims si pas de cartes additinnells
+                        else {
+                            gameState = gameState.withClaimedRoute(claimedRoute, claimCards);
+                            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
+                        }
                     }
+                    //claim route surface
                     else {
                         gameState = gameState.withClaimedRoute(claimedRoute, claimCards);
                         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
