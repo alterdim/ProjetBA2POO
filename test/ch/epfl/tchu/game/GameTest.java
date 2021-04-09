@@ -24,6 +24,7 @@ class GameTest {
     @Test
     void play(){
         Game.play(Map.of(PlayerId.PLAYER_1 ,new TestPlayer(new Random().nextLong(), new ChMap().ALL_ROUTES), PlayerId.PLAYER_2 ,new TestPlayer(new Random().nextLong(), new ChMap().ALL_ROUTES)), Map.of(PlayerId.PLAYER_1, "PLAYER ONE", PlayerId.PLAYER_2, "PLAYER TWO"), SortedBag.of(new ChMap().ALL_TICKETS), new Random());
+        assertTrue(TestPlayer.receiveCounter>=TestPlayer.turnCounter);
     }
 
 
@@ -35,7 +36,8 @@ class GameTest {
         // Toutes les routes de la carte
         private final List<Route> allRoutes;
 
-        private int turnCounter;
+        private static int turnCounter;
+        private static int receiveCounter;
         private PlayerState ownState;
         private PublicGameState gameState;
 
@@ -46,7 +48,8 @@ class GameTest {
         public TestPlayer(long randomSeed, List<Route> allRoutes) {
             this.rng = new Random(randomSeed);
             this.allRoutes = List.copyOf(allRoutes);
-            this.turnCounter = 0;
+            turnCounter = 0;
+            receiveCounter = 0;
         }
 
         @Override
@@ -56,6 +59,8 @@ class GameTest {
 
         @Override
         public void receiveInfo(String info) {
+            receiveCounter++;
+
             System.out.println(info);
         }
 
@@ -136,7 +141,7 @@ class GameTest {
         @Override
         public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
             if (options.size()>0) {
-                System.out.println(options.get(0));
+//                System.out.println(options.get(0));
                 return options.get(0);
             }
             else{

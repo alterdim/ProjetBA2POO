@@ -131,11 +131,8 @@ public final class Route {
      * @return Retourne toutes les combinaisons de cartes utilisables pour capturer la route dans une List de SortedBags
      */
     public List<SortedBag<Card>> possibleClaimCards() {
-        boolean rainbow = true;
+        boolean rainbow = color == null;
         //Si la route ne possède pas le couleur, le flag rainbow s'active pour autoriser toutes les couleurs de cartes.
-        if (color != null) {
-            rainbow = false;
-        }
         List<SortedBag<Card>> bagList = new ArrayList<>();
         SortedBag<Card> bag;
         if (this.level.equals(Level.UNDERGROUND)) {
