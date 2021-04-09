@@ -20,7 +20,7 @@ public final class Game {
         Preconditions.checkArgument(players.values().size()==PlayerId.COUNT);
         Preconditions.checkArgument(playerNames.values().size()==PlayerId.COUNT);
         //Initialisation de variables utiles
-        boolean finished = false;
+        int twoMoreLoops = 0;
 
         Map<PlayerId, Info> playerInfos = new HashMap<>();
         //Initialiser le jeu
@@ -53,7 +53,7 @@ public final class Game {
                     playerInfos.get(p).keptTickets(gameState.playerState(p).ticketCount()));
         }
         //Boucle de jeu
-        do {
+        while (twoMoreLoops<=2){
             updateEveryone(players, gameState);
             Player currentPlayer = players.get(gameState.currentPlayerId());
             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay());
@@ -138,18 +138,12 @@ public final class Game {
                     }
                     break;
             }
-//            System.out.println("DeckSize  : "+gameState.cardState().deckSize());
-//            System.out.println("DiscardSize  : "+gameState.cardState().discardsSize());
-//            System.out.println("current player Cards  : "+gameState.currentPlayerState().cards());
-
-            System.out.println(gameState.currentPlayerState().carCount());
-            System.out.println(gameState.lastTurnBegins());
             gameState = gameState.forNextTurn();
+
             if (gameState.lastPlayer() != null) {
-                finished = true;
+                twoMoreLoops++;
             }
         }
-        while(!finished);
 
 
 //        Trail longestTrail1 = Trail.longest(playerStates.get(PlayerId.PLAYER_1).routes());
