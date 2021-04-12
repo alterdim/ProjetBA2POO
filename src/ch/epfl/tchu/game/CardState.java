@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
-import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 
 /**
  *
@@ -37,7 +36,6 @@ public final class CardState extends PublicCardState{
      */
     public static CardState of(Deck<Card> deck){
         Preconditions.checkArgument(deck.size()>=FACE_UP_CARDS_COUNT);
-
         return new CardState(deck.topCards(FACE_UP_CARDS_COUNT).toList(), deck.withoutTopCards(FACE_UP_CARDS_COUNT), new SortedBag.Builder<Card>().build());
     }
 
@@ -50,9 +48,7 @@ public final class CardState extends PublicCardState{
      */
     public CardState withDrawnFaceUpCard(int slot){
         Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
-//        if (!FACE_UP_CARD_SLOTS.contains(slot)) throw new IndexOutOfBoundsException();
         Preconditions.checkArgument(!drawCards.isEmpty());
-
         List<Card> faceUpCards = new ArrayList<>(faceUpCards());
         faceUpCards.set(slot, drawCards.topCard());  //Replace element in position slot
         return new CardState(faceUpCards ,drawCards.withoutTopCard(), discards);
@@ -63,7 +59,7 @@ public final class CardState extends PublicCardState{
      * @return Retourne la carte se trouvant au sommet de la pioche
      * @throws IllegalArgumentException  si la pioche est vide
      */
-    public Card topDeckCard(){
+    public Card topDeckCard() {
         Preconditions.checkArgument(!drawCards.isEmpty());
         return drawCards.topCard();
     }
@@ -73,7 +69,7 @@ public final class CardState extends PublicCardState{
      * @return retourne un ensemble de carte en enlevant la première carte de la pioche
      * @throws IllegalArgumentException si la pioche est vide
      */
-    public CardState withoutTopDeckCard(){
+    public CardState withoutTopDeckCard() {
         Preconditions.checkArgument(!drawCards.isEmpty());
         return new CardState(faceUpCards(), drawCards.withoutTopCard(), discards);
     }
@@ -84,7 +80,7 @@ public final class CardState extends PublicCardState{
      * @return Retourne un ensemble de carte avec les cartes de la défausses mélangées et remise dans la pioche
      * @throws IllegalArgumentException si la pioche n'est pas vide
      */
-    public CardState withDeckRecreatedFromDiscards(Random rng){
+    public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(drawCards.isEmpty());
         return new CardState(faceUpCards(), Deck.of(discards, rng), new SortedBag.Builder<Card>().build());
     }
@@ -94,11 +90,10 @@ public final class CardState extends PublicCardState{
      * @param additionalDiscards ensemble de cartes à mettre a la défausse
      * @return retourne un ensemble de cartes
      */
-    public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards){
+    public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
         SortedBag.Builder<Card> discardList = new SortedBag.Builder<>();
         discardList.add(discards);
         discardList.add(additionalDiscards);
-
         return new CardState(faceUpCards(), drawCards, discardList.build());
     }
 }

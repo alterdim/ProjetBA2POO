@@ -114,14 +114,12 @@ public final class PlayerState extends PublicPlayerState {
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         Preconditions.checkArgument(route.length() <= carCount());
-
         List<SortedBag<Card>> listPossibleClaimCards = new ArrayList<>();
         for (SortedBag<Card> combination : route.possibleClaimCards()) {
             if (cards.contains(combination)) {
                 listPossibleClaimCards.add(combination);
             }
         }
-
         return listPossibleClaimCards;
     }
 
@@ -139,6 +137,7 @@ public final class PlayerState extends PublicPlayerState {
         Preconditions.checkArgument(!initialCards.isEmpty()); // InitialCards vide
         Preconditions.checkArgument(initialCards.toMap().keySet().size() <= 2); // MAX 2 types de cartes
         Preconditions.checkArgument(drawnCards.size() == 3); //3 éléments dans drawncards
+
         ArrayList<SortedBag<Card>> options; // liste qui sera renvoyée
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
         SortedBag<Card> possibleCards = builder.build(); //won't do anything but we initialize it
@@ -172,7 +171,6 @@ public final class PlayerState extends PublicPlayerState {
         options = new ArrayList<>(builder.build().subsetsOfSize(additionalCardsCount));
         options.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE))); // tri par nombre de locomotives
         return options;
-
     }
 
     private void removeMultipleFromList(List<Card> list, Card card, int count) {

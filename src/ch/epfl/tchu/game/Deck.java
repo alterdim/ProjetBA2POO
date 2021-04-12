@@ -19,7 +19,7 @@ public final class Deck<C extends Comparable<C>> {
 
     private final List<C> cards;
 
-    private Deck(List<C> cards){
+    private Deck(List<C> cards) {
         this.cards=cards;
     }
 
@@ -30,7 +30,7 @@ public final class Deck<C extends Comparable<C>> {
      * @param rng instance de Random
      * @return Un Deck
      */
-    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng){
+    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng) {
         List<C> cardsList = cards.toList();
         Collections.shuffle(cardsList, rng);
         return new Deck<>(cardsList);
@@ -56,7 +56,7 @@ public final class Deck<C extends Comparable<C>> {
      * @return Premier élément du tas
      * @throws IllegalArgumentException si le tas est vide
      */
-    public C topCard(){
+    public C topCard() {
         Preconditions.checkArgument(!cards.isEmpty());
         return cards.get(0);
     }
@@ -91,7 +91,7 @@ public final class Deck<C extends Comparable<C>> {
      * @return Un tas sans les count premiers éléments
      * @throws IllegalArgumentException si le nombre d'élément a supprimer n'est pas compris dans le tas
      */
-    public Deck<C> withoutTopCards(int count){
+    public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count>=0 && count<=size());
         return new Deck<>(cards.subList(count, size()));
     }

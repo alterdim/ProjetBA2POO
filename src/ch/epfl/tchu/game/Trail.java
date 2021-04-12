@@ -115,7 +115,6 @@ public final class Trail {
         str.append(stationTo.name());
 
         str.append(String.format(" (%d)", length()));
-//        str.append(" (").append(length()).append(")");
 
         return str.toString();
     }

@@ -70,7 +70,6 @@ public class PublicGameState {
      */
     public boolean canDrawCards() {
         return cardState.totalSize() >= Constants.ADDITIONAL_TUNNEL_CARDS + Constants.FACE_UP_CARDS_COUNT + 2;
-//        return (cardState.discardsSize() + cardState.deckSize() >= Constants.ADDITIONAL_TUNNEL_CARDS+2);
     }
 
     /**
@@ -112,7 +111,4 @@ public class PublicGameState {
     public PlayerId lastPlayer() {
         return lastPlayer;
     }
-
-
-
 }
