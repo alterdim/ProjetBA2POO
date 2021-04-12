@@ -14,25 +14,32 @@ import java.util.*;
  */
 public final class Game {
 
+    /**
+     * @param players Une Map liant les id des joueurs (enum PlayerId) et les joueurs.
+     * @param playerNames Une Map liant les id des joueurs et leurs noms.
+     * @param tickets Un SortedBag contenant les tickets (objectifs) à mettre en jeu.
+     * @param rng Un générateur de nombre aléatoires.
+     */
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames,
                             SortedBag<Ticket> tickets, Random rng) {
-        //CHECK CONDITIONS
+        //Préconditions (nombre de joueurs adéquat)
         Preconditions.checkArgument(players.values().size()==PlayerId.COUNT);
         Preconditions.checkArgument(playerNames.values().size()==PlayerId.COUNT);
+
         //Initialisation de variables utiles
         int twoMoreLoops = 0;
 
-        Map<PlayerId, Info> playerInfos = new HashMap<>();
-        //Initialiser le jeu
-        //Gère les tickets
-        GameState gameState = GameState.initial(tickets, rng);
 
-//        Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
+        //Initialiser le jeu
+        GameState gameState = GameState.initial(tickets, rng);
+        Map<PlayerId, Info> playerInfos = new HashMap<>();
+
         for (PlayerId p : players.keySet()) {
             Player player = players.get(p);
             playerInfos.put(p, new Info(playerNames.get(p)));
             player.initPlayers(p, playerNames);
         }
+
         //Annoncer le premier joueur
         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).willPlayFirst());
 
@@ -52,6 +59,7 @@ public final class Game {
             tellEveryone(players,
                     playerInfos.get(p).keptTickets(gameState.playerState(p).ticketCount()));
         }
+
         //Boucle de jeu
         while (twoMoreLoops<=2){
             updateEveryone(players, gameState);
@@ -144,13 +152,16 @@ public final class Game {
             }
             gameState = gameState.forNextTurn();
 
+            //Gestion des derniers tours et annonce de la fin.
             if (gameState.lastPlayer() != null) {
-                if (twoMoreLoops==0) tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()));
+                if (twoMoreLoops==0) {
+                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()));
+                }
                 twoMoreLoops++;
             }
         }
 
-
+        //Calcul du longestTrail, du total des points
         Trail longestTrail1 = Trail.longest(gameState.playerState(PlayerId.PLAYER_1).routes());
         Trail longestTrail2 = Trail.longest(gameState.playerState(PlayerId.PLAYER_2).routes());
         int score1 = gameState.playerState(PlayerId.PLAYER_1).finalPoints();
@@ -166,6 +177,7 @@ public final class Game {
 
         updateEveryone(players, gameState);
 
+        //Annonce du gagnant ou de la gagnante de la partie.
         if (score1 == score2) {
             List<String> names = new ArrayList<>(playerNames.values());
             tellEveryone(players, Info.draw(names, score1));
