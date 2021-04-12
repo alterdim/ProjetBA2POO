@@ -30,7 +30,7 @@ public final class Game {
 //        Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
         for (PlayerId p : players.keySet()) {
             Player player = players.get(p);
-            playerInfos.put(p, new Info(p.name()));
+            playerInfos.put(p, new Info(playerNames.get(p)));
             player.initPlayers(p, playerNames);
         }
         //Annoncer le premier joueur
