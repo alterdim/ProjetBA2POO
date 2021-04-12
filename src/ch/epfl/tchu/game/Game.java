@@ -146,14 +146,10 @@ public final class Game {
         }
 
 
-//        Trail longestTrail1 = Trail.longest(playerStates.get(PlayerId.PLAYER_1).routes());
         Trail longestTrail1 = Trail.longest(gameState.playerState(PlayerId.PLAYER_1).routes());
-//        Trail longestTrail2 = Trail.longest(playerStates.get(PlayerId.PLAYER_2).routes());
         Trail longestTrail2 = Trail.longest(gameState.playerState(PlayerId.PLAYER_2).routes());
         int score1 = gameState.playerState(PlayerId.PLAYER_1).finalPoints();
-//        int score1 = playerStates.get(PlayerId.PLAYER_1).finalPoints();
         int score2 = gameState.playerState(PlayerId.PLAYER_2).finalPoints();
-//        int score2 = playerStates.get(PlayerId.PLAYER_2).finalPoints();
         if (longestTrail1.length()>=longestTrail2.length()) {
             score1+=Constants.LONGEST_TRAIL_BONUS_POINTS;
             tellEveryone(players, playerInfos.get(PlayerId.PLAYER_1).getsLongestTrailBonus(longestTrail1));
