@@ -27,7 +27,7 @@ public final class Game {
         //Gère les tickets
         GameState gameState = GameState.initial(tickets, rng);
 
-        Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
+//        Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
         for (PlayerId p : players.keySet()) {
             Player player = players.get(p);
             playerInfos.put(p, new Info(p.name()));
@@ -40,10 +40,10 @@ public final class Game {
         for (PlayerId p : players.keySet()) {
             Player player = players.get(p);
 
-            player.setInitialTicketChoice(ticketDeck.topCards(Constants.INITIAL_TICKETS_COUNT));
-            ticketDeck = ticketDeck.withoutTopCards(Constants.INITIAL_TICKETS_COUNT);
-
+            player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
+            gameState=gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
             gameState = gameState.withInitiallyChosenTickets(p, player.chooseInitialTickets());
+
             updateEveryone(players, gameState);
         }
 
@@ -62,8 +62,11 @@ public final class Game {
             }
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
-                    SortedBag<Ticket> drawnTickets = ticketDeck.topCards(Constants.IN_GAME_TICKETS_COUNT);
-                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewTickets(Constants.IN_GAME_TICKETS_COUNT));
+                    //Sélectionne les 3 premiers tickets
+                    SortedBag<Ticket> drawnTickets = gameState.topTickets(Constants.IN_GAME_TICKETS_COUNT);
+                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewTickets(drawnTickets.size()));
+
+                    //demande au joueur quels tickets il conserve
                     SortedBag<Ticket> keptTickets = currentPlayer.chooseTickets(drawnTickets);
                     gameState = gameState.withChosenAdditionalTickets(drawnTickets, keptTickets);
                     tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).keptTickets(keptTickets.size()));
@@ -93,6 +96,7 @@ public final class Game {
 
                     if (claimedRoute.level().equals(Route.Level.UNDERGROUND)) {
                         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).attemptsTunnelClaim(claimedRoute, claimCards));
+
                         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
                         for (int i = 0; i<3; i++) {
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
@@ -107,22 +111,23 @@ public final class Game {
 
                         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewAdditionalCards(drawnCards, addCardsCount));
                         if (addCardsCount > 0) {
-                            SortedBag<Card> chosenCards = currentPlayer.chooseAdditionalCards(
-                                    gameState.currentPlayerState()
-                                            .possibleAdditionalCards(
-                                                    addCardsCount,
-                                                    claimCards,
-                                                    drawnCards
-                                            )
-                            );
-                            if (chosenCards.isEmpty()) {
-                                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
-                                break;
+
+                            List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards, drawnCards);
+                            if (!listPossibleAdditionalCards.isEmpty()) {
+                                SortedBag<Card> chosenCards = currentPlayer.chooseAdditionalCards(
+                                        listPossibleAdditionalCards
+                                );
+                                if (chosenCards.isEmpty()) {
+                                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
+                                }
+                                //claims avec carte + cartes additionnels
+                                else {
+                                    gameState = gameState.withClaimedRoute(claimedRoute, chosenCards.union(claimCards));
+                                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
+                                }
                             }
-                            //claims avec carte + cartes additionnels
                             else {
-                                gameState = gameState.withClaimedRoute(claimedRoute, chosenCards.union(claimCards));
-                                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
+                                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
                             }
                         }
                         //claims si pas de cartes additionnelles
@@ -130,6 +135,7 @@ public final class Game {
                             gameState = gameState.withClaimedRoute(claimedRoute, claimCards);
                             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
                         }
+                        break;
                     }
                     //claim route surface
                     else {
