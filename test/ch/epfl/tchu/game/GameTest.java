@@ -196,7 +196,7 @@ class GameTest {
 
             var expectedInfosB = new SortedBag.Builder<String>();
             player.ownState().routes().stream()
-                    .map(r -> playerClaimedRoute + r.station1() + " â€“ " + r.station2())
+                    .map(r -> playerClaimedRoute + r.station1() + " – " + r.station2())
                     .forEach(expectedInfosB::add);
             var expectedInfos = expectedInfosB.build();
 
@@ -210,6 +210,7 @@ class GameTest {
             assertEquals(expectedInfos, actualInfos);
         }
     }
+
 
     @Test
     void gamePlayProperlyCommunicatesLastTurn() {
@@ -226,7 +227,7 @@ class GameTest {
         for (var player : playRandomGame(2031)) {
             var lastTurnsCount = player.allInfos.stream()
                     .dropWhile(i -> !i.contains("le dernier tour commence"))
-                    .filter(i -> i.startsWith("\nC'est Ã "))
+                    .filter(i -> i.startsWith("\nC'est à"))
                     .count();
             assertEquals(2, lastTurnsCount);
         }
@@ -236,7 +237,7 @@ class GameTest {
     void gamePlayProperlyCommunicatesLongestTrailBonus() {
         for (var player : playRandomGame(2032)) {
             var bonusInfoCount = player.allInfos.stream()
-                    .filter(i -> i.contains("reÃ§oit un bonus de 10 points"))
+                    .filter(i -> i.contains("reçoit un bonus de 10 points"))
                     .count();
             assertTrue(1 <= bonusInfoCount && bonusInfoCount <= 2);
         }

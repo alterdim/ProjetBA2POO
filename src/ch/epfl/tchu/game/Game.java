@@ -144,11 +144,11 @@ public final class Game {
                     }
                     break;
             }
-            gameState = gameState.forNextTurn();
-
             if (gameState.lastPlayer() != null) {
+                if (twoMoreLoops==0) tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()));
                 twoMoreLoops++;
             }
+            gameState = gameState.forNextTurn();
         }
 
 
