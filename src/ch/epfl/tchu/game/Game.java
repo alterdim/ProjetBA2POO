@@ -57,9 +57,7 @@ public final class Game {
             updateEveryone(players, gameState);
             Player currentPlayer = players.get(gameState.currentPlayerId());
             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay());
-            if (gameState.lastTurnBegins()) {
-                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()));
-            }
+
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
                     //Sélectionne les 3 premiers tickets
@@ -144,11 +142,12 @@ public final class Game {
                     }
                     break;
             }
+            gameState = gameState.forNextTurn();
+
             if (gameState.lastPlayer() != null) {
                 if (twoMoreLoops==0) tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()));
                 twoMoreLoops++;
             }
-            gameState = gameState.forNextTurn();
         }
 
 
