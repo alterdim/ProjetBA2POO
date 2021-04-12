@@ -211,7 +211,6 @@ class GameTest {
         }
     }
 
-
     @Test
     void gamePlayProperlyCommunicatesLastTurn() {
         for (var player : playRandomGame(2030)) {
@@ -247,7 +246,7 @@ class GameTest {
     void gamePlayProperlyCommunicatesResult() {
         for (var player : playRandomGame(2033)) {
             var outcomeInfo = player.allInfos.stream()
-                    .filter(i -> i.contains("remporte la victoire") || i.contains("sont ex Ã¦qo"))
+                    .filter(i -> i.contains("remporte la victoire") || i.contains("sont ex æqo"))
                     .collect(Collectors.toList());
             assertEquals(1, outcomeInfo.size());
             assertEquals(player.allInfos.getLast(), outcomeInfo.get(0));
@@ -446,16 +445,16 @@ class GameTest {
 
         // Stations - cities
         private static final Station BAD = new Station(0, "Baden");
-        private static final Station BAL = new Station(1, "BÃ¢le");
+        private static final Station BAL = new Station(1, "Bâle");
         private static final Station BEL = new Station(2, "Bellinzone");
         private static final Station BER = new Station(3, "Berne");
         private static final Station BRI = new Station(4, "Brigue");
         private static final Station BRU = new Station(5, "Brusio");
         private static final Station COI = new Station(6, "Coire");
         private static final Station DAV = new Station(7, "Davos");
-        private static final Station DEL = new Station(8, "DelÃ©mont");
+        private static final Station DEL = new Station(8, "Delémont");
         private static final Station FRI = new Station(9, "Fribourg");
-        private static final Station GEN = new Station(10, "GenÃ¨ve");
+        private static final Station GEN = new Station(10, "Genève");
         private static final Station INT = new Station(11, "Interlaken");
         private static final Station KRE = new Station(12, "Kreuzlingen");
         private static final Station LAU = new Station(13, "Lausanne");
@@ -464,9 +463,9 @@ class GameTest {
         private static final Station LUC = new Station(16, "Lucerne");
         private static final Station LUG = new Station(17, "Lugano");
         private static final Station MAR = new Station(18, "Martigny");
-        private static final Station NEU = new Station(19, "NeuchÃ¢tel");
+        private static final Station NEU = new Station(19, "Neuchâtel");
         private static final Station OLT = new Station(20, "Olten");
-        private static final Station PFA = new Station(21, "PfÃ¤ffikon");
+        private static final Station PFA = new Station(21, "Pfäffikon");
         private static final Station SAR = new Station(22, "Sargans");
         private static final Station SCE = new Station(23, "Schaffhouse");
         private static final Station SCZ = new Station(24, "Schwyz");
@@ -478,7 +477,7 @@ class GameTest {
         private static final Station WIN = new Station(30, "Winterthour");
         private static final Station YVE = new Station(31, "Yverdon");
         private static final Station ZOU = new Station(32, "Zoug");
-        private static final Station ZUR = new Station(33, "ZÃ¼rich");
+        private static final Station ZUR = new Station(33, "Zürich");
 
         // Stations - countries
         private static final Station DE1 = new Station(34, "Allemagne");
