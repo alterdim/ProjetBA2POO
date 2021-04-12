@@ -50,7 +50,7 @@ public enum Card {
      * @param color Couleur de la carte à renvoyer
      * @return Renvoie la carte de la couleur appropriée
      */
-    public static Card of(Color color){
+    public static Card of(Color color) {
         for (Card c : Card.values()) {
             if (color.equals(c.color)) {
                 return c;

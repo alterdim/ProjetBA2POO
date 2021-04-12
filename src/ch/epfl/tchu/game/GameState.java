@@ -17,8 +17,6 @@ public final class GameState extends PublicGameState {
     private final Deck<Ticket> ticketDeck;
     private final CardState cardState;
 
-
-
     /**
      * Constructeur de l'état d'une partie.
      *
@@ -198,7 +196,6 @@ public final class GameState extends PublicGameState {
      * @return Un GameState identique où le joueur courant à utilisé cards pour s'emparer de route.
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
-        //TODO vérifier si le joueur possède les cartes Question piazza @509
         Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
         newMap.put(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
         return new GameState(ticketDeck, cardState.withMoreDiscardedCards(cards), currentPlayerId(), newMap, lastPlayer());
@@ -224,7 +221,4 @@ public final class GameState extends PublicGameState {
         }
         return new GameState(ticketDeck, cardState, currentPlayerId().next(), playerStateMap, lastPlayer());
     }
-
-
-
 }

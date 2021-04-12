@@ -29,9 +29,7 @@ public enum PlayerId {
      * Retourne l'autre joueur
      * @return le joueur suivant
      */
-    public PlayerId next(){
-        /*if (this.equals(PLAYER_1)) return PLAYER_2;
-        else return PLAYER_1;*/
+    public PlayerId next() {
         return this.equals(PLAYER_2) ? PLAYER_1 : PLAYER_2;
     }
 }

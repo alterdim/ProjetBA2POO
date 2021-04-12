@@ -33,22 +33,22 @@ public class PublicPlayerState {
      * @param routes liste de routes appartenant au joueur
      * @throws IllegalArgumentException si le nombre de billets ou de cartes sont négatifs
      */
-    public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes){
+    public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
         Preconditions.checkArgument(ticketCount>=0);
         Preconditions.checkArgument(cardCount>=0);
 
-        this.ticketCount=ticketCount;
-        this.cardCount=cardCount;
-        this.routes=List.copyOf(routes);
+        this.ticketCount = ticketCount;
+        this.cardCount = cardCount;
+        this.routes = List.copyOf(routes);
 
-        int car=INITIAL_CAR_COUNT;
-        int points=0;
-        for (Route route:routes){
-            car-=route.length();
-            points+=route.claimPoints();
+        int car = INITIAL_CAR_COUNT;
+        int points = 0;
+        for (Route route:routes) {
+            car -= route.length();
+            points += route.claimPoints();
         }
-        this.carCount=car;
-        this.claimPoints=points;
+        this.carCount = car;
+        this.claimPoints = points;
     }
 
     /**

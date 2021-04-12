@@ -178,7 +178,6 @@ public final class Route {
             }
         }
         //On itère de 0 à la longueur pour commencer par les mains qui utilisent le moins de locomotives.
-
             return bagList;
     }
 
