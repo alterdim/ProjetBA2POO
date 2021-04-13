@@ -3,7 +3,7 @@ package ch.epfl.tchu.net;
 /**
  * Créé le 12.04.2021 à 14:55
  *
- * Enumère les types de messages que le serveur peut envoyer aux clients.
+ * Énumère les types de messages que le serveur peut envoyer aux clients.
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
