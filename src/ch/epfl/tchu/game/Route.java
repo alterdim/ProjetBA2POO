@@ -170,7 +170,7 @@ public final class Route {
      *                                  UNDERGROUND
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
-        Preconditions.checkArgument(drawnCards.size() == 3 && this.level().equals(Level.UNDERGROUND));
+        Preconditions.checkArgument(drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS && this.level().equals(Level.UNDERGROUND));
         int requirement = 0;
         for (Card c : drawnCards) {
             if (claimCards.contains(c) || c.equals(Card.LOCOMOTIVE)) {

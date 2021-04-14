@@ -49,9 +49,9 @@ public final class Game {
 
             player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
             gameState=gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
+            updateEveryone(players, gameState);
             gameState = gameState.withInitiallyChosenTickets(p, player.chooseInitialTickets());
 
-            updateEveryone(players, gameState);
         }
 
         //Annoncer le nombre de tickets gardés
@@ -62,10 +62,10 @@ public final class Game {
 
         //Boucle de jeu
         while (twoMoreLoops<=2){
-            updateEveryone(players, gameState);
             Player currentPlayer = players.get(gameState.currentPlayerId());
             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay());
 
+            updateEveryone(players, gameState);
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
                     //Sélectionne les 3 premiers tickets
@@ -79,9 +79,8 @@ public final class Game {
                     break;
                 case DRAW_CARDS:
                     for (int i = 0; i<2; i++) {
-                        updateEveryone(players, gameState);
-
                         gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
+                        updateEveryone(players, gameState);
                         int drawSlot = currentPlayer.drawSlot();
                         if (drawSlot ==  Constants.DECK_SLOT) {
                             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewBlindCard());
@@ -150,6 +149,7 @@ public final class Game {
                     }
                     break;
             }
+
             gameState = gameState.forNextTurn();
 
             //Gestion des derniers tours et annonce de la fin.
