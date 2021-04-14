@@ -40,14 +40,14 @@ class SerdesTest {
         list.add("Bob");
         list.add("Charles");
 
-        String string="";
+        StringBuilder string= new StringBuilder();
         for (String s : list) {
-            if (string.length()!=0) string+=",";
-            string+=Serdes.STRING.serialize(s);
+            if (string.length()!=0) string.append(",");
+            string.append(Serdes.STRING.serialize(s));
         }
 
-        assertEquals(string, Serdes.LIST_STRING.serialize(list));
-        assertEquals(list, Serdes.LIST_STRING.deserialize(string));
+        assertEquals(string.toString(), Serdes.LIST_STRING.serialize(list));
+        assertEquals(list, Serdes.LIST_STRING.deserialize(string.toString()));
     }
 
     @Test
