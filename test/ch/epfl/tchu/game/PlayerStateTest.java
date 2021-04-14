@@ -1101,7 +1101,6 @@ public class PlayerStateTest {
 
 
         var cardsplayer = new SortedBag.Builder<Card>()
-                //TODO si un seul élément dans la main du joueur erreur si besoin de 1 nouvel carte
                 .add(Card.ORANGE)
                 .build();
 
@@ -1281,13 +1280,6 @@ public class PlayerStateTest {
         assertEquals(5, playerState3.ticketPoints());
 
     }
-
-
-
-
-
-
-    //TODO end of tests
 
     private static final class TestMap {
         // Stations - cities

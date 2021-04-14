@@ -284,7 +284,6 @@ class PublicGameStateTest {
         /*System.out.println(map.size());
         System.out.println(map.toString());*/
 
-        //TODO useless check?
         /*assertThrows(IllegalArgumentException.class, () -> {
             new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
         });*/
