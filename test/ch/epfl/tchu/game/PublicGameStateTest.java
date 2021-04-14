@@ -566,12 +566,12 @@ class PublicGameStateTest {
         var play2 = new PublicPlayerState(0, 0, rt2);
         map.put(PLAYER_2, play2);
 
-        var rtAll = new ArrayList<>();
+        var rtAll = new HashSet<>();
         rtAll.addAll(rt1);
         rtAll.addAll(rt2);
 
         var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
-        assertEquals(rtAll, publicGameState.claimedRoutes());
+        assertEquals(rtAll, new HashSet<>(publicGameState.claimedRoutes()));
     }
 
     @Test
