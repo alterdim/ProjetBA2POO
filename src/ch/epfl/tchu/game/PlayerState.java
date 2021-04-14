@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
+
 /**
  * Créé le 08.03.2021 à 14:02
  *
@@ -27,8 +29,8 @@ public final class PlayerState extends PublicPlayerState {
      * @param routes  routes appartenant au joueur
      */
     public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
-        super(tickets.size(), cards.size(), routes);
-        this.tickets = tickets;
+        super(tickets.size(), cards.size(), routes); //cards est sortedBag (immuable) et routes n'est pas assigné à une variable dans cette classe, mais dispose bien d'une copy dans la classe mère
+        this.tickets = tickets; //SortedBag est immuable, donc pas besoin de faire une copy
         this.cards = cards;
     }
 
@@ -95,13 +97,11 @@ public final class PlayerState extends PublicPlayerState {
      * @return vrai s'il peut s'en emparer
      */
     public boolean canClaimRoute(Route route) {
-        if (carCount() < route.length()) {
-            return false;
-        }
-        List<SortedBag<Card>> possibleClaimCards = route.possibleClaimCards();
-        for (SortedBag<Card> combination : possibleClaimCards) {
-            if (cards.contains(combination)) {
-                return true;
+        if (carCount()>=route.length()) {
+            for (SortedBag<Card> combination : route.possibleClaimCards()) {
+                if (cards.contains(combination)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -133,10 +133,10 @@ public final class PlayerState extends PublicPlayerState {
      * @throws IllegalArgumentException si le nombre de carte pas compris entre 1 et 3 (inclus), si ensemble cartes initiales vide ou contient plus de 2 types de cartes différents, l'ensemble des cartes tirées ne contient pas exactement 3 cartes
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
-        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS); //nb de cartes 3>=x>=1
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= ADDITIONAL_TUNNEL_CARDS); //nb de cartes 3>=x>=1
         Preconditions.checkArgument(!initialCards.isEmpty()); // InitialCards vide
         Preconditions.checkArgument(initialCards.toMap().keySet().size() <= 2); // MAX 2 types de cartes
-        Preconditions.checkArgument(drawnCards.size() == 3); //3 éléments dans drawncards
+        Preconditions.checkArgument(drawnCards.size() == ADDITIONAL_TUNNEL_CARDS); //3 éléments dans drawncards
 
         ArrayList<SortedBag<Card>> options; // liste qui sera renvoyée
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
@@ -223,10 +223,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return Retourne la somme des points des tickets et des bonus de routes.
      */
     public int finalPoints() {
-        int totalPoints = 0;
-        totalPoints += ticketPoints();
-        totalPoints += claimPoints();
-        return totalPoints;
+        return ticketPoints()+claimPoints();
     }
 
 

@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *  Une route relie deux stations et possède plusieurs caractéristiques.
- *  Fichier créé à 14:28 le 23.02.2021
+ * Une route relie deux stations et possède plusieurs caractéristiques.
+ * Fichier créé à 14:28 le 23.02.2021
  *
- *  @author Louis Gerard (296782)
- *  @author Célien Muller (310777)
- *
- *
+ * @author Louis Gerard (296782)
+ * @author Célien Muller (310777)
  */
 
 public final class Route {
@@ -27,23 +25,15 @@ public final class Route {
     SortedBag.Builder<Card> cardsB;
 
     /**
-     * Enum qui indique si la route est en surface ou en tunnel
-     */
-    public enum Level {
-        OVERGROUND,
-        UNDERGROUND
-    }
-
-    /**
-     * @param id L'identification unique de la route. Chaine de caractères, pas un int comme les stations !
+     * @param id       L'identification unique de la route. Chaine de caractères, pas un int comme les stations !
      * @param station1 Station de départ
      * @param station2 Station d'arrivée
-     * @param length Longueur de la route (affecte le nombre de cartes à utiliser pour la capturer)
-     * @param level Level.UNDERGROUND ou Level.OVERGROUND, affecte la règle de capture
-     * @param color Couleur de la route, null si elle est neutre
+     * @param length   Longueur de la route (affecte le nombre de cartes à utiliser pour la capturer)
+     * @param level    Level.UNDERGROUND ou Level.OVERGROUND, affecte la règle de capture
+     * @param color    Couleur de la route, null si elle est neutre
      * @throws IllegalArgumentException si les deux gares sont égal (au sens de equals)
      * @throws IllegalArgumentException si la longueur n'est pas compris dans les bornes défini dans Constant
-     * @throws NullPointerException si une des gare ou le niveau est null
+     * @throws NullPointerException     si une des gare ou le niveau est null
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         Preconditions.checkArgument(!station1.equals(station2));
@@ -111,20 +101,14 @@ public final class Route {
     }
 
     /**
+     * Retourne la station opposée à celle donnée en argument
      * @param station La station de départ ou d'arrivée de la route.
-     * @throws IllegalArgumentException si la station n'est ni l'arrivée ni le départ.
      * @return Renvoie la station de départ si l'argument est la station d'arrivée et vice-versa.
+     * @throws IllegalArgumentException si la station n'est ni l'arrivée ni le départ.
      */
     public Station stationOpposite(Station station) {
-        boolean isStation1 = station.equals(station1);
-        boolean isStation2 = station.equals(station2);
-        Preconditions.checkArgument(isStation1 || isStation2);
-        if (isStation1) {
-            return station2;
-        }
-        else {
-            return station1;
-        }
+        Preconditions.checkArgument(stations().contains(station));
+        return station.equals(station1) ? station2 : station1;
     }
 
     /**
@@ -143,8 +127,7 @@ public final class Route {
                     cardsB.add(i, Card.LOCOMOTIVE);
                     bag = cardsB.add(length - i, Card.of(color)).build();
                     bagList.add(bag);
-                }
-                else {
+                } else {
                     for (Color c : Color.values()) {
                         cardsB = new SortedBag.Builder<>();
                         // pour éviter les doublons de mains à n locomotives, on arrête la fonction prématurément quand
@@ -161,15 +144,13 @@ public final class Route {
                 }
 
             }
-        }
-        else {
+        } else {
             cardsB = new SortedBag.Builder<>();
             if (!rainbow) {
                 cardsB.add(length, Card.of(color));
                 bag = cardsB.build();
                 bagList.add(bag);
-            }
-            else {
+            } else {
                 for (Color c : Color.values()) {
                     cardsB = new SortedBag.Builder<>();
                     bag = cardsB.add(length, Card.of(c)).build();
@@ -178,33 +159,40 @@ public final class Route {
             }
         }
         //On itère de 0 à la longueur pour commencer par les mains qui utilisent le moins de locomotives.
-            return bagList;
+        return bagList;
     }
 
     /**
      * @param claimCards Les cartes utilisées pour capturer le tunnel
      * @param drawnCards Les trois cartes piochées par le joueur lors de la tentative de capture
-     * @throws IllegalArgumentException si il n'y a pas exactement 3 cartes dans drawnCards ou si la route n'est pas
-     * UNDERGROUND
      * @return le nombre de cartes à rejouer pour s'emparer du tunnel
+     * @throws IllegalArgumentException si il n'y a pas exactement 3 cartes dans drawnCards ou si la route n'est pas
+     *                                  UNDERGROUND
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
-        int requirement = 0;
         Preconditions.checkArgument(drawnCards.size() == 3 && this.level().equals(Level.UNDERGROUND));
+        int requirement = 0;
         for (Card c : drawnCards) {
             if (claimCards.contains(c) || c.equals(Card.LOCOMOTIVE)) {
                 requirement++;
             }
         }
         return requirement;
-
     }
 
     /**
      * @return retourne le nombre de points appropriés vis-à-vis de la longueur de la route.
      */
-    public int claimPoints(){
-       return Constants.ROUTE_CLAIM_POINTS.get(length);
+    public int claimPoints() {
+        return Constants.ROUTE_CLAIM_POINTS.get(length);
+    }
+
+    /**
+     * Enum qui indique si la route est en surface ou en tunnel
+     */
+    public enum Level {
+        OVERGROUND,
+        UNDERGROUND
     }
 }
 

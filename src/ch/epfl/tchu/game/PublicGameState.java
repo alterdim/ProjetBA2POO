@@ -39,9 +39,8 @@ public class PublicGameState {
         this.ticketCount = ticketCount;
         this.cardState = cardState;
         this.currentPlayerId = currentPlayerId;
-        this.playerState = playerState;
+        this.playerState = Map.copyOf(playerState);
         this.lastPlayer = lastPlayer;
-
     }
 
     /**

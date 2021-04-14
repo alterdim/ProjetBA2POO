@@ -37,9 +37,7 @@ public final class StationPartition implements StationConnectivity{
         else {
             return representative(list, list[stationId]);
         }
-
     }
-
 
 
     /**
@@ -82,11 +80,5 @@ public final class StationPartition implements StationConnectivity{
             }
             return new StationPartition(newPartition);
         }
-
-
-
-
     }
-
-
 }

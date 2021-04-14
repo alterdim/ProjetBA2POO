@@ -19,7 +19,7 @@ public final class Trail {
     private Trail(Station stationFrom, Station stationTo, List<Route> routes, int length) {
         this.stationFrom=stationFrom;
         this.stationTo=stationTo;
-        this.routes=routes;
+        this.routes=List.copyOf(routes);
         this.length=length;
     }
 
@@ -29,13 +29,12 @@ public final class Trail {
      * @return  Retourne un trajet parmi les plus longs disponibles
      */
     public static Trail longest(List<Route> routes){
-
-        Trail longestTrail=new Trail(null, null, null, 0);
+        Trail longestTrail = new Trail(null, null, List.of(), 0);
 
         List<Trail> cs = new ArrayList<>();
 
         for (Route route:routes){
-            if (longestTrail.length< route.length()) longestTrail=new Trail(route.station1(), route.station2(), List.of(route), route.length());
+            if (longestTrail.length < route.length()) longestTrail=new Trail(route.station1(), route.station2(), List.of(route), route.length());
             cs.add(new Trail(route.station1(), route.station2(), List.of(route), route.length()));
             cs.add(new Trail(route.station2(), route.station1(), List.of(route), route.length()));
         }
@@ -43,7 +42,6 @@ public final class Trail {
         while (!cs.isEmpty()){
             List<Trail> cs2 = new ArrayList<>();
             for(Trail c:cs){
-
                 List<Route> rs= new ArrayList<>(routes);
 
                 //Retire toutes les routes déjà utilisée
@@ -67,7 +65,6 @@ public final class Trail {
         }
         return longestTrail;
     }
-
 
     /**
      * Récupère la station de départ
@@ -111,7 +108,7 @@ public final class Trail {
             str.append(" - ");
         }
 
-        stations.add(stationTo);
+//        stations.add(stationTo);
         str.append(stationTo.name());
 
         str.append(String.format(" (%d)", length()));

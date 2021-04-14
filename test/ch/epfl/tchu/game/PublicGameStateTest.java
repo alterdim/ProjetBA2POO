@@ -213,6 +213,391 @@ class PublicGameStateTest {
         assertNull(pgsN.lastPlayer());
     }
 
+    //Personal tests
+    @Test
+    void failWithPublicGameStateNegativeDeckSize() {
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            new PublicGameState(-1, publicC, PLAYER_1, map, null);
+        });
+    }
+
+    @Test
+    void failWithPublicGameStateLessPair() {
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            new PublicGameState(0, publicC, PLAYER_1, map, null);
+        });
+    }
+
+    @Test
+    void failWithPublicGameStateMorePair() {
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        var play1 = new PublicPlayerState(0, 0, List.of());
+        map.put(PLAYER_1, play1);
+        var play2 = new PublicPlayerState(0, 0, List.of());
+        map.put(PLAYER_2, play2);
+        var play3 = new PublicPlayerState(0, 0, List.of());
+        map.put(PLAYER_1, play1);
+
+        /*System.out.println(map.size());
+        System.out.println(map.toString());*/
+
+        //TODO useless check?
+        /*assertThrows(IllegalArgumentException.class, () -> {
+            new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
+        });*/
+    }
+
+    @Test
+    void failWithPublicGameStateZeroPair() {
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            new PublicGameState(0, publicC, PLAYER_1, map, null);
+        });
+    }
+
+    @Test
+    void failWithPublicGameStateNullElement() {
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        //with ticketCount null error because int cannot be null (Integer can)
+
+        assertThrows(NullPointerException.class, () -> {
+            new PublicGameState(0, null, PLAYER_1, map, null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new PublicGameState(0, publicC, null, map, null);
+        });
+        assertThrows(NullPointerException.class, () -> {
+            new PublicGameState(0, publicC, PLAYER_1, null, null);
+        });
+    }
+
+    @Test
+    void workWithPublicGameState() {
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        new PublicGameState(0, publicC, PLAYER_1, map, null);
+        new PublicGameState(0, publicC, PLAYER_1, map, PLAYER_2);
+    }
+
+    @Test
+    void workTicketsCount() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        new PublicGameState(0, publicC, PLAYER_1, map, null);
+
+    }
+
+    @Test
+    void workTicketCount() {
+        int tickets = 10;
+
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+        int x = 0;
+        int y = 0;
+
+        var publicC = new PublicCardState(cards, x, y);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        var publicGameState = new PublicGameState(tickets, publicC, PLAYER_1, map, null);
+
+        assertEquals(tickets, publicGameState.ticketsCount());
+    }
+
+    @Test
+    void workCanDrawTickets() {
+        int tickets = 10;
+
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 0, 0);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        var publicGameState = new PublicGameState(tickets, publicC, PLAYER_1, map, null);
+
+        assertTrue(publicGameState.canDrawTickets());
+        var publicGameState2 = new PublicGameState(0, publicC, PLAYER_1, map, null);
+        assertFalse(publicGameState2.canDrawTickets());
+    }
+
+    @Test
+    void workCardState() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 0, 0);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+        assertEquals(publicC, publicGameState.cardState());
+    }
+
+    @Test
+    void workCanDrawCards() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 5, 0);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+
+        assertTrue(publicGameState.canDrawCards());
+
+        publicC = new PublicCardState(cards, 4, 0);
+        publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+
+        assertFalse(publicGameState.canDrawCards());
+    }
+
+    @Test
+    void workCurrentPlayerId() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 0, 0);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+        assertEquals(PLAYER_1, publicGameState.currentPlayerId());
+
+        var publicGameState2 = new PublicGameState(10, publicC, PLAYER_2, map, null);
+        assertEquals(PLAYER_2, publicGameState2.currentPlayerId());
+    }
+
+    @Test
+    void workPlayerState() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 0, 0);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        var play1 = new PublicPlayerState(0, 0, List.of());
+        map.put(PLAYER_1, play1);
+        var play2 = new PublicPlayerState(0, 0, List.of());
+        map.put(PLAYER_2, play2);
+
+        var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+        assertEquals(play1, publicGameState.playerState(PLAYER_1));
+        assertEquals(play2, publicGameState.playerState(PLAYER_2));
+    }
+
+    @Test
+    void workCurrentPlayerState() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 0, 0);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        var play1 = new PublicPlayerState(0, 0, List.of());
+        map.put(PLAYER_1, play1);
+        var play2 = new PublicPlayerState(0, 0, List.of());
+        map.put(PLAYER_2, play2);
+
+        var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+        var publicGameState2 = new PublicGameState(10, publicC, PLAYER_2, map, null);
+        assertEquals(play1, publicGameState.currentPlayerState());
+        assertEquals(play2, publicGameState2.currentPlayerState());
+    }
+
+    @Test
+    void workClaimedRoutes() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 0, 0);
+        var chMap = new ChMap();
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        var rt1 = List.of(chMap.BAD_BAL_1, chMap.BEL_LUG_2, chMap.AT1_STG_1, chMap.BEL_LOC_1);
+        var rt2 = List.of(chMap.BAD_ZUR_1, chMap.BRI_INT_1, chMap.AT2_VAD_1);
+        var play1 = new PublicPlayerState(0, 0, rt1);
+        map.put(PLAYER_1, play1);
+        var play2 = new PublicPlayerState(0, 0, rt2);
+        map.put(PLAYER_2, play2);
+
+        var rtAll = new ArrayList<>();
+        rtAll.addAll(rt1);
+        rtAll.addAll(rt2);
+
+        var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+        assertEquals(rtAll, publicGameState.claimedRoutes());
+    }
+
+    @Test
+    void workLastPlayer() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(Card.LOCOMOTIVE);
+        cards.add(Card.BLUE);
+        cards.add(Card.BLACK);
+        cards.add(Card.WHITE);
+        cards.add(Card.GREEN);
+
+        var publicC = new PublicCardState(cards, 1, 0);
+
+        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+        var publicGameState = new PublicGameState(10, publicC, PLAYER_1, map, null);
+        assertEquals(null, publicGameState.lastPlayer());
+
+        var publicGameState2 = new PublicGameState(10, publicC, PLAYER_1, map, PLAYER_2);
+        assertEquals(PLAYER_2, publicGameState2.lastPlayer());
+        var publicGameState3 = new PublicGameState(10, publicC, PLAYER_1, map, PLAYER_1);
+        assertEquals(PLAYER_1, publicGameState3.lastPlayer());
+    }
+
     private static final class ChMap {
         //region Stations
         final Station BAD = new Station(0, "Baden");
@@ -375,393 +760,6 @@ class PublicGameStateTest {
                 SCZ_WAS_2, SCZ_ZOU_1, SCZ_ZOU_2, STG_VAD_1, STG_WIN_1, STG_ZUR_1,
                 WIN_ZUR_1, WIN_ZUR_2, ZOU_ZUR_1, ZOU_ZUR_2);
         //endregion
-    }
-
-
-    //Personal tests
-    @Test
-    void failWithPublicGameStateNegativeDeckSize(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(-1, publicC, PLAYER_1, map, null);
-        });
-    }
-
-    @Test
-    void failWithPublicGameStateLessPair(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(0, publicC, PLAYER_1, map, null);
-        });
-    }
-
-    @Test
-    void failWithPublicGameStateMorePair(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var play1 = new PublicPlayerState(0, 0, List.of());
-        map.put(PLAYER_1, play1);
-        var play2 = new PublicPlayerState(0, 0, List.of());
-        map.put(PLAYER_2, play2);
-        var play3 = new PublicPlayerState(0, 0, List.of());
-        map.put(PLAYER_1, play1);
-
-        /*System.out.println(map.size());
-        System.out.println(map.toString());*/
-
-        //TODO useless check?
-        /*assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(0, publicC, PlayerId.PLAYER_1, map, null);
-        });*/
-    }
-
-    @Test
-    void failWithPublicGameStateZeroPair(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new PublicGameState(0, publicC, PLAYER_1, map, null);
-        });
-    }
-
-    @Test
-    void failWithPublicGameStateNullElement(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        //with ticketCount null error because int cannot be null (Integer can)
-
-        assertThrows(NullPointerException.class, () -> {
-            new PublicGameState(0, null, PLAYER_1, map, null);
-        });
-        assertThrows(NullPointerException.class, () -> {
-            new PublicGameState(0, publicC, null, map, null);
-        });
-        assertThrows(NullPointerException.class, () -> {
-            new PublicGameState(0, publicC, PLAYER_1, null, null);
-        });
-    }
-
-    @Test
-    void workWithPublicGameState(){
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        new PublicGameState(0, publicC, PLAYER_1, map, null);
-        new PublicGameState(0, publicC, PLAYER_1, map, PLAYER_2);
-    }
-
-
-    @Test
-    void workTicketsCount(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        new PublicGameState(0, publicC, PLAYER_1, map, null);
-
-    }
-
-    @Test
-    void workTicketCount(){
-        int tickets=10;
-
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-
-        var publicC = new PublicCardState(cards, x,y);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-       var publicGameState =  new PublicGameState(tickets, publicC, PLAYER_1, map, null);
-
-       assertEquals(tickets, publicGameState.ticketsCount());
-    }
-
-    @Test
-    void workCanDrawTickets(){
-        int tickets=10;
-
-
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(tickets, publicC, PLAYER_1, map, null);
-
-        assertTrue(publicGameState.canDrawTickets());
-        var publicGameState2 =  new PublicGameState(0, publicC, PLAYER_1, map, null);
-        assertFalse(publicGameState2.canDrawTickets());
-    }
-
-    @Test
-    void workCardState(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-        assertEquals(publicC ,publicGameState.cardState());
-    }
-
-
-    @Test
-    void workCanDrawCards(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 5,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-
-        assertTrue(publicGameState.canDrawCards());
-
-        publicC = new PublicCardState(cards, 4,0);
-        publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-
-        assertFalse(publicGameState.canDrawCards());
-    }
-
-    @Test
-    void workCurrentPlayerId(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-        assertEquals(PLAYER_1 ,publicGameState.currentPlayerId());
-
-        var publicGameState2 =  new PublicGameState(10, publicC, PLAYER_2, map, null);
-        assertEquals(PLAYER_2 ,publicGameState2.currentPlayerId());
-    }
-
-    @Test
-    void workPlayerState(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var play1 = new PublicPlayerState(0, 0, List.of());
-        map.put(PLAYER_1, play1);
-        var play2 = new PublicPlayerState(0, 0, List.of());
-        map.put(PLAYER_2, play2);
-
-        var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-        assertEquals(play1,publicGameState.playerState(PLAYER_1));
-        assertEquals(play2,publicGameState.playerState(PLAYER_2));
-    }
-
-    @Test
-    void workCurrentPlayerState(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var play1 = new PublicPlayerState(0, 0, List.of());
-        map.put(PLAYER_1, play1);
-        var play2 = new PublicPlayerState(0, 0, List.of());
-        map.put(PLAYER_2, play2);
-
-        var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-        var publicGameState2 =  new PublicGameState(10, publicC, PLAYER_2, map, null);
-        assertEquals(play1,publicGameState.currentPlayerState());
-        assertEquals(play2,publicGameState2.currentPlayerState());
-    }
-
-    @Test
-    void workClaimedRoutes(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 0,0);
-        var chMap = new ChMap();
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        var rt1=List.of(chMap.BAD_BAL_1, chMap.BEL_LUG_2, chMap.AT1_STG_1, chMap.BEL_LOC_1);
-        var rtAll= new ArrayList<>(rt1);
-        var play1 = new PublicPlayerState(0, 0, rt1);
-        map.put(PLAYER_1, play1);
-        var rt2=List.of(chMap.BAD_ZUR_1, chMap.BRI_INT_1, chMap.AT2_VAD_1);
-        var play2 = new PublicPlayerState(0, 0, rt2);
-        map.put(PLAYER_2, play2);
-
-       rtAll.addAll(rt2);
-
-        var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-        assertEquals(rtAll,publicGameState.claimedRoutes());
-    }
-
-    @Test
-    void workLastPlayer(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-
-        var publicC = new PublicCardState(cards, 1,0);
-
-        Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
-        map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
-        map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
-
-        var publicGameState =  new PublicGameState(10, publicC, PLAYER_1, map, null);
-        assertEquals(null, publicGameState.lastPlayer());
-
-        var publicGameState2 =  new PublicGameState(10, publicC, PLAYER_1, map, PLAYER_2);
-        assertEquals(PLAYER_2, publicGameState2.lastPlayer());
-        var publicGameState3 =  new PublicGameState(10, publicC, PLAYER_1, map, PLAYER_1);
-        assertEquals(PLAYER_1, publicGameState3.lastPlayer());
     }
 
 

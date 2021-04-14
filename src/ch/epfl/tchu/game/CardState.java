@@ -36,7 +36,11 @@ public final class CardState extends PublicCardState{
      */
     public static CardState of(Deck<Card> deck){
         Preconditions.checkArgument(deck.size()>=FACE_UP_CARDS_COUNT);
-        return new CardState(deck.topCards(FACE_UP_CARDS_COUNT).toList(), deck.withoutTopCards(FACE_UP_CARDS_COUNT), new SortedBag.Builder<Card>().build());
+        return new CardState(
+                deck.topCards(FACE_UP_CARDS_COUNT).toList(),
+                deck.withoutTopCards(FACE_UP_CARDS_COUNT),
+                new SortedBag.Builder<Card>().build()
+        );
     }
 
     /**
@@ -51,7 +55,7 @@ public final class CardState extends PublicCardState{
         Preconditions.checkArgument(!drawCards.isEmpty());
         List<Card> faceUpCards = new ArrayList<>(faceUpCards());
         faceUpCards.set(slot, drawCards.topCard());  //Replace element in position slot
-        return new CardState(faceUpCards ,drawCards.withoutTopCard(), discards);
+        return new CardState(faceUpCards, drawCards.withoutTopCard(), discards);
     }
 
     /**
@@ -82,7 +86,11 @@ public final class CardState extends PublicCardState{
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(drawCards.isEmpty());
-        return new CardState(faceUpCards(), Deck.of(discards, rng), new SortedBag.Builder<Card>().build());
+        return new CardState(
+                faceUpCards(),
+                Deck.of(discards, rng),
+                new SortedBag.Builder<Card>().build()
+        );
     }
 
     /**

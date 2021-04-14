@@ -236,7 +236,7 @@ class InfoTest {
         Station station2 = new Station(2, "station2");
         Route route = new Route("route", station1, station2, 3, Route.Level.OVERGROUND, Color.BLACK);
 
-        var longesttrail = Trail.longest(List.of(route));
+        var longestTrail = Trail.longest(List.of(route));
 
 
 //        System.out.print(info.willPlayFirst());
@@ -250,7 +250,7 @@ class InfoTest {
 //        System.out.print(info.drewAdditionalCards(cardSortedBag, 5));
 //        System.out.print(info.didNotClaimRoute(route));
 //        System.out.print(info.lastTurnBegins(5));
-//        System.out.print(info.getsLongestTrailBonus(longesttrail));
+//        System.out.print(info.getsLongestTrailBonus(longestTrail));
 //        System.out.print(info.won(5,3));
     }
 
