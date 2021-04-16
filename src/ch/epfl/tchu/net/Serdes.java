@@ -51,12 +51,11 @@ public final class Serdes {
         infos.add(LIST_CARD.serialize(publicCardState.faceUpCards()));
         infos.add(INTEGER.serialize(publicCardState.deckSize()));
         infos.add(INTEGER.serialize(publicCardState.discardsSize()));
-        return STRING.serialize(String.join(";", infos));
+        return String.join(";", infos);
     }
 
     private static PublicCardState deserializePCS(String string) {
-        String decodedString = STRING.deserialize(string);
-        String[] infos = Pattern.quote(decodedString).split(";", -1);
+        String[] infos = Pattern.quote(string).split(";", -1);
         return new PublicCardState(LIST_CARD.deserialize(infos[0]),
                 INTEGER.deserialize(infos[1]),
                 INTEGER.deserialize(infos[2]));
@@ -68,12 +67,11 @@ public final class Serdes {
         infos.add(INTEGER.serialize(publicPlayerState.ticketCount()));
         infos.add(INTEGER.serialize(publicPlayerState.carCount()));
         infos.add(LIST_ROUTE.serialize(publicPlayerState.routes()));
-        return STRING.serialize(String.join(";", infos));
+        return String.join(";", infos);
     }
 
     private static PublicPlayerState deserializePPS(String string) {
-        String decodedString = STRING.deserialize(string);
-        String[] infos = Pattern.quote(decodedString).split(";", -1);
+        String[] infos = Pattern.quote(string).split(";", -1);
         return new PublicPlayerState(INTEGER.deserialize(infos[0]),
                 INTEGER.deserialize(infos[1]),
                 LIST_ROUTE.deserialize(infos[2]));
@@ -85,12 +83,11 @@ public final class Serdes {
         infos.add(SORTED_BAG_TICKET.serialize(playerState.tickets()));
         infos.add(SORTED_BAG_CARD.serialize(playerState.cards()));
         infos.add(LIST_ROUTE.serialize(playerState.routes()));
-        return STRING.serialize(String.join(";", infos));
+        return String.join(";", infos);
     }
 
     private static PlayerState deserializePS(String string) {
-        String decodedString = STRING.deserialize(string);
-        String[] infos = Pattern.quote(decodedString).split(";", -1);
+        String[] infos = Pattern.quote(string).split(";", -1);
         return new PlayerState(SORTED_BAG_TICKET.deserialize(infos[0]),
                 SORTED_BAG_CARD.deserialize(infos[1]),
                 LIST_ROUTE.deserialize(infos[2]));
@@ -104,13 +101,19 @@ public final class Serdes {
         infos.add(PLAYER_ID.serialize(publicGameState.currentPlayerId()));
         infos.add(PUBLIC_PLAYER_STATE.serialize(publicGameState.playerState(PlayerId.PLAYER_1)));
         infos.add(PUBLIC_PLAYER_STATE.serialize(publicGameState.playerState(PlayerId.PLAYER_2)));
-        infos.add(PLAYER_ID.serialize(publicGameState.lastPlayer()));
-        return STRING.serialize(String.join(":", infos));
+
+        if (publicGameState.lastPlayer() == null) {
+            infos.add("");
+        }
+        else {
+            infos.add(PLAYER_ID.serialize(publicGameState.lastPlayer()));
+        }
+
+        return String.join(":", infos);
     }
 
     private static PublicGameState deserializePGS(String string) {
-        String decodedString = STRING.deserialize(string);
-        String[] infos = Pattern.quote(decodedString).split(":", -1);
+        String[] infos = Pattern.quote(string).split(":", -1);
         HashMap<PlayerId, PublicPlayerState> playerMap = new HashMap<>();
         playerMap.put(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE.deserialize(infos[3]));
         playerMap.put(PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE.deserialize(infos[4]));
