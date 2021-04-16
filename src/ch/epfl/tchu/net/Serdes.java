@@ -65,7 +65,7 @@ public final class Serdes {
     private static String serializePPS(PublicPlayerState publicPlayerState) {
         List<String> infos = new ArrayList<>();
         infos.add(INTEGER.serialize(publicPlayerState.ticketCount()));
-        infos.add(INTEGER.serialize(publicPlayerState.carCount()));
+        infos.add(INTEGER.serialize(publicPlayerState.cardCount()));
         infos.add(LIST_ROUTE.serialize(publicPlayerState.routes()));
         return String.join(";", infos);
     }
