@@ -4,8 +4,11 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Créé le 13.04.2021 à 08:53
@@ -38,18 +41,84 @@ public final class Serdes {
 
     public static final Serde<List<SortedBag<Card>>> LIST_SORTED_BAG_CARD = Serde.listOf(SORTED_BAG_CARD, ";");
 
-    //Types composites :
+    public static final Serde<PublicCardState> PUBLIC_CARD_STATE = Serde.of(Serdes::serializePCS, Serdes::deserializePCS);
+    public static final Serde<PublicPlayerState> PUBLIC_PLAYER_STATE = Serde.of(Serdes::serializePPS, Serdes::deserializePPS);
+    public static final Serde<PlayerState> PLAYER_STATE = Serde.of(Serdes::serializePS, Serdes::deserializePS);
+    public static final Serde<PublicGameState> PUBLIC_GAME_STATE = Serde.of(Serdes::serializePGS, Serdes::deserializePGS);
 
-    //List<Card>
-    //int
-    //int
-    public static final Serde<PublicCardState> PUBLIC_CARD_STATE = null;
+    private static String serializePCS(PublicCardState publicCardState) {
+        List<String> infos = new ArrayList<>();
+        infos.add(LIST_CARD.serialize(publicCardState.faceUpCards()));
+        infos.add(INTEGER.serialize(publicCardState.deckSize()));
+        infos.add(INTEGER.serialize(publicCardState.discardsSize()));
+        return STRING.serialize(String.join(";", infos));
+    }
 
-    public static final Serde<PublicPlayerState> PUBLIC_PLAYER_STATE = null;
-    public static final Serde<PlayerState> PLAYER_STATE = null;
+    private static PublicCardState deserializePCS(String string) {
+        String decodedString = STRING.deserialize(string);
+        String[] infos = Pattern.quote(decodedString).split(";", -1);
+        return new PublicCardState(LIST_CARD.deserialize(infos[0]),
+                INTEGER.deserialize(infos[1]),
+                INTEGER.deserialize(infos[2]));
+    }
 
 
-    public static final Serde<PublicGameState> PUBLIC_GAME_STATE=null;
+    private static String serializePPS(PublicPlayerState publicPlayerState) {
+        List<String> infos = new ArrayList<>();
+        infos.add(INTEGER.serialize(publicPlayerState.ticketCount()));
+        infos.add(INTEGER.serialize(publicPlayerState.carCount()));
+        infos.add(LIST_ROUTE.serialize(publicPlayerState.routes()));
+        return STRING.serialize(String.join(";", infos));
+    }
 
+    private static PublicPlayerState deserializePPS(String string) {
+        String decodedString = STRING.deserialize(string);
+        String[] infos = Pattern.quote(decodedString).split(";", -1);
+        return new PublicPlayerState(INTEGER.deserialize(infos[0]),
+                INTEGER.deserialize(infos[1]),
+                LIST_ROUTE.deserialize(infos[2]));
+    }
+
+
+    private static String serializePS(PlayerState playerState) {
+        List<String> infos = new ArrayList<>();
+        infos.add(SORTED_BAG_TICKET.serialize(playerState.tickets()));
+        infos.add(SORTED_BAG_CARD.serialize(playerState.cards()));
+        infos.add(LIST_ROUTE.serialize(playerState.routes()));
+        return STRING.serialize(String.join(";", infos));
+    }
+
+    private static PlayerState deserializePS(String string) {
+        String decodedString = STRING.deserialize(string);
+        String[] infos = Pattern.quote(decodedString).split(";", -1);
+        return new PlayerState(SORTED_BAG_TICKET.deserialize(infos[0]),
+                SORTED_BAG_CARD.deserialize(infos[1]),
+                LIST_ROUTE.deserialize(infos[2]));
+    }
+
+
+    private static String serializePGS(PublicGameState publicGameState) {
+        List<String> infos = new ArrayList<>();
+        infos.add(INTEGER.serialize(publicGameState.ticketsCount()));
+        infos.add(PUBLIC_CARD_STATE.serialize(publicGameState.cardState()));
+        infos.add(PLAYER_ID.serialize(publicGameState.currentPlayerId()));
+        infos.add(PUBLIC_PLAYER_STATE.serialize(publicGameState.playerState(PlayerId.PLAYER_1)));
+        infos.add(PUBLIC_PLAYER_STATE.serialize(publicGameState.playerState(PlayerId.PLAYER_2)));
+        infos.add(PLAYER_ID.serialize(publicGameState.lastPlayer()));
+        return STRING.serialize(String.join(":", infos));
+    }
+
+    private static PublicGameState deserializePGS(String string) {
+        String decodedString = STRING.deserialize(string);
+        String[] infos = Pattern.quote(decodedString).split(":", -1);
+        HashMap<PlayerId, PublicPlayerState> playerMap = new HashMap<>();
+        playerMap.put(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE.deserialize(infos[3]));
+        playerMap.put(PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE.deserialize(infos[4]));
+        return new PublicGameState(INTEGER.deserialize(infos[0]),
+                PUBLIC_CARD_STATE.deserialize(infos[1]),
+                PLAYER_ID.deserialize(infos[2]),
+                playerMap,
+                PLAYER_ID.deserialize(infos[5]));
+    }
 
 }
