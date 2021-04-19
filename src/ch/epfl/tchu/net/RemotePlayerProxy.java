@@ -23,6 +23,10 @@ public class RemotePlayerProxy implements Player {
 
     private Socket socket;
 
+    /**
+     * Constructeur pour le mandataire d'un joueur distant.
+     * @param socket La prise réseau
+     */
     public RemotePlayerProxy(Socket socket) {
         this.socket = socket;
 
