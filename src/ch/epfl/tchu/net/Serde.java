@@ -9,6 +9,8 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
+ * serde (de serializer-deserializer), à savoir un objet capable de sérialiser et désérialiser des valeurs d'un type donné.
+ *
  * Créé le 12.04.2021 à 15:03
  *
  * @author Louis Gerard (296782)

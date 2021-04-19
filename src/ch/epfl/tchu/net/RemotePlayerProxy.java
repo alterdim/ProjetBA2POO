@@ -23,9 +23,12 @@ public class RemotePlayerProxy implements Player {
 
     private Socket socket;
 
+    /**
+     * Constructeur de RemotePlayerProxy
+     * @param socket la "prise" (Socket) que le mandataire utilise pour communiquer avec le client
+     */
     public RemotePlayerProxy(Socket socket) {
         this.socket = socket;
-
     }
 
     private void sendThisDeafly(String sentString) {
@@ -39,7 +42,6 @@ public class RemotePlayerProxy implements Player {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
     }
 
     private String sendThisAndListen(String sentString) {
@@ -58,7 +60,6 @@ public class RemotePlayerProxy implements Player {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
     }
 
     private String stringBaker(String... strings) {
@@ -73,7 +74,6 @@ public class RemotePlayerProxy implements Player {
             }
         }
         return baker.toString();
-
     }
 
     /**
