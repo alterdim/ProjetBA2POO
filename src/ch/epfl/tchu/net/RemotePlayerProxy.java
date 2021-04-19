@@ -61,17 +61,6 @@ public class RemotePlayerProxy implements Player {
 
     }
 
-    private String shutUpAndListen() {
-        try (BufferedReader reader =
-                     new BufferedReader(
-                             new InputStreamReader(socket.getInputStream(),
-                                     US_ASCII))) {
-            return reader.readLine();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
     private String stringBaker(String... strings) {
         StringBuilder baker = new StringBuilder();
         for (int i = 0; i < strings.length; i++) {
@@ -145,7 +134,8 @@ public class RemotePlayerProxy implements Player {
      */
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-        String ticketsSerded = shutUpAndListen();
+        String readyString = stringBaker(MessageId.CHOOSE_INITIAL_TICKETS.name());
+        String ticketsSerded = sendThisAndListen(readyString);
         return Serdes.SORTED_BAG_TICKET.deserialize(ticketsSerded);
     }
 
@@ -156,7 +146,8 @@ public class RemotePlayerProxy implements Player {
      */
     @Override
     public TurnKind nextTurn() {
-        String turnSerded = shutUpAndListen();
+        String readyString = stringBaker(MessageId.NEXT_TURN.name());
+        String turnSerded = sendThisAndListen(readyString);
         return Serdes.TURN_KIND.deserialize(turnSerded);
     }
 
@@ -181,7 +172,8 @@ public class RemotePlayerProxy implements Player {
      */
     @Override
     public int drawSlot() {
-        String receivedInt = shutUpAndListen();
+        String readyString = stringBaker(MessageId.DRAW_SLOT.name());
+        String receivedInt = sendThisAndListen(readyString);
         return Serdes.INTEGER.deserialize(receivedInt);
     }
 
@@ -190,7 +182,8 @@ public class RemotePlayerProxy implements Player {
      */
     @Override
     public Route claimedRoute() {
-        String receivedRoute = shutUpAndListen();
+        String readyString = stringBaker(MessageId.ROUTE.name());
+        String receivedRoute = sendThisAndListen(readyString);
         return Serdes.ROUTE.deserialize(receivedRoute);
     }
 
@@ -201,7 +194,8 @@ public class RemotePlayerProxy implements Player {
      */
     @Override
     public SortedBag<Card> initialClaimCards() {
-        String receivedCards = shutUpAndListen();
+        String readyString = stringBaker(MessageId.CARDS.name());
+        String receivedCards = sendThisAndListen(readyString);
         return Serdes.SORTED_BAG_CARD.deserialize(receivedCards);
     }
 
