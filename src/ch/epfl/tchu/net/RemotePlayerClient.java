@@ -69,38 +69,32 @@ public class RemotePlayerClient {
                         player.setInitialTicketChoice(Serdes.SORTED_BAG_TICKET.deserialize(data[1]));
                         break;
                     case CHOOSE_INITIAL_TICKETS:
-                        writer.write(Serdes.SORTED_BAG_TICKET.serialize(player.chooseInitialTickets()));
-                        writer.write("\n");
+
+                        writer.write(Serdes.SORTED_BAG_TICKET.serialize(player.chooseInitialTickets()) + "\n");
                         writer.flush();
                         break;
                     case NEXT_TURN:
-                        writer.write(Serdes.TURN_KIND.serialize(player.nextTurn()));
-                        writer.write("\n");
+                        writer.write(Serdes.TURN_KIND.serialize(player.nextTurn()) + "\n");
                         writer.flush();
                         break;
                     case CHOOSE_TICKETS:
-                        writer.write(Serdes.SORTED_BAG_TICKET.serialize(player.chooseTickets(Serdes.SORTED_BAG_TICKET.deserialize(data[1]))));
-                        writer.write("\n");
+                        writer.write(Serdes.SORTED_BAG_TICKET.serialize(player.chooseTickets(Serdes.SORTED_BAG_TICKET.deserialize(data[1]))) + "\n");
                         writer.flush();
                         break;
                     case DRAW_SLOT:
-                        writer.write(Serdes.INTEGER.serialize(player.drawSlot()));
-                        writer.write("\n");
+                        writer.write(Serdes.INTEGER.serialize(player.drawSlot()) + "\n");
                         writer.flush();
                         break;
                     case ROUTE:
-                        writer.write(String.valueOf(Serdes.ROUTE.serialize(player.claimedRoute())));
-                        writer.write("\n");
+                        writer.write(Serdes.ROUTE.serialize(player.claimedRoute()) + "\n");
                         writer.flush();
                         break;
                     case CARDS:
-                        writer.write(Serdes.SORTED_BAG_CARD.serialize(player.initialClaimCards()));
-                        writer.write("\n");
+                        writer.write(Serdes.SORTED_BAG_CARD.serialize(player.initialClaimCards()) + "\n");
                         writer.flush();
                         break;
                     case CHOOSE_ADDITIONAL_CARDS:
-                        writer.write(Serdes.SORTED_BAG_CARD.serialize(player.chooseAdditionalCards(Serdes.LIST_SORTED_BAG_CARD.deserialize(data[1]))));
-                        writer.write("\n");
+                        writer.write(Serdes.SORTED_BAG_CARD.serialize(player.chooseAdditionalCards(Serdes.LIST_SORTED_BAG_CARD.deserialize(data[1])))+ "\n");
                         writer.flush();
                         break;
                 }
