@@ -3,6 +3,8 @@ package ch.epfl.tchu.net;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,10 @@ public final class TestClient {
     }
 
     private final static class TestPlayer implements Player {
+
+        private final Deque<SortedBag<Ticket>> allTicketsSeen = new ArrayDeque<>();
+
+
         @Override
         public void initPlayers(PlayerId ownId,
                                 Map<PlayerId, String> names) {
@@ -33,7 +39,7 @@ public final class TestClient {
 
         @Override
         public void receiveInfo(String info) {
-
+            System.out.println("receiveInfo "+info);
         }
 
         @Override
@@ -43,12 +49,14 @@ public final class TestClient {
 
         @Override
         public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-
+            allTicketsSeen.addLast(tickets);
+            System.out.println("InitialTickets "+tickets);
         }
 
         @Override
         public SortedBag<Ticket> chooseInitialTickets() {
-            return null;
+            System.out.println("Tickets choisi"+allTicketsSeen.peekFirst());
+            return allTicketsSeen.peekFirst();
         }
 
         @Override
@@ -68,7 +76,9 @@ public final class TestClient {
 
         @Override
         public Route claimedRoute() {
-            return null;
+            var route = ChMap.routes().get(0);
+            System.out.println("Claimed route "+route.id());
+            return route;
         }
 
         @Override
@@ -80,7 +90,5 @@ public final class TestClient {
         public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
             return null;
         }
-
-        // … autres méthodes de Player
     }
 }

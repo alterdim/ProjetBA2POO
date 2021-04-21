@@ -39,11 +39,9 @@ public class RemotePlayerProxy implements Player {
                                      US_ASCII))) {
             writer.write(sentString);
             writer.flush();
-
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
     }
 
     private String sendThisAndListen(String sentString) {
@@ -58,7 +56,6 @@ public class RemotePlayerProxy implements Player {
             writer.write(sentString);
             writer.flush();
             return reader.readLine();
-
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -69,10 +66,9 @@ public class RemotePlayerProxy implements Player {
         StringBuilder baker = new StringBuilder();
         for (int i = 0; i < strings.length; i++) {
             baker.append(strings[i]);
-            if (i != strings.length-1) {
+            if (i != strings.length - 1) {
                 baker.append(" ");
-            }
-            else {
+            } else {
                 baker.append("\n");
             }
         }
@@ -128,9 +124,8 @@ public class RemotePlayerProxy implements Player {
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
         String ticketsSerded = Serdes.SORTED_BAG_TICKET.serialize(tickets);
-        String readyString = stringBaker(ticketsSerded);
+        String readyString = stringBaker(MessageId.SET_INITIAL_TICKETS.name(), ticketsSerded);
         sendThisDeafly(readyString);
-
     }
 
     /**
@@ -164,7 +159,7 @@ public class RemotePlayerProxy implements Player {
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
         String optionsSerded = Serdes.SORTED_BAG_TICKET.serialize(options);
-        String readyString = stringBaker(optionsSerded);
+        String readyString = stringBaker(MessageId.CHOOSE_TICKETS.name(), optionsSerded);
         String serdedTickets = sendThisAndListen(readyString);
         return Serdes.SORTED_BAG_TICKET.deserialize(serdedTickets);
     }
@@ -212,7 +207,7 @@ public class RemotePlayerProxy implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         String optionsSerded = Serdes.LIST_SORTED_BAG_CARD.serialize(options);
-        String readyString = stringBaker(optionsSerded);
+        String readyString = stringBaker(MessageId.CHOOSE_ADDITIONAL_CARDS.name(), optionsSerded);
         String cardsSerded = sendThisAndListen(readyString);
         return Serdes.SORTED_BAG_CARD.deserialize(cardsSerded);
     }

@@ -1,5 +1,7 @@
 package ch.epfl.tchu.net;
 
+import ch.epfl.tchu.SortedBag;
+import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Player;
 
 import java.io.IOException;
@@ -25,6 +27,18 @@ public final class TestServer {
             var playerNames = Map.of(PLAYER_1, "Ada",
                     PLAYER_2, "Charles");
             playerProxy.initPlayers(PLAYER_1, playerNames);
+
+//            System.out.println("Claimed Route "+playerProxy.claimedRoute().id());
+
+            SortedBag.Builder s = new SortedBag.Builder();
+            s.add(ChMap.tickets().get(0));
+            s.add(ChMap.tickets().get(1));
+            s.add(ChMap.tickets().get(2));
+            s.add(ChMap.tickets().get(3));
+            s.add(ChMap.tickets().get(4));
+            playerProxy.setInitialTicketChoice(s.build());
+
+//            System.out.println("Initial tickets choice"+ playerProxy.chooseInitialTickets());
         }
         System.out.println("Server done!");
     }
