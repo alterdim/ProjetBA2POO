@@ -2,6 +2,7 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -17,11 +18,13 @@ import java.util.Map;
 public final class TestClient {
     public static void main(String[] args) {
         System.out.println("Starting client!");
+        TestPlayer testPlayer = new TestPlayer();
         RemotePlayerClient playerClient =
-                new RemotePlayerClient(new TestPlayer(),
+                new RemotePlayerClient(testPlayer,
                         "localhost",
                         5108);
         playerClient.run();
+        testPlayer.claimedRoute();
         System.out.println("Client done!");
     }
 

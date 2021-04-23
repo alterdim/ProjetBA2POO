@@ -28,7 +28,8 @@ public final class TestServer {
                     PLAYER_2, "Charles");
             playerProxy.initPlayers(PLAYER_1, playerNames);
 
-//            System.out.println("Claimed Route "+playerProxy.claimedRoute().id());
+
+            System.out.println("Claimed Route "+ playerProxy.claimedRoute().id());
 
             SortedBag.Builder s = new SortedBag.Builder();
             s.add(ChMap.tickets().get(0));
@@ -38,7 +39,7 @@ public final class TestServer {
             s.add(ChMap.tickets().get(4));
             playerProxy.setInitialTicketChoice(s.build());
 
-//            System.out.println("Initial tickets choice"+ playerProxy.chooseInitialTickets());
+            System.out.println("Initial tickets choice"+ playerProxy.chooseInitialTickets());
         }
         System.out.println("Server done!");
     }

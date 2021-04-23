@@ -5,6 +5,7 @@ import ch.epfl.tchu.game.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,22 +22,28 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  */
 public class RemotePlayerProxy implements Player {
 
-    private Socket socket;
+    private BufferedWriter writer;
+    private BufferedReader reader;
 
     /**
      * Constructeur pour le mandataire d'un joueur distant.
      * @param socket La prise réseau
      */
     public RemotePlayerProxy(Socket socket) {
-        this.socket = socket;
+        try {
+            this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+            this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+
+
 
     }
 
     private void sendThisDeafly(String sentString) {
-        try (BufferedWriter writer =
-                     new BufferedWriter(
-                             new OutputStreamWriter(socket.getOutputStream(),
-                                     US_ASCII))) {
+        try {
             writer.write(sentString);
             writer.flush();
         } catch (IOException e) {
@@ -45,14 +52,7 @@ public class RemotePlayerProxy implements Player {
     }
 
     private String sendThisAndListen(String sentString) {
-        try (BufferedReader reader =
-                     new BufferedReader(
-                             new InputStreamReader(socket.getInputStream(),
-                                     US_ASCII));
-             BufferedWriter writer =
-                     new BufferedWriter(
-                             new OutputStreamWriter(socket.getOutputStream(),
-                                     US_ASCII))) {
+        try {
             writer.write(sentString);
             writer.flush();
             return reader.readLine();
