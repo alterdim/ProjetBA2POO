@@ -28,19 +28,32 @@ abstract class MapViewCreator {
     }
 
     public static Pane createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandler, CardChooser cardChooser) {
-        JavaFXSceneBuilder sceneBuilder = new JavaFXSceneBuilder();
-        List<String> styleSheets = sceneBuilder.getStylesheets();
+        Pane canvas = new Pane();
+        canvas.getStylesheets().add("map.css");
         ImageView background = new ImageView();
-        background.setStyle("map:css");
-
-        List<Node> routeNodes = new ArrayList<Node>();
-
-
+        canvas.getChildren().add(background);
         Group routeGroup = new Group();
+        Group tempRouteGroup;
+        Group tempCaseGroup;
+        for (Route r : ChMap.routes()) {
+            tempRouteGroup = new Group();
+            tempRouteGroup.getStylesheets().addAll("ROUTE", r.level().toString(), r.color().toString());
+            tempRouteGroup.setId(r.id());
+
+            for (int i = 0; i< r.length(); i++) {
+                tempCaseGroup = new Group();
+                tempCaseGroup.setId(r.id()+"_"+(i+1));
+
+            }
+            routeGroup.getChildren().addAll(tempRouteGroup);
+        }
+        canvas.getChildren().add(routeGroup);
         routeGroup.getStyleClass().addAll("route", "UNDERGROUND", "NEUTRAL");
         routeGroup.getChildren().addAll();
 
-        Pane canvas = new Pane();
+
+
+
         canvas.getChildren().addAll();
         return canvas;
     }
