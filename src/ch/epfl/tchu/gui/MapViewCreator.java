@@ -3,24 +3,13 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
-import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Route;
-import com.sun.javafx.fxml.builder.JavaFXImageBuilder;
-import com.sun.javafx.fxml.builder.JavaFXSceneBuilder;
-import com.sun.javafx.property.adapter.PropertyDescriptor;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.shape.Rectangle;
 import javafx.beans.property.ObjectProperty;
-import javafx.fxml.JavaFXBuilderFactory;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
-import java.util.ArrayList;
 import java.util.List;
 import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
 
@@ -91,8 +80,7 @@ abstract class MapViewCreator {
             }
             tempRouteGroup.disableProperty().bind(claimRouteHandler.isNull().or(gameState.canClaimRoute(r).not()));
             tempRouteGroup.setOnMouseClicked((event) -> {
-                    Route route = r;
-                    List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(route);
+                List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(r);
                     if (possibleClaimCards.size()==1){
                         claimRouteH.onClaimRoute(r, possibleClaimCards.get(0));
                     }
@@ -101,15 +89,10 @@ abstract class MapViewCreator {
                     }
             });
             canvas.getChildren().addAll(tempRouteGroup);
-
         }
-
-
-
         return canvas;
-
-
     }
+
     private static void handleSpecialCardCase(ObservableGameState gameState, Route route, ClaimRouteHandler claimRouteHandler, CardChooser cardChooser) {
         List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(route);
         ActionHandlers.ChooseCardsHandler chooseCardsHandler = (chosenCards) -> claimRouteHandler.onClaimRoute(route, chosenCards);

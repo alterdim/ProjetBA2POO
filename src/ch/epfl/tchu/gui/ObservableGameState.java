@@ -33,6 +33,7 @@ public class ObservableGameState {
     private final ObservableList<Ticket> tickets;
     private final Map<Card, IntegerProperty> cards;
     private final Map<Route, BooleanProperty> routes;
+
     private PublicGameState currentPublicGameState;
     private PlayerState currentPlayerState;
 
