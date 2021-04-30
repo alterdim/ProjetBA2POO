@@ -67,6 +67,9 @@ public class ObservableGameState {
     //groupe 1
     private static List<ObjectProperty<Card>> createFaceUpCards() {
         List<ObjectProperty<Card>> faceUpCardsList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            faceUpCardsList.add(null);
+        }
         for (int slot : FACE_UP_CARD_SLOTS) {
             faceUpCardsList.set(slot, new SimpleObjectProperty<>(null));
         }
@@ -155,7 +158,7 @@ public class ObservableGameState {
     private void updateFaceUpCards(PublicCardState cardState) {
         for (int slot : FACE_UP_CARD_SLOTS) {
             Card newCard = cardState.faceUpCard(slot);
-            if (!faceUpCards.get(slot).get().equals(newCard)) {
+            if (!faceUpCards.get(slot).equals(newCard)) {
                 faceUpCards.get(slot).set(newCard);
             }
         }
@@ -164,7 +167,7 @@ public class ObservableGameState {
     private void updateRoutesOwned(PublicGameState gameState) {
         for (PlayerId playerId : PlayerId.ALL) {
             for (Route route : gameState.playerState(playerId).routes()) {
-                if (!routesOwned.get(route).get().equals(playerId)) {
+                if (!routesOwned.get(route).equals(playerId)) {
                     routesOwned.get(route).set(playerId);
                 }
             }

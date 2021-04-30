@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -37,7 +38,8 @@ public final class Stage9Test extends Application {
         //Node handView = DecksViewCreator.createHandView(gameState);
 
         //BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, null);
-        //rimaryStage.setScene(new Scene(mainPane));
+        Pane mainPane = new Pane(mapView);
+        primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
 
         setState(gameState);
