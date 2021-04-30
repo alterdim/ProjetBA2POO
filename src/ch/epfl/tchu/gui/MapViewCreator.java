@@ -90,10 +90,15 @@ abstract class MapViewCreator {
                 tempRouteGroup.getChildren().add(tempCaseGroup);
             }
             tempRouteGroup.disableProperty().bind(claimRouteHandler.isNull().or(gameState.canClaimRoute(r).not()));
-            tempRouteGroup.setOnMouseClicked(() -> {
-                    final Route route = r;
+            tempRouteGroup.setOnMouseClicked((event) -> {
+                    Route route = r;
                     List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(route);
-                    possibleClaimCards.size() == 1 ? claimRouteH.onClaimRoute(r, possibleClaimCards.get(0)) : handleSpecialCardCase(gameState, r, claimRouteH, cardChooser);
+                    if (possibleClaimCards.size()==1){
+                        claimRouteH.onClaimRoute(r, possibleClaimCards.get(0));
+                    }
+                    else {
+                        handleSpecialCardCase(gameState, r, claimRouteH, cardChooser);
+                    }
             });
             canvas.getChildren().addAll(tempRouteGroup);
 
