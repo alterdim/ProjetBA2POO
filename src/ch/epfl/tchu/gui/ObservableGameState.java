@@ -11,8 +11,7 @@ import java.util.*;
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 
 /**
- *
- * Représente l'état observable d'une partie de tCHu.
+ * Représente l' état observable d' une partie de tCHu.
  * Créé le 26.04.2021 à 15:24
  *
  * @author Louis Gerard (296782)
@@ -20,28 +19,26 @@ import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
  */
 public class ObservableGameState {
     private final PlayerId player;
-    private PublicGameState currentPublicGameState;
-    private PlayerState currentPlayerState;
-
     //Groupe 1, état publique de la partie
     private final IntegerProperty leftTicketsPercentage;
     private final IntegerProperty leftCardsPercentage;
     private final List<ObjectProperty<Card>> faceUpCards;
     private final Map<Route, ObjectProperty<PlayerId>> routesOwned;
-
     //Groupe 2, état publique des joueurs
     private final Map<PlayerId, IntegerProperty> ticketCount;
     private final Map<PlayerId, IntegerProperty> cardCount;
     private final Map<PlayerId, IntegerProperty> carCount;
     private final Map<PlayerId, IntegerProperty> claimPoints;
-
     //Groupe 3, état privé du joueur player
     private final ObservableList<Ticket> tickets;
     private final Map<Card, IntegerProperty> cards;
     private final Map<Route, BooleanProperty> routes;
+    private PublicGameState currentPublicGameState;
+    private PlayerState currentPlayerState;
 
     /**
      * Constructeur
+     *
      * @param player L' identité du joueur qui correspond à l' interface graphique
      */
     public ObservableGameState(PlayerId player) {
@@ -67,11 +64,8 @@ public class ObservableGameState {
     //groupe 1
     private static List<ObjectProperty<Card>> createFaceUpCards() {
         List<ObjectProperty<Card>> faceUpCardsList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            faceUpCardsList.add(null);
-        }
         for (int slot : FACE_UP_CARD_SLOTS) {
-            faceUpCardsList.set(slot, new SimpleObjectProperty<>(null));
+            faceUpCardsList.add(new SimpleObjectProperty<>(null));
         }
         return faceUpCardsList;
     }
@@ -116,12 +110,13 @@ public class ObservableGameState {
 
     /**
      * Met à jour la totalité des propriétés
-     * @param newGameState la partie publique du jeu
+     *
+     * @param newGameState   la partie publique du jeu
      * @param newPlayerState l 'état complet du joueur auquel elle correspond
      */
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
-        this.currentPublicGameState =newGameState;
-        this.currentPlayerState=newPlayerState;
+        this.currentPublicGameState = newGameState;
+        this.currentPlayerState = newPlayerState;
         //Groupe 1, état publique de la partie
         updateFaceUpCards(newGameState.cardState());
         updateLeftCardsPercentage(newGameState.cardState());
@@ -158,7 +153,7 @@ public class ObservableGameState {
     private void updateFaceUpCards(PublicCardState cardState) {
         for (int slot : FACE_UP_CARD_SLOTS) {
             Card newCard = cardState.faceUpCard(slot);
-            if (!faceUpCards.get(slot).equals(newCard)) {
+            if (faceUpCards.get(slot).get() != newCard) {
                 faceUpCards.get(slot).set(newCard);
             }
         }
@@ -167,7 +162,7 @@ public class ObservableGameState {
     private void updateRoutesOwned(PublicGameState gameState) {
         for (PlayerId playerId : PlayerId.ALL) {
             for (Route route : gameState.playerState(playerId).routes()) {
-                if (!routesOwned.get(route).equals(playerId)) {
+                if (routesOwned.get(route).get() != playerId) {
                     routesOwned.get(route).set(playerId);
                 }
             }
@@ -223,32 +218,37 @@ public class ObservableGameState {
 
     private void updateRoutes(PublicGameState gameState, PlayerState playerState) {
         for (Route route : routes.keySet()) {
-            routes.get(route).set(gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
+            boolean isRouteClaimable = (gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
+            if (routes.get(route).get() != isRouteClaimable) {
+                routes.get(route).set(gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
+            }
         }
     }
 
     /**
      * Vérifier que la route ne fait pas partie de la liste des routes double, ou le cas échéant si la route double associée n'a pas été price
+     *
      * @param route Route à contrôler
      * @return Boolean vrai si la route n appartient à personne et, dans le cas d une route double, sa voisine non plus.
      */
     private boolean checkClaimDoubleRoute(Route route) {
-        Map<String, Route> doubleRoute = getAllDoubleRoute();
+        Map<Route, Route> doubleRoute = getAllDoubleRoute();//TODO optimiser en faisant un seul appel et en stockant la Map dans une variable
 
-        return !doubleRoute.containsKey(route.id()) || routesOwned.get(doubleRoute.get(route.id())) == null;
+        return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)) == null;
     }
 
     /**
      * Récupère toutes les routes doubles
+     *
      * @return Un map avec lid dune route et la deuxième route
      */
-    private Map<String, Route> getAllDoubleRoute() {
-        Map<String, Route> doubleRoute = new HashMap<>();
+    private Map<Route, Route> getAllDoubleRoute() {
+        Map<Route, Route> doubleRoute = new HashMap<>();
         for (Route route1 : ChMap.routes()) {
             for (Route route2 : ChMap.routes()) {
                 //l’ordre des gares sera toujours le même, car comme dit à la §3.2 de l’étape 2, ce qui rend inutile la deuxième partie du contrôle
                 if ((route1.station1().equals(route2.station1()) && route1.station2().equals(route2.station2()))/* || (route1.station2().equals(route2.station1()) && route1.station1().equals(route2.station2()))*/) {
-                    doubleRoute.put(route1.id(), route2);
+                    doubleRoute.put(route1, route2);
                 }
             }
         }
@@ -259,6 +259,7 @@ public class ObservableGameState {
 
     /**
      * Carte face visible
+     *
      * @param slot emplacement
      * @return carte
      */
@@ -268,6 +269,7 @@ public class ObservableGameState {
 
     /**
      * le pourcentage de cartes restant dans la pioche
+     *
      * @return le pourcentage de cartes restant dans la pioche
      */
     public ReadOnlyIntegerProperty leftCardsPercentage() {
@@ -275,7 +277,6 @@ public class ObservableGameState {
     }
 
     /**
-     *
      * @return le pourcentage de tickets restant dans la pioche,
      */
     public ReadOnlyIntegerProperty leftTicketsPercentage() {
@@ -284,6 +285,7 @@ public class ObservableGameState {
 
     /**
      * Retourne le propriétaire de la route donnée
+     *
      * @param route route
      * @return propriétaire de la route
      */
@@ -291,11 +293,11 @@ public class ObservableGameState {
         return routesOwned.get(route);
     }
 
-
     //Groupe 2
 
     /**
      * le nombre de cartes que le joueur a en main
+     *
      * @param playerId identité du joueur
      * @return nombre de cartes
      */
@@ -305,6 +307,7 @@ public class ObservableGameState {
 
     /**
      * le nombre de billets que le joueur a en main
+     *
      * @param playerId identité du joueur
      * @return nombre de billets
      */
@@ -314,6 +317,7 @@ public class ObservableGameState {
 
     /**
      * le nombre de wagons dont le joueur dispose
+     *
      * @param playerId identité du joueur
      * @return nombre de wagons restant
      */
@@ -323,6 +327,7 @@ public class ObservableGameState {
 
     /**
      * le nombre de points de construction obtenu par le joueur
+     *
      * @param playerId identité du joueur
      * @return nombre de points de construction
      */
@@ -334,6 +339,7 @@ public class ObservableGameState {
 
     /**
      * Liste de billets appartenant au joueur
+     *
      * @return Liste de billet
      */
     public ObservableList<Ticket> tickets() {
@@ -342,8 +348,9 @@ public class ObservableGameState {
 
     /**
      * Nombre de cartes dans la main du joueur correspondant à la carte donnée
+     *
      * @param card Carte
-     * @return Nombre d'occurance de la carte
+     * @return Nombre d' occurrence de la carte
      */
     public ReadOnlyIntegerProperty cardsCountOf(Card card) {
         return cards.get(card);
@@ -351,6 +358,7 @@ public class ObservableGameState {
 
     /**
      * Contrôle si le joueur peut prendre possession de la route donnée
+     *
      * @param route Route a vérifier
      * @return vrai si le joueur peut prendre la route
      */
@@ -363,26 +371,29 @@ public class ObservableGameState {
 
     /**
      * Appelle à la méthode canDrawTickets de l 'état courant de PublicGameState
+     *
      * @return vrai si le joueur peut tirer des tickets
      */
-    public boolean canDrawTickets(){
+    public boolean canDrawTickets() {
         return currentPublicGameState.canDrawTickets();
     }
 
     /**
      * Appelle à la méthode canDrawCards de l 'état courant de PublicGameState
+     *
      * @return vrai si le joueur peut tirer des cartes
      */
-    public boolean canDrawCards(){
+    public boolean canDrawCards() {
         return currentPublicGameState.canDrawCards();
     }
 
     /**
      * Appelle à la méthode possibleClaimCards de l 'état courant de PlayerState
+     *
      * @param route Route
      * @return les cartes que le joueur peut utiliser pour s' emparer de la route
      */
-    public List<SortedBag<Card>> possibleClaimCards(Route route){
+    public List<SortedBag<Card>> possibleClaimCards(Route route) {
         return currentPlayerState.possibleClaimCards(route);
     }
 }
