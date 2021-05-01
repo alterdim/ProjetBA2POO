@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
  */
 abstract class DecksViewCreator {
 
-    public HBox createHandView(ObservableGameState observableGameState) {
+    public static HBox createHandView(ObservableGameState observableGameState) {
         HBox canvas = new HBox();
 
         ListView<Ticket> ticketListView = new ListView<>();
@@ -81,10 +81,7 @@ abstract class DecksViewCreator {
         return canvas;
     }
 
-    public VBox createCardsView(ObservableGameState observableGameState, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketHandler, ObjectProperty<ActionHandlers.DrawCardHandler> cardHandler) {
-        DrawTicketsHandler tHandler = ticketHandler.get();
-        DrawCardHandler cHandler = cardHandler.get();
-
+    public static VBox createCardsView(ObservableGameState observableGameState, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketHandler, ObjectProperty<ActionHandlers.DrawCardHandler> cardHandler) {
         VBox canvas = new VBox();
 
         Button ticketsButton = new Button();
@@ -99,18 +96,27 @@ abstract class DecksViewCreator {
         canvas.setId("card-pane");//TODO id correct?
         canvas.getStylesheets().add("decks.css");
         canvas.getStylesheets().add("colors.css");
-        cardHandler.addListener((p, o , n)-> createCardsView(observableGameState, ticketHandler, n.));
-        //TODO comment ajouter le listener
-        observableGameState.
+
 
         for (int index : Constants.FACE_UP_CARD_SLOTS) {
-            Card card = observableGameState.faceUpCard(index).get();
             tempStackPane = new StackPane();
-            if (card.color() != null) {
+            StackPane finalTempStackPane = tempStackPane;
+            observableGameState.faceUpCard(index).addListener((p, o , n)-> {
+                //TODO vérifier
+                if (n.color() != null) {
+                    finalTempStackPane.getStyleClass().add(n.color().toString());
+                } else {
+                    finalTempStackPane.getStyleClass().add("NEUTRAL");
+                }
+            });
+
+
+//            Card card = observableGameState.faceUpCard(index).get();
+            /*if (card != null && card.color() != null) {
                 tempStackPane.getStyleClass().add(card.color().toString());
             } else {
                 tempStackPane.getStyleClass().add("NEUTRAL");
-            }
+            }*/
             tempStackPane.getStyleClass().add("card");
 
             tempRectangleOutside = new Rectangle(60, 90);
@@ -123,24 +129,39 @@ abstract class DecksViewCreator {
             tempRectangleImage.getStyleClass().add("train-image");
 
 
+
+
             tempStackPane.getChildren().addAll(tempRectangleOutside, tempRectangleInside, tempRectangleImage);
             canvas.getChildren().add(tempStackPane);
+            tempStackPane.disableProperty().bind(cardHandler.isNull());
+
+            tempStackPane.setOnMouseClicked((event -> cardHandler.get().onDrawCard(index)));
+
         }
 
         cardsButton.getStyleClass().add("gauged");
         Group tempGroup = new Group();
         Rectangle tempRectangleBackground = new Rectangle(50, 5);
         Rectangle tempRectangleForeground = new Rectangle(50, 5);
+
+        tempRectangleForeground.widthProperty().bind(observableGameState.leftCardsPercentage().multiply(50).divide(100));
         tempGroup.getChildren().addAll(tempRectangleBackground, tempRectangleForeground);
         cardsButton.setGraphic(tempGroup);
+        cardsButton.disableProperty().bind(cardHandler.isNull());
+        cardsButton.setOnMouseClicked((event -> cardHandler.get().onDrawCard(Constants.DECK_SLOT)));
 
 
         ticketsButton.getStyleClass().add("gauged");
         tempGroup = new Group();
         tempRectangleBackground = new Rectangle(50, 5);
         tempRectangleForeground = new Rectangle(50, 5);
+        tempRectangleForeground.widthProperty().bind(observableGameState.leftTicketsPercentage().multiply(50).divide(100));
+
         tempGroup.getChildren().addAll(tempRectangleBackground, tempRectangleForeground);
         ticketsButton.setGraphic(tempGroup);
+        ticketsButton.disableProperty().bind(ticketHandler.isNull());
+        ticketsButton.setOnMouseClicked((event -> ticketHandler.get().onDrawTickets()));
+        ticketsButton.setText("Billets");//TODO faut-il ajouter le texte comme ca?
 
         canvas.getChildren().addAll(cardsButton, ticketsButton);
         return canvas;
