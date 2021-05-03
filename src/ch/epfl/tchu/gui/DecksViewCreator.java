@@ -3,12 +3,9 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
-import ch.epfl.tchu.gui.ActionHandlers.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -18,10 +15,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import java.awt.*;
-
-
 /**
+ *
+ * Construction un graphe de scène représentant des cartes
  * Créé le 30.04.2021 à 21:06
  *
  * @author Louis Gerard (296782)
@@ -29,6 +25,11 @@ import java.awt.*;
  */
 abstract class DecksViewCreator {
 
+    /**
+     * Gère le visuel de la main du joueur
+     * @param observableGameState  l 'état du jeu observable
+     * @return HBox de la main
+     */
     public static HBox createHandView(ObservableGameState observableGameState) {
         HBox canvas = new HBox();
 
@@ -80,14 +81,17 @@ abstract class DecksViewCreator {
             tempStackPane.getChildren().addAll(tempRectangleOutside, tempRectangleInside, tempRectangleImage, tempTextCount);
             canvas.getChildren().add(tempStackPane);
         }
-
         ticketListView.setItems(observableGameState.tickets());
-
-
-
         return canvas;
     }
 
+    /**
+     * Gère le visuel de la pioche
+     * @param observableGameState l' état de jeu observable
+     * @param ticketHandler gestionnaire d' action des billets (tickets)
+     * @param cardHandler gestionnaire d' action des cartes
+     * @return VBox de la pioche
+     */
     public static VBox createCardsView(ObservableGameState observableGameState, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketHandler, ObjectProperty<ActionHandlers.DrawCardHandler> cardHandler) {
         VBox canvas = new VBox();
 

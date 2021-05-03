@@ -237,7 +237,6 @@ public class ObservableGameState {
      * @return Boolean vrai si la route n appartient à personne et, dans le cas d une route double, sa voisine non plus.
      */
     private boolean checkClaimDoubleRoute(Route route) {
-        System.out.println(routesOwned.get(doubleRoute.get(route)));
         return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)).get() == null;
     }
 
