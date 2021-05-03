@@ -112,14 +112,12 @@ abstract class DecksViewCreator {
 
         tempRectangleBackgroundTicket.getStyleClass().add("background");
         tempRectangleForegroundTicket.getStyleClass().add("foreground");
-
         tempRectangleForegroundTicket.widthProperty().bind(observableGameState.leftTicketsPercentage().multiply(50).divide(100));
         tempGroupTicket.getChildren().addAll(tempRectangleBackgroundTicket, tempRectangleForegroundTicket);
         ticketsButton.setGraphic(tempGroupTicket);
         ticketsButton.disableProperty().bind(ticketHandler.isNull());
         ticketsButton.setOnMouseClicked((event -> ticketHandler.get().onDrawTickets()));
         ticketsButton.setText(StringsFr.TICKETS);
-
         canvas.getChildren().add(ticketsButton);
 
 
