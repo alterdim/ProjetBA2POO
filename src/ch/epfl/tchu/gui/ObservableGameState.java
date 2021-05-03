@@ -226,7 +226,6 @@ public class ObservableGameState {
             boolean isRouteClaimable = (gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
             if (routes.get(route).get() != isRouteClaimable) {
                 routes.get(route).set(isRouteClaimable);
-//                routes.get(route).set(gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
             }
         }
     }
@@ -238,7 +237,8 @@ public class ObservableGameState {
      * @return Boolean vrai si la route n appartient à personne et, dans le cas d une route double, sa voisine non plus.
      */
     private boolean checkClaimDoubleRoute(Route route) {
-        return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)) == null;
+        System.out.println(routesOwned.get(doubleRoute.get(route)));
+        return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)).get() == null;
     }
 
     /**
@@ -251,7 +251,7 @@ public class ObservableGameState {
         for (Route route1 : ChMap.routes()) {
             for (Route route2 : ChMap.routes()) {
                 //l’ordre des gares sera toujours le même, car comme dit à la §3.2 de l’étape 2, ce qui rend inutile la deuxième partie du contrôle
-                if (!route1.equals(route2) && route1.station1().equals(route2.station1()) && route1.station2().equals(route2.station2())/* || (route1.station2().equals(route2.station1()) && route1.station1().equals(route2.station2()))*/) {
+                if (!route1.equals(route2) && (route1.station1().equals(route2.station1()) && route1.station2().equals(route2.station2()) || (route1.station2().equals(route2.station1()) && route1.station1().equals(route2.station2())))) {
                     doubleRoute.put(route1, route2);
                 }
             }
