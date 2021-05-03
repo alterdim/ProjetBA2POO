@@ -45,8 +45,8 @@ abstract class DecksViewCreator {
         canvas.getStylesheets().add("decks.css");
         canvas.getStylesheets().add("colors.css");
 
-        ticketListView.setId("tickets");//TODO id correct?
-        handPaneHBox.setId("hand-pane");//TODO id correct?
+        ticketListView.setId("tickets");
+        handPaneHBox.setId("hand-pane");
         canvas.getChildren().add(ticketListView);
         canvas.getChildren().add(handPaneHBox);
 
@@ -100,7 +100,7 @@ abstract class DecksViewCreator {
         Rectangle tempRectangleInside;
         Rectangle tempRectangleImage;
 
-        canvas.setId("card-pane");//TODO id correct?
+        canvas.setId("card-pane");
         canvas.getStylesheets().add("decks.css");
         canvas.getStylesheets().add("colors.css");
 
@@ -118,7 +118,7 @@ abstract class DecksViewCreator {
         ticketsButton.setGraphic(tempGroupTicket);
         ticketsButton.disableProperty().bind(ticketHandler.isNull());
         ticketsButton.setOnMouseClicked((event -> ticketHandler.get().onDrawTickets()));
-        ticketsButton.setText(StringsFr.TICKETS);//TODO faut-il ajouter le texte comme ca?
+        ticketsButton.setText(StringsFr.TICKETS);
 
         canvas.getChildren().add(ticketsButton);
 

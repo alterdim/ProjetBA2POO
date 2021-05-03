@@ -37,6 +37,8 @@ public class ObservableGameState {
     private PublicGameState currentPublicGameState;
     private PlayerState currentPlayerState;
 
+    private  Map<Route, Route> doubleRoute;
+
     /**
      * Constructeur
      *
@@ -60,6 +62,8 @@ public class ObservableGameState {
         this.tickets = createTickets();
         this.cards = createCards();
         this.routes = createRoutes();
+
+        this.doubleRoute = getAllDoubleRoute();
     }
 
     //groupe 1
@@ -221,7 +225,8 @@ public class ObservableGameState {
         for (Route route : routes.keySet()) {
             boolean isRouteClaimable = (gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
             if (routes.get(route).get() != isRouteClaimable) {
-                routes.get(route).set(gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
+                routes.get(route).set(isRouteClaimable);
+//                routes.get(route).set(gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
             }
         }
     }
@@ -233,8 +238,6 @@ public class ObservableGameState {
      * @return Boolean vrai si la route n appartient à personne et, dans le cas d une route double, sa voisine non plus.
      */
     private boolean checkClaimDoubleRoute(Route route) {
-        Map<Route, Route> doubleRoute = getAllDoubleRoute();//TODO optimiser en faisant un seul appel et en stockant la Map dans une variable
-
         return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)) == null;
     }
 
@@ -248,7 +251,7 @@ public class ObservableGameState {
         for (Route route1 : ChMap.routes()) {
             for (Route route2 : ChMap.routes()) {
                 //l’ordre des gares sera toujours le même, car comme dit à la §3.2 de l’étape 2, ce qui rend inutile la deuxième partie du contrôle
-                if ((route1.station1().equals(route2.station1()) && route1.station2().equals(route2.station2()))/* || (route1.station2().equals(route2.station1()) && route1.station1().equals(route2.station2()))*/) {
+                if (!route1.equals(route2) && route1.station1().equals(route2.station1()) && route1.station2().equals(route2.station2())/* || (route1.station2().equals(route2.station1()) && route1.station1().equals(route2.station2()))*/) {
                     doubleRoute.put(route1, route2);
                 }
             }
