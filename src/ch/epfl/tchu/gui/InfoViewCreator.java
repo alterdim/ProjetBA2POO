@@ -20,6 +20,9 @@ import java.util.Map;
  * @author Célien Muller (310777)
  */
 abstract class InfoViewCreator {
+    public static final int MAX_MESSAGE_DISPLAYED = 5;
+    public static final int PLAYER_CIRCLE_RADIUS = 5;
+
 
     /**
      * Informations concernant l'état de la partie
@@ -41,7 +44,7 @@ abstract class InfoViewCreator {
         TextFlow messageTextFlow = new TextFlow();
         messageTextFlow.setId("game-info");
 
-        for (int i = 0; i < Constants.MAX_MESSAGE_DISPLAYED; i++) {
+        for (int i = 0; i < MAX_MESSAGE_DISPLAYED; i++) {
             Text text = new Text();
 
 //            text.textProperty().bind(Bindings.bindContent(messageTextFlow.getChildren(), observableText));
@@ -60,6 +63,7 @@ abstract class InfoViewCreator {
 
         Circle circle = new Circle();
         circle.getStyleClass().add("filled");
+        circle.setRadius(PLAYER_CIRCLE_RADIUS);
         Text text = new Text();
         text.textProperty().bind(Bindings.format(
                 StringsFr.PLAYER_STATS,
