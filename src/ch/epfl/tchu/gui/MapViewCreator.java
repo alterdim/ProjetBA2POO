@@ -53,7 +53,6 @@ abstract class MapViewCreator {
                 //Création des groupes
                 tempCaseGroup = new Group();
                 tempCaseGroup.setId(r.id() + "_" + (i + 1));
-                tempVoieGroup = new Group();
                 tempWagonGroup = new Group();
                 tempWagonGroup.getStyleClass().add("car");
 
@@ -73,9 +72,8 @@ abstract class MapViewCreator {
                 tempCirc2.centerYProperty().setValue(6);
 
                 //On réunit et organise en groupes
-                tempVoieGroup.getChildren().add(tempRect);
                 tempWagonGroup.getChildren().addAll(tempRect2, tempCirc1, tempCirc2);
-                tempCaseGroup.getChildren().addAll(tempVoieGroup, tempWagonGroup);
+                tempCaseGroup.getChildren().addAll(tempRect, tempWagonGroup);
                 tempRouteGroup.getChildren().add(tempCaseGroup);
             }
             tempRouteGroup.disableProperty().bind(claimRouteHandler.isNull().or(gameState.canClaimRoute(r).not()));

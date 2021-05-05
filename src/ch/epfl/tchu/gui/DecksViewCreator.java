@@ -134,14 +134,15 @@ abstract class DecksViewCreator {
                 //TODO vérifier
                 if (n.color() != null) {
                     finalTempStackPane.getStyleClass().add(n.color().toString());
+
                 } else {
                     finalTempStackPane.getStyleClass().add("NEUTRAL");
                 }
             });
 
 
-//            Card card = observableGameState.faceUpCard(index).get();
-            /*if (card != null && card.color() != null) {
+            /*Card card = observableGameState.faceUpCard(index).get();
+            if (card != null && card.color() != null) {
                 tempStackPane.getStyleClass().add(card.color().toString());
             } else {
                 tempStackPane.getStyleClass().add("NEUTRAL");

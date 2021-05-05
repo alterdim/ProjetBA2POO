@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -34,15 +35,18 @@ public final class Stage9Test extends Application {
 
         Node mapView = MapViewCreator
                 .createMapView(gameState, claimRoute, Stage9Test::chooseCards);
+//        dumpTree(mapView);
         Node cardsView = DecksViewCreator.createCardsView(gameState, drawTickets, drawCard);
+        dumpTree(cardsView);
         Node handView = DecksViewCreator.createHandView(gameState);
-
+//        dumpTree(handView);
         BorderPane mainPane = new BorderPane(mapView, null, cardsView, handView, null);
 //        Pane mainPane = new Pane(mapView);
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
 
         setState(gameState);
+//        dumpTree(cardsView);
     }
 
     private void setState(ObservableGameState gameState) {
@@ -61,6 +65,7 @@ public final class Stage9Test extends Application {
         PublicGameState publicGameState =
                 new PublicGameState(36, cardState, PLAYER_1, pubPlayerStates, null);
         gameState.setState(publicGameState, p1State);
+
     }
 
     private static void claimRoute(Route route, SortedBag<Card> cards) {
@@ -79,6 +84,23 @@ public final class Stage9Test extends Application {
 
     private static void drawCard(int slot) {
         System.out.printf("Tirage de cartes (emplacement %s)!\n", slot);
+    }
+
+    public static void dumpTree(Node root) {
+        dumpTree(0, root);
+    }
+
+    public static void dumpTree(int indent, Node root) {
+        System.out.printf("%s%s (id: %s, classes: [%s])%n",
+                " ".repeat(indent),
+                root.getTypeSelector(),
+                root.getId(),
+                String.join(", ", root.getStyleClass()));
+        if (root instanceof Parent) {
+            Parent parent = ((Parent) root);
+            for (Node child : parent.getChildrenUnmodifiable())
+                dumpTree(indent + 2, child);
+        }
     }
 
 }
