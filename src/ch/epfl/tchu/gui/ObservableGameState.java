@@ -142,16 +142,16 @@ public class ObservableGameState {
 
     //groupe 1
     private void updateLeftCardsPercentage(PublicCardState cardState) {
-        int percentage = (cardState.deckSize() / cardState.totalSize()) * 100;
+        double percentage = ((double)cardState.deckSize() / (double)cardState.totalSize()) * 100;
         if (leftCardsPercentage.get() != percentage) {
-            leftCardsPercentage.set(percentage);
+            leftCardsPercentage.set((int)percentage);
         }
     }
 
     private void updateLeftTicketsPercentage(PublicGameState gameState) {
-        int percentage = (gameState.ticketsCount() / ChMap.tickets().size()) * 100;
+        double percentage = ((double)gameState.ticketsCount() / (double)ChMap.tickets().size()) * 100;
         if (leftTicketsPercentage.get() != percentage) {
-            leftTicketsPercentage.set(percentage);
+            leftTicketsPercentage.set((int)percentage);
         }
     }
 
