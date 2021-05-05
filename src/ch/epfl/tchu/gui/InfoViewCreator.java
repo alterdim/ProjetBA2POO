@@ -13,7 +13,6 @@ import javafx.scene.text.TextFlow;
 import java.util.Map;
 
 /**
- *
  * Construction de la vue des informations.
  * Créé le 03.05.2021 à 13:07
  *
@@ -25,13 +24,13 @@ abstract class InfoViewCreator {
     /**
      * Informations concernant l'état de la partie
      *
-     * @param ownerPlayerId l'identité du joueur auquel l'interface correspond
-     * @param playerNames la table associative des noms des joueurs
+     * @param ownerPlayerId       l'identité du joueur auquel l'interface correspond
+     * @param playerNames         la table associative des noms des joueurs
      * @param observableGameState l'état de jeu observable
-     * @param observableText une liste (observable) contenant les informations sur le déroulement de la partie, sous la forme d'instances de Text.
+     * @param observableText      une liste (observable) contenant les informations sur le déroulement de la partie, sous la forme d'instances de Text.
      * @return VBox, vue contant des informations sur l'état de la partie
      */
-    public static VBox createInfoView(PlayerId ownerPlayerId, Map<PlayerId, String> playerNames, ObservableGameState observableGameState, ObservableList<String> observableText) {
+    public static VBox createInfoView(PlayerId ownerPlayerId, Map<PlayerId, String> playerNames, ObservableGameState observableGameState, ObservableList<Text> observableText) {
         VBox canvasBox = new VBox();
         canvasBox.getStylesheets().addAll("info.css", "colors.css");
 
@@ -44,14 +43,15 @@ abstract class InfoViewCreator {
 
         for (int i = 0; i < Constants.MAX_MESSAGE_DISPLAYED; i++) {
             Text text = new Text();
-//            text.textProperty().bind(Bindings.bindContent(List.of(text), observableText));
+
+//            text.textProperty().bind(Bindings.bindContent(messageTextFlow.getChildren(), observableText));
             //TODO comment bind
             messageTextFlow.getChildren().add(text);
         }
-
+        Bindings.bindContent(messageTextFlow.getChildren(), observableText);
         canvasBox.getChildren().add(messageTextFlow);
 
-        return null;
+        return canvasBox;
     }
 
     private static TextFlow playerProperties(PlayerId playerId, Map<PlayerId, String> playerNames, ObservableGameState observableGameState) {
@@ -75,11 +75,18 @@ abstract class InfoViewCreator {
         return textFlow;
     }
 
-    private static VBox playerStatsBox(PlayerId ownerPlayerId, Map<PlayerId, String> playerNames, ObservableGameState observableGameState){
+    private static VBox playerStatsBox(PlayerId ownerPlayerId, Map<PlayerId, String> playerNames, ObservableGameState observableGameState) {
         VBox playersBox = new VBox();
         playersBox.setId("player-stats");
-        playersBox.getChildren().add(playerProperties(ownerPlayerId, playerNames, observableGameState));
-        playersBox.getChildren().add(playerProperties(ownerPlayerId.next(), playerNames, observableGameState));
+
+        //Permettrait d'ajouter plus de joueurs
+        PlayerId lastPlayerId = ownerPlayerId;
+        for (int i = 0; i < PlayerId.COUNT; i++) {
+            playersBox.getChildren().add(playerProperties(lastPlayerId, playerNames, observableGameState));
+            lastPlayerId=lastPlayerId.next();
+        }
+//        playersBox.getChildren().add(playerProperties(ownerPlayerId, playerNames, observableGameState));
+//        playersBox.getChildren().add(playerProperties(ownerPlayerId.next(), playerNames, observableGameState));
 
         return playersBox;
     }
