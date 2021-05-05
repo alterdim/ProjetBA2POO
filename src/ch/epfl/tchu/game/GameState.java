@@ -36,24 +36,23 @@ public final class GameState extends PublicGameState {
 
     /**
      * @param tickets Les tickets à mettre en jeu.
-     * @param rng Le générateur de nombre aléatoires
+     * @param rng     Le générateur de nombre aléatoires
      * @return Retourne un gameState initial pour les débuts de partie. Le premier joueur est déjà choisi au hasard et
      * les cartes distribuées.
      */
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
-        PlayerId firstPlayer = PlayerId.PLAYER_2;
-        if (rng.nextBoolean()) {
-            firstPlayer = PlayerId.PLAYER_1;
-        }
+        PlayerId firstPlayer = PlayerId.values()[rng.nextInt(PlayerId.COUNT)];
+
         Deck<Ticket> ticketDeck = Deck.of(tickets, rng);
         Deck<Card> cardDeck = Deck.of(Constants.ALL_CARDS, rng);
-        SortedBag<Card> initialCardsPlayer1 = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
-        cardDeck = cardDeck.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
-        SortedBag<Card> initialCardsPlayer2 = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
-        cardDeck = cardDeck.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
+
         Map<PlayerId, PlayerState> playerStateMap = new EnumMap<>(PlayerId.class);
-        playerStateMap.put(PlayerId.PLAYER_1, PlayerState.initial(initialCardsPlayer1));
-        playerStateMap.put(PlayerId.PLAYER_2, PlayerState.initial(initialCardsPlayer2));
+        for (PlayerId playerId : PlayerId.values()) {
+            SortedBag<Card> initCardsPlayer = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
+            cardDeck = cardDeck.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
+
+            playerStateMap.put(playerId, PlayerState.initial(initCardsPlayer));
+        }
         CardState cardState = CardState.of(cardDeck);
 
         return new GameState(ticketDeck, cardState, firstPlayer, playerStateMap, null);
@@ -77,9 +76,9 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * @throws IllegalArgumentException si count n'est pas compris entre zéro et la taille du deck de tickets.
      * @param count le nombre de tickets à "regarder".
      * @return Renvoie un sortedBag contenant les count tickets du haut de la pioche.
+     * @throws IllegalArgumentException si count n'est pas compris entre zéro et la taille du deck de tickets.
      */
     public SortedBag<Ticket> topTickets(int count) {
         Preconditions.checkArgument(count >= 0 && count <= ticketDeck.size());
@@ -87,9 +86,9 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * @throws IllegalArgumentException si count n'est pas compris entre zéro et la taille du deck de tickets.
      * @param count Le nombre de tickets à enlever de la pioche de tickets.
      * @return Retourne un gameState identique sans les count tickets du dessus.
+     * @throws IllegalArgumentException si count n'est pas compris entre zéro et la taille du deck de tickets.
      */
     public GameState withoutTopTickets(int count) {
         Preconditions.checkArgument(count >= 0 && count <= ticketDeck.size());
@@ -97,8 +96,8 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * @throws IllegalArgumentException si la pioche est vide.
      * @return Renvoie la carte "au dessus" de la pioche.
+     * @throws IllegalArgumentException si la pioche est vide.
      */
     public Card topCard() {
         Preconditions.checkArgument(!cardState.isDeckEmpty());
@@ -106,8 +105,8 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * @throws IllegalArgumentException si la pioche est vide.
      * @return Un gameState identique sans la carte du dessus de la pioche.
+     * @throws IllegalArgumentException si la pioche est vide.
      */
     public GameState withoutTopCard() {
         Preconditions.checkArgument(!cardState.isDeckEmpty());
@@ -134,23 +133,23 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * @param playerId Le joueur auquel ajouter des tickets.
+     * @param playerId      Le joueur auquel ajouter des tickets.
      * @param chosenTickets Les tickets à ajouter.
      * @return Un gameState identique mais dont le joueur choisi a reçu de nouveaux tickets.
      * @throws IllegalArgumentException si le joueur possède déjà au moins un billet
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
-        Preconditions.checkArgument(playerState(playerId).ticketCount()==0);
+        Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
         Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
         newMap.put(playerId, playerState(playerId).withAddedTickets(chosenTickets));
         return new GameState(ticketDeck, cardState, currentPlayerId(), newMap, lastPlayer());
     }
 
     /**
-     * @throws  IllegalArgumentException si les tickets choisis n'appartiennent pas au deck.
-     * @param drawnTickets Les tickets piochés.
+     * @param drawnTickets  Les tickets piochés.
      * @param chosenTickets Les tickets choisis par le joueur.
      * @return Retourne un gameState identique avec les tickets choisis ajoutés à la mains et les piochés retirés de la pioche.
+     * @throws IllegalArgumentException si les tickets choisis n'appartiennent pas au deck.
      */
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
@@ -161,24 +160,24 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * @throws IllegalArgumentException s'il n'est pas possible de piocher des cartes actuellement (voir canDrawCards())
      * @param slot L'emplacement de la carte ouverte choisie par le joueur.
      * @return Retourne un GameState identique où la carte du slot a été remplacée par la carte du haut de la pioche et ajoutée à la main du joueur.
+     * @throws IllegalArgumentException s'il n'est pas possible de piocher des cartes actuellement (voir canDrawCards())
      */
     public GameState withDrawnFaceUpCard(int slot) {
         Preconditions.checkArgument(canDrawCards());
 
         Card c = cardState().faceUpCard(slot);
-        CardState newCardState=cardState.withDrawnFaceUpCard(slot);
+        CardState newCardState = cardState.withDrawnFaceUpCard(slot);
         Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
         newMap.put(currentPlayerId(), currentPlayerState().withAddedCard(c));
 
-        return new GameState(ticketDeck, newCardState,currentPlayerId(), newMap, lastPlayer());
+        return new GameState(ticketDeck, newCardState, currentPlayerId(), newMap, lastPlayer());
     }
 
     /**
-     * @throws IllegalArgumentException s'il n'est pas possible de piocher des cartes actuellement (voir canDrawCards())
      * @return Retourne un gameState identique où la carte du haut de la pioche a été piochée par le joueur courant.
+     * @throws IllegalArgumentException s'il n'est pas possible de piocher des cartes actuellement (voir canDrawCards())
      */
     public GameState withBlindlyDrawnCard() {
         Preconditions.checkArgument(canDrawCards());

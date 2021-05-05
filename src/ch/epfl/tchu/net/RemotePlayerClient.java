@@ -2,10 +2,12 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
+import ch.epfl.tchu.game.PublicPlayerState;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -110,6 +112,10 @@ public class RemotePlayerClient {
      * @return Map des noms de joueurs
      */
     private Map<PlayerId, String> getPlayerNames(List<String> names) {
-        return Map.of(PlayerId.PLAYER_1, names.get(PlayerId.PLAYER_1.ordinal()), PlayerId.PLAYER_2, names.get(PlayerId.PLAYER_2.ordinal()));
+        Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
+        for (PlayerId playerId : PlayerId.values()) {
+            playerNames.put(playerId, names.get(playerId.ordinal()));
+        }
+        return playerNames;
     }
 }

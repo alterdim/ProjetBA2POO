@@ -4,10 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -146,8 +143,10 @@ public final class Serdes {
         infos.add(INTEGER.serialize(publicGameState.ticketsCount()));
         infos.add(PUBLIC_CARD_STATE.serialize(publicGameState.cardState()));
         infos.add(PLAYER_ID.serialize(publicGameState.currentPlayerId()));
-        infos.add(PUBLIC_PLAYER_STATE.serialize(publicGameState.playerState(PlayerId.PLAYER_1)));
-        infos.add(PUBLIC_PLAYER_STATE.serialize(publicGameState.playerState(PlayerId.PLAYER_2)));
+
+        for (PlayerId playerId : PlayerId.values()) {
+            infos.add(PUBLIC_PLAYER_STATE.serialize(publicGameState.playerState(playerId)));
+        }
 
         if (publicGameState.lastPlayer() == null) infos.add("");
         else infos.add(PLAYER_ID.serialize(publicGameState.lastPlayer()));
@@ -157,13 +156,16 @@ public final class Serdes {
 
     private static PublicGameState deserializePGS(String string) {
         String[] infos = Pattern.quote(string).split(":", -1);
-        HashMap<PlayerId, PublicPlayerState> playerMap = new HashMap<>();
-        playerMap.put(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE.deserialize(infos[3]));
-        playerMap.put(PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE.deserialize(infos[4]));
+        Map<PlayerId, PublicPlayerState> playerMap = new EnumMap<>(PlayerId.class);
+        for (int i = 0; i < PlayerId.COUNT; i++) {
+            int index = i+3;
+            playerMap.put(PlayerId.values()[i], PUBLIC_PLAYER_STATE.deserialize(infos[index]));
+        }
+
         return new PublicGameState(INTEGER.deserialize(infos[0]),
                 PUBLIC_CARD_STATE.deserialize(infos[1]),
                 PLAYER_ID.deserialize(infos[2]),
                 playerMap,
-                PLAYER_ID.deserialize(infos[5]));
+                PLAYER_ID.deserialize(infos[3+PlayerId.COUNT]));
     }
 }

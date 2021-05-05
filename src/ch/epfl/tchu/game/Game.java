@@ -160,6 +160,8 @@ public final class Game {
         //Informe les joueurs de l'état du jeu à la fin de la partie
         updateEveryone(players, gameState);
 
+
+        //TODO faire une boucle sur PlayerId (pour permettre l'ajout de davantage de joueurs
         //Calcul du longestTrail, du total des points
         Trail longestTrail1 = Trail.longest(gameState.playerState(PlayerId.PLAYER_1).routes());
         Trail longestTrail2 = Trail.longest(gameState.playerState(PlayerId.PLAYER_2).routes());

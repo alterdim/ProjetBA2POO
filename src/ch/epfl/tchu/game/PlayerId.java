@@ -30,10 +30,8 @@ public enum PlayerId {
      * @return le joueur suivant
      */
     public PlayerId next() {
-        //Permettrait l'ajout de davantage de joueurs
+        //Permettrait l 'ajout de davantage de joueurs
         if (this.ordinal()+1==values().length) return values()[0];
         else return values()[this.ordinal()+1];
-
-//        return this.equals(PLAYER_2) ? PLAYER_1 : PLAYER_2;
     }
 }
