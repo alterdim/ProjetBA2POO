@@ -38,7 +38,7 @@ import static ch.epfl.tchu.gui.StringsFr.plural;
 
 /**
  * Représente l'interface graphique d'un joueur.
- *
+ * <p>
  * Fichier créé à 08:45 le 07/05/2021
  *
  * @author Louis Gerard (296782)
@@ -85,8 +85,8 @@ public class GraphicalPlayer {
         observableText.add(new Text(message));
     }
 
-    public void startTurn(ActionHandlers.DrawCardHandler cardHandler,
-                          ActionHandlers.DrawTicketsHandler ticketsHandler,
+    public void startTurn(ActionHandlers.DrawTicketsHandler ticketsHandler,
+                          ActionHandlers.DrawCardHandler cardHandler,
                           ActionHandlers.ClaimRouteHandler routeHandler) {
         assert Platform.isFxApplicationThread();
         if (gameState.canDrawTickets()) {
@@ -133,7 +133,7 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         chooseTicketsVBox.getChildren().add(vboxButton);
-        vboxButton.disableProperty().bind(new SimpleBooleanProperty(ticketList.getSelectionModel().getSelectedItems().size()== ticketCount) ) ;
+        vboxButton.disableProperty().bind(new SimpleBooleanProperty(ticketList.getSelectionModel().getSelectedItems().size() == ticketCount));
         vboxButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -176,7 +176,7 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         vBox.getChildren().add(vboxButton);
-        vboxButton.disableProperty().bind(new SimpleBooleanProperty(listView.getSelectionModel().getSelectedItem().size() == 0)) ;
+        vboxButton.disableProperty().bind(new SimpleBooleanProperty(listView.getSelectionModel().getSelectedItem().size() == 0));
         vboxButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -189,7 +189,7 @@ public class GraphicalPlayer {
         });
     }
 
-    public void chooseAdditionalCards (List<SortedBag<Card>> cardLists, ActionHandlers.ChooseCardsHandler cardsHandler) {
+    public void chooseAdditionalCards(List<SortedBag<Card>> cardLists, ActionHandlers.ChooseCardsHandler cardsHandler) {
         assert Platform.isFxApplicationThread();
 
         //Initialisation
@@ -226,8 +226,6 @@ public class GraphicalPlayer {
             }
         });
     }
-
-
 
 
 }
