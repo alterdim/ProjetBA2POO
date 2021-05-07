@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -62,13 +64,25 @@ public class GraphicalPlayer {
 
         mainWindow = new Stage();
         BorderPane borderPane = new BorderPane();
+        Scene scene = new Scene(borderPane);
+        mainWindow.setScene(scene);
 
         observableText = FXCollections.observableArrayList(
                 new Text("Première information.\n"),
                 new Text("\nSeconde information.\n"));
 
-        //Pane mapView = MapViewCreator.createMapView(gameState, )
+        Pane mapView = MapViewCreator.createMapView(gameState, new SimpleObjectProperty<>(routeHandler), this::chooseClaimCards);
         VBox infoView = InfoViewCreator.createInfoView(playerId, playerNames, gameState, observableText);
+        VBox deckView = DecksViewCreator.createCardsView(gameState, new SimpleObjectProperty<>(ticketsHandler),
+                new SimpleObjectProperty<>(cardHandler));
+        HBox handView = DecksViewCreator.createHandView(gameState);
+        borderPane.centerProperty().setValue(mapView);
+        borderPane.bottomProperty().setValue(handView);
+        borderPane.leftProperty().setValue(infoView);
+        borderPane.rightProperty().setValue(deckView);
+
+        mainWindow.show();
+
 
     }
 
