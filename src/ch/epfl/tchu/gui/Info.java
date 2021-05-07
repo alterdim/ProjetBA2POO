@@ -208,7 +208,7 @@ public final class Info {
         return String.format(WINS, playerName, points, plural(points), loserPoints, plural(loserPoints));
     }
 
-    private String generateCardString(SortedBag<Card> cards) {
+    public static String generateCardString(SortedBag<Card> cards) {
         String cardString = "";
         List<Card> presentCards = new ArrayList<>();
         for (Card c : Card.values()) {
