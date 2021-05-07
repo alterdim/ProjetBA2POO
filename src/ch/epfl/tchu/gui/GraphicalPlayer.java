@@ -63,7 +63,7 @@ public class GraphicalPlayer {
         mainWindow = new Stage();
         BorderPane borderPane = new BorderPane();
 
-        ObservableList<Text> infos = FXCollections.observableArrayList(
+        observableText = FXCollections.observableArrayList(
                 new Text("Première information.\n"),
                 new Text("\nSeconde information.\n"));
 
