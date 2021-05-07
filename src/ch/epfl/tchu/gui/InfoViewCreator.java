@@ -1,6 +1,5 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.PlayerId;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
@@ -20,9 +19,7 @@ import java.util.Map;
  * @author Célien Muller (310777)
  */
 abstract class InfoViewCreator {
-    public static final int MAX_MESSAGE_DISPLAYED = 5;
     public static final int PLAYER_CIRCLE_RADIUS = 5;
-
 
     /**
      * Informations concernant l'état de la partie
@@ -82,9 +79,6 @@ abstract class InfoViewCreator {
             playersBox.getChildren().add(playerProperties(lastPlayerId, playerNames, observableGameState));
             lastPlayerId=lastPlayerId.next();
         }
-//        playersBox.getChildren().add(playerProperties(ownerPlayerId, playerNames, observableGameState));
-//        playersBox.getChildren().add(playerProperties(ownerPlayerId.next(), playerNames, observableGameState));
-
         return playersBox;
     }
 }

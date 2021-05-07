@@ -1,7 +1,6 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
-import ch.epfl.tchu.game.Color;
 import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
