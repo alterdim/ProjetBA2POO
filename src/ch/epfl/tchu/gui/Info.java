@@ -77,8 +77,14 @@ public final class Info {
      * @return retourne un message expliquant que les joueurs ont fini æqo avec le nombre de points
      */
     public static String draw(List<String> playerNames, int points) {
-        String names = playerNames.get(0) + AND_SEPARATOR + playerNames.get(1);
-        return String.format(DRAW, names, points);
+        StringBuilder stringBuilder=new StringBuilder();
+        for (int i = 0; i < playerNames.size(); i++) {
+            stringBuilder.append(playerNames.get(i));
+            if (i<playerNames.size()-1){
+                stringBuilder.append(AND_SEPARATOR);
+            }
+        }
+        return String.format(DRAW, stringBuilder, points);
     }
 
     /**

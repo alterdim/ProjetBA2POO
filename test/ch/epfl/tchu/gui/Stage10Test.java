@@ -14,7 +14,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,9 +54,8 @@ public final class Stage10Test extends Application {
         ObservableList<Text> infos = FXCollections.observableArrayList(
                 new Text("Première information.\n"),
                 new Text("\nSeconde information.\n"));
-        Node infoView = InfoViewCreator
+                Node infoView = InfoViewCreator
                 .createInfoView(PLAYER_1, playerNames, gameState, infos);
-        dumpTree(infoView);
 
         BorderPane mainPane =
                 new BorderPane(mapView, null, cardsView, handView, infoView);

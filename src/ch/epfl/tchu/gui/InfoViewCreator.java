@@ -44,13 +44,6 @@ abstract class InfoViewCreator {
         TextFlow messageTextFlow = new TextFlow();
         messageTextFlow.setId("game-info");
 
-        for (int i = 0; i < MAX_MESSAGE_DISPLAYED; i++) {
-            Text text = new Text();
-
-//            text.textProperty().bind(Bindings.bindContent(messageTextFlow.getChildren(), observableText));
-            //TODO comment bind
-            messageTextFlow.getChildren().add(text);
-        }
         Bindings.bindContent(messageTextFlow.getChildren(), observableText);
         canvasBox.getChildren().add(messageTextFlow);
 
