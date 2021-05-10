@@ -19,11 +19,10 @@ public class ClientMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //TODO gérer les exceptions
         List<String> parameters = getParameters().getRaw();
-        String address="localhost";
-        int port=5108;
-        switch (parameters.size()){
+        String address = "localhost";
+        int port = 5108;
+        switch (parameters.size()) {
             case 2:
                 address = parameters.get(0);
                 port = Integer.parseInt(parameters.get(1));
