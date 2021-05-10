@@ -57,10 +57,17 @@ class SerdesTest {
         List<Route> rs1 = ChMap.routes().subList(0, 2);
         Map<PlayerId, PublicPlayerState> ps = Map.of(
                 PLAYER_1, new PublicPlayerState(10, 11, rs1),
-                PLAYER_2, new PublicPlayerState(20, 21, List.of()));
+                PLAYER_2, new PublicPlayerState(20, 21, rs1));
         PublicGameState gs =
                 new PublicGameState(40, cs, PLAYER_2, ps, null);
-        assertEquals("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:", Serdes.PUBLIC_GAME_STATE.serialize(gs));
+//        assertEquals("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:", Serdes.PUBLIC_GAME_STATE.serialize(gs));
+        assertEquals(gs.ticketsCount(), Serdes.PUBLIC_GAME_STATE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;0,1:").ticketsCount());
+//        assertEquals(Serdes.PUBLIC_GAME_STATE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:"), gs);
+    }
+
+    @Test
+    void publicPlayerSerdes(){
+
     }
 
 }

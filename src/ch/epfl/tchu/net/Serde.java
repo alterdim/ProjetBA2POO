@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * serde (de serializer-deserializer), à savoir un objet capable de sérialiser et désérialiser des valeurs d'un type donné.
- *
+ * <p>
  * Créé le 12.04.2021 à 15:03
  *
  * @author Louis Gerard (296782)
@@ -19,27 +19,14 @@ import java.util.regex.Pattern;
 public interface Serde<T> {
 
     /**
-     * Méthode de sérialisation
-     * @param t Objet à sérialiser
-     * @return String de l'objet sérialisé
-     */
-    public abstract String serialize(T t);
-
-    /**
-     * Méthode de désérialisation
-     * @param str chaîne correspond à la sérialisation de l'objet
-     * @return Retourne l´objet correspond à la sérialisation
-     */
-    public abstract T deserialize(String str);
-
-    /**
      * Méthode permettant de crée un serde à partir des méthodes de sérialisation et de désérialisation
-     * @param fs Function de sérialisation
-     * @param fd Function de désérialisation
+     *
+     * @param fs  Function de sérialisation
+     * @param fd  Function de désérialisation
      * @param <T> Type de l'object à  (dé)sérialiser
      * @return Un Serde correspond à l´objet
      */
-    public static <T> Serde<T> of(Function<T, String> fs, Function<String, T> fd){
+    public static <T> Serde<T> of(Function<T, String> fs, Function<String, T> fd) {
         return new Serde<>() {
             @Override
             public String serialize(T t) {
@@ -55,11 +42,12 @@ public interface Serde<T> {
 
     /**
      * Méthode permettant de crée un serde à partir d'une liste contenant tous les valeurs possible de l'objet (enumeration)
+     *
      * @param list List comprenant tous les éléments de l'objet
-     * @param <T> Type de l'object à  (dé)sérialiser
+     * @param <T>  Type de l'object à  (dé)sérialiser
      * @return Un Serde correspond à l'objet
      */
-    public static <T> Serde<T> oneOf(List<T> list){
+    public static <T> Serde<T> oneOf(List<T> list) {
         Preconditions.checkArgument(!list.isEmpty());
         return new Serde<>() {
             @Override
@@ -76,12 +64,13 @@ public interface Serde<T> {
 
     /**
      * Méthode permettant de crée un serde de list d'objet à partir d´un serde et d'un caractère séparateur
+     *
      * @param serde Serde correspond au type de l´objet à l´intérieur de la liste
-     * @param c caractère séparateur
-     * @param <T> Type de l´objet
+     * @param c     caractère séparateur
+     * @param <T>   Type de l´objet
      * @return Un Serde correspond à la liste
      */
-    public static <T> Serde<List<T>> listOf(Serde<T> serde, String c){
+    public static <T> Serde<List<T>> listOf(Serde<T> serde, String c) {
         return new Serde<List<T>>() {
             @Override
             public String serialize(List<T> list) {
@@ -95,7 +84,7 @@ public interface Serde<T> {
             @Override
             public List<T> deserialize(String str) {
                 List<T> listT = new ArrayList<>();
-                for (String s : str.split(Pattern.quote(c))) {
+                for (String s : str.split(Pattern.quote(c), -1)) {
                     listT.add(serde.deserialize(s));
                 }
                 return listT;
@@ -105,12 +94,13 @@ public interface Serde<T> {
 
     /**
      * Méthode permettant de crée un serde de SortedBag d'objet à partir d´un serde et d'un caractère séparateur
+     *
      * @param serde Serde correspond au type de l´objet à l´intérieur du sortedBag
-     * @param c caractère séparateur
-     * @param <T> Type de l´objet
+     * @param c     caractère séparateur
+     * @param <T>   Type de l´objet
      * @return Un Serde correspond au SortedBag
      */
-    public static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, String c){
+    public static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, String c) {
         return new Serde<SortedBag<T>>() {
             @Override
             public String serialize(SortedBag<T> bag) {
@@ -124,12 +114,28 @@ public interface Serde<T> {
             @Override
             public SortedBag<T> deserialize(String str) {
                 SortedBag.Builder<T> bagT = new SortedBag.Builder<>();
-                for (String s : str.split(Pattern.quote(c))) {
+                for (String s : str.split(Pattern.quote(c), -1)) {
                     bagT.add(serde.deserialize(s));
                 }
                 return bagT.build();
             }
         };
     }
+
+    /**
+     * Méthode de sérialisation
+     *
+     * @param t Objet à sérialiser
+     * @return String de l'objet sérialisé
+     */
+    public abstract String serialize(T t);
+
+    /**
+     * Méthode de désérialisation
+     *
+     * @param str chaîne correspond à la sérialisation de l'objet
+     * @return Retourne l´objet correspond à la sérialisation
+     */
+    public abstract T deserialize(String str);
 
 }

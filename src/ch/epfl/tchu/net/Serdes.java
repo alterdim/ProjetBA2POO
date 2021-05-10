@@ -32,7 +32,8 @@ public final class Serdes {
     /**
      * Serde utile pour PlayerID
      */
-    public static final Serde<PlayerId> PLAYER_ID = Serde.oneOf(PlayerId.ALL);
+    public static final Serde<PlayerId> PLAYER_ID = Serde.of(Serdes::serializePI, Serdes::deserializePI);
+//    public static final Serde<PlayerId> PLAYER_ID = Serde.oneOf(PlayerId.ALL);
     /**
      * Serde utile pour TurnKind
      */
@@ -44,7 +45,8 @@ public final class Serdes {
     /**
      * Serde utile pour Route
      */
-    public static final Serde<Route> ROUTE = Serde.oneOf(ChMap.routes());
+    public static final Serde<Route> ROUTE = Serde.of(Serdes::serializeR, Serdes::deserializeR);
+//    public static final Serde<Route> ROUTE = Serde.oneOf(ChMap.routes());
     /**
      * Serde utile pour Ticket
      */
@@ -89,7 +91,30 @@ public final class Serdes {
      * Serde utile pour un PublicGameState
      */
     public static final Serde<PublicGameState> PUBLIC_GAME_STATE = Serde.of(Serdes::serializePGS, Serdes::deserializePGS);
+
     private Serdes() {
+    }
+
+    private static String serializePI(PlayerId playerId) {
+        if (playerId == null) return "";
+        else return String.valueOf(PlayerId.ALL.indexOf(playerId));
+    }
+
+    private static PlayerId deserializePI(String string) {
+        if (string.length() == 0) return null;
+        else return PlayerId.ALL.get(Integer.parseInt(string));
+    }
+
+    private static String serializeR(Route route) {
+        if (route == null) return "";
+        else return String.valueOf(ChMap.routes().indexOf(route));
+    }
+
+    private static Route deserializeR(String string) {
+        if (string.length() == 0) {
+            System.out.println("null route");
+            return ChMap.routes().get(0);
+        } else return ChMap.routes().get(Integer.parseInt(string));
     }
 
     private static String serializePCS(PublicCardState publicCardState) {
@@ -101,7 +126,7 @@ public final class Serdes {
     }
 
     private static PublicCardState deserializePCS(String string) {
-        String[] infos = Pattern.quote(string).split(";", -1);
+        String[] infos = string.split(Pattern.quote(";"), -1);
         return new PublicCardState(LIST_CARD.deserialize(infos[0]),
                 INTEGER.deserialize(infos[1]),
                 INTEGER.deserialize(infos[2]));
@@ -116,10 +141,20 @@ public final class Serdes {
     }
 
     private static PublicPlayerState deserializePPS(String string) {
-        String[] infos = Pattern.quote(string).split(";", -1);
+        String[] infos = string.split(Pattern.quote(";"), -1);
+        System.out.println("PPS");
+        System.out.println(string);
+        System.out.println(Arrays.asList(infos));
+
+
+        List<Route> routes = infos[2].length() > 0 ? LIST_ROUTE.deserialize(infos[2]) : List.of();
+        System.out.println("Routes");
+        var car = INTEGER.deserialize(infos[1]);
+        System.out.println("carCount");
+
         return new PublicPlayerState(INTEGER.deserialize(infos[0]),
-                INTEGER.deserialize(infos[1]),
-                LIST_ROUTE.deserialize(infos[2]));
+                car,
+                routes);
     }
 
     private static String serializePS(PlayerState playerState) {
@@ -131,10 +166,12 @@ public final class Serdes {
     }
 
     private static PlayerState deserializePS(String string) {
-        String[] infos = Pattern.quote(string).split(";", -1);
-        return new PlayerState(SORTED_BAG_TICKET.deserialize(infos[0]),
+        String[] infos = string.split(Pattern.quote(";"), -1);
+        List<Route> routes = infos[0].length() > 0 ? LIST_ROUTE.deserialize(infos[2]) : List.of();
+        SortedBag<Ticket> tickets = infos[0].length() > 0 ? SORTED_BAG_TICKET.deserialize(infos[0]) : SortedBag.of();
+        return new PlayerState(tickets,
                 SORTED_BAG_CARD.deserialize(infos[1]),
-                LIST_ROUTE.deserialize(infos[2]));
+                routes);
     }
 
     private static String serializePGS(PublicGameState publicGameState) {
@@ -154,17 +191,36 @@ public final class Serdes {
     }
 
     private static PublicGameState deserializePGS(String string) {
-        String[] infos = Pattern.quote(string).split(":", -1);
+        String[] infos = string.split(Pattern.quote(":"), -1);
         Map<PlayerId, PublicPlayerState> playerMap = new EnumMap<>(PlayerId.class);
         for (int i = 0; i < PlayerId.COUNT; i++) {
-            int index = i + 3;
-            playerMap.put(PlayerId.values()[i], PUBLIC_PLAYER_STATE.deserialize(infos[index]));
+            playerMap.put(PlayerId.values()[i], PUBLIC_PLAYER_STATE.deserialize(infos[i+3]));
         }
+
+//        playerMap.put(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE.deserialize(infos[3]));
+//        playerMap.put(PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE.deserialize(infos[4]));
 
         return new PublicGameState(INTEGER.deserialize(infos[0]),
                 PUBLIC_CARD_STATE.deserialize(infos[1]),
                 PLAYER_ID.deserialize(infos[2]),
                 playerMap,
                 PLAYER_ID.deserialize(infos[3 + PlayerId.COUNT]));
+
+
+        /*String[] infos = string.split(Pattern.quote(":"), -1);
+
+        HashMap<PlayerId, PublicPlayerState> playerMap = new HashMap<>();
+        playerMap.put(PlayerId.PLAYER_1, PUBLIC_PLAYER_STATE.deserialize(infos[3]));
+        playerMap.put(PlayerId.PLAYER_2, PUBLIC_PLAYER_STATE.deserialize(infos[4]));
+
+        PlayerId lastPlayerId = PLAYER_ID.deserialize(infos[5]);
+        var in = INTEGER.deserialize(infos[0]);
+        var p = PUBLIC_CARD_STATE.deserialize(infos[1]);
+        var a = PLAYER_ID.deserialize(infos[2]);
+        return new PublicGameState(in,
+                p,
+                a,
+                playerMap,
+                lastPlayerId);*/
     }
 }

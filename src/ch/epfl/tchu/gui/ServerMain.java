@@ -1,11 +1,12 @@
-package ch.epfl.tchu.net;
+package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import ch.epfl.tchu.gui.GraphicalPlayerAdapter;
+import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.EnumMap;
@@ -27,7 +28,7 @@ public class ServerMain extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         List<String> parameters = getParameters().getRaw();
         Map<PlayerId, String> playersNameMap = new EnumMap<>(PlayerId.class);
         playersNameMap.put(PlayerId.PLAYER_1, "Ada");
@@ -49,7 +50,10 @@ public class ServerMain extends Application {
             Player p2 = new RemotePlayerProxy(socket);
             playersMap.put(PlayerId.PLAYER_2, p2);
 
-            Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random());
+            new Thread(() ->  Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new Error(e);
         }
     }
 }

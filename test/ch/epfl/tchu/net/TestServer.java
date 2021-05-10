@@ -1,13 +1,15 @@
 package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.SortedBag;
-import ch.epfl.tchu.game.ChMap;
-import ch.epfl.tchu.game.Player;
+import ch.epfl.tchu.game.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
@@ -29,7 +31,7 @@ public final class TestServer {
             playerProxy.initPlayers(PLAYER_1, playerNames);
 
 
-            System.out.println("Claimed Route "+ playerProxy.claimedRoute().id());
+//            System.out.println("Claimed Route "+ playerProxy.claimedRoute().id());
 
             SortedBag.Builder s = new SortedBag.Builder();
             s.add(ChMap.tickets().get(0));
@@ -39,7 +41,48 @@ public final class TestServer {
             s.add(ChMap.tickets().get(4));
             playerProxy.setInitialTicketChoice(s.build());
 
-            System.out.println("Initial tickets choice"+ playerProxy.chooseInitialTickets());
+            List<Card> cards = new ArrayList<>();
+            cards.add(Card.LOCOMOTIVE);
+            cards.add(Card.BLUE);
+            cards.add(Card.BLACK);
+            cards.add(Card.WHITE);
+            cards.add(Card.GREEN);
+            int x = 0;
+            int y = 0;
+
+            var publicC = new PublicCardState(cards, x, y);
+
+            Map<PlayerId, PublicPlayerState> map = new TreeMap<>();
+            map.put(PLAYER_1, new PublicPlayerState(0, 0, List.of()));
+            map.put(PLAYER_2, new PublicPlayerState(0, 0, List.of()));
+
+            var p = new PublicGameState(0, publicC, PLAYER_1, map, null);
+
+            Station station1 = new Station(1, "station1");
+            Station station2 = new Station(2, "station2");
+            Route route = new Route("rte", station1, station2, 2, Route.Level.UNDERGROUND, null);
+
+
+            var cardsplayer = new SortedBag.Builder<Card>()
+                    .add(Card.ORANGE)
+                    .add(Card.ORANGE)
+                    .add(Card.RED)
+                    .add(Card.LOCOMOTIVE)
+                    .build();
+
+            var tickets = new SortedBag.Builder<Ticket>()
+                    .add(ChMap.tickets().get(1))
+                    .add(ChMap.tickets().get(2))
+                    .add(ChMap.tickets().get(3))
+                    .add(ChMap.tickets().get(4))
+                    .add(ChMap.tickets().get(5))
+                    .build();
+
+            var playerState = new  PlayerState(tickets, cardsplayer, List.of());
+
+//            System.out.println("Initial tickets choice"+ playerProxy.chooseInitialTickets());
+
+            playerProxy.updateState(p, playerState);
         }
         System.out.println("Server done!");
     }

@@ -1,3 +1,4 @@
+/*
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.SortedBag;
@@ -8,12 +9,14 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+*/
 /**
  * Créé le 08.03.2021 à 15:08
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
- */
+ *//*
+
 public class PlayerStateTest {
     //Given test
     private static final int INITIAL_CARD_COUNT = 4;
@@ -242,7 +245,7 @@ public class PlayerStateTest {
                 playerState.possibleAdditionalCards(
                         additionalCardsCount,
                         SortedBag.of(Card.BLUE)
-                        /*,SortedBag.of(3, Card.RED)*/);
+                        ,SortedBag.of(3, Card.RED));
             });
         }
     }
@@ -253,29 +256,35 @@ public class PlayerStateTest {
         assertThrows(IllegalArgumentException.class, () -> {
             playerState.possibleAdditionalCards(
                     1,
-                    SortedBag.of()/*,
-                    SortedBag.of(3, Card.RED)*/);
+                    SortedBag.of(),
+                    SortedBag.of(3, Card.RED));
         });
         assertThrows(IllegalArgumentException.class, () -> {
             playerState.possibleAdditionalCards(
                     1,
-                    SortedBag.of(List.of(Card.RED, Card.BLUE, Card.WHITE))/*,
-                    SortedBag.of(3, Card.RED)*/);
+                    SortedBag.of(List.of(Card.RED, Card.BLUE, Card.WHITE)),
+                    SortedBag.of(3, Card.RED));
         });
     }
 
-    /*@Test
+    */
+/*@Test
     void playerStatePossibleAdditionalCardsFailsWithInvalidDrawnCards() {
         var playerState = new PlayerState(SortedBag.of(), SortedBag.of(), List.of());
         for (var drawnCardsCount : List.of(0, 1, 2, 4, 5)) {
             assertThrows(IllegalArgumentException.class, () -> {
                 playerState.possibleAdditionalCards(
                         1,
-                        SortedBag.of(Card.BLUE)*//*,
-                        SortedBag.of(drawnCardsCount, Card.RED)*//*);
+                        SortedBag.of(Card.BLUE)*//*
+*/
+/*,
+                        SortedBag.of(drawnCardsCount, Card.RED)*//*
+*/
+/*);
             });
         }
-    }*/
+    }*//*
+
 
     @Test
     void playerStatePossibleAdditionalCardsWorksWithoutLocomotivesInHand() {
@@ -299,8 +308,8 @@ public class PlayerStateTest {
                                 3 - additionalCount, otherCard);
                         var actualPAC = playerState.possibleAdditionalCards(
                                 additionalCount,
-                                initialCards/*,
-                                drawnCards*/);
+                                initialCards,
+                                drawnCards);
                         var expectedPAC = totalCarCardsCount <= 6
                                 ? List.of(SortedBag.of(additionalCount, carCard))
                                 : List.<SortedBag<Card>>of();
@@ -322,7 +331,7 @@ public class PlayerStateTest {
                 var drawnCards = SortedBag.of(3, carCard);
                 for (var additionalCardsCount = 1; additionalCardsCount <= 3; additionalCardsCount++) {
                     var actualPAC = playerState
-                            .possibleAdditionalCards(additionalCardsCount, initialCards/*, drawnCards*/);
+                            .possibleAdditionalCards(additionalCardsCount, initialCards, drawnCards);
                     var expectedPAC = new ArrayList<SortedBag<Card>>();
                     for (int locoCount = 0; locoCount <= additionalCardsCount; locoCount++) {
                         var carCount = additionalCardsCount - locoCount;
@@ -348,8 +357,8 @@ public class PlayerStateTest {
                         3 - additionalCount, Card.BLUE);
                 var actualPAC = playerState.possibleAdditionalCards(
                         additionalCount,
-                        initialCards/*,
-                        drawnCards*/);
+                        initialCards,
+                        drawnCards);
                 var expectedPAC = totalCount <= 6
                         ? List.of(SortedBag.of(additionalCount, Card.LOCOMOTIVE))
                         : List.<SortedBag<Card>>of();
@@ -960,10 +969,10 @@ public class PlayerStateTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, ()->
-                playerState.possibleAdditionalCards(0, iniCards/*, drawnCards*/)
+                playerState.possibleAdditionalCards(0, iniCards, drawnCards)
         );
         assertThrows(IllegalArgumentException.class, ()->
-                playerState.possibleAdditionalCards(4, iniCards/*, drawnCards*/)
+                playerState.possibleAdditionalCards(4, iniCards, drawnCards)
         );
     }
 
@@ -1004,10 +1013,10 @@ public class PlayerStateTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, ()->
-                playerState.possibleAdditionalCards(1, new SortedBag.Builder<Card>().build()/*, drawnCards*/)
+                playerState.possibleAdditionalCards(1, new SortedBag.Builder<Card>().build(), drawnCards)
         );
         assertThrows(IllegalArgumentException.class, ()->
-                playerState.possibleAdditionalCards(3, iniCards/*, drawnCards*/)
+                playerState.possibleAdditionalCards(3, iniCards, drawnCards)
         );
     }
 
@@ -1048,9 +1057,15 @@ public class PlayerStateTest {
                 .add(Card.ORANGE)
                 .build();
 
-        /*assertThrows(IllegalArgumentException.class, ()->
-                playerState.possibleAdditionalCards(1, iniCards*//*, drawnCards*//*)
-        );*/
+        */
+/*assertThrows(IllegalArgumentException.class, ()->
+                playerState.possibleAdditionalCards(1, iniCards*//*
+*/
+/*, drawnCards*//*
+*/
+/*)
+        );*//*
+
     }
 
     @Test
@@ -1282,3 +1297,4 @@ public class PlayerStateTest {
         }
     }
 }
+*/

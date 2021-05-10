@@ -1,20 +1,16 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -30,13 +26,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.CheckedOutputStream;
 
-import static ch.epfl.tchu.gui.StringsFr.KEPT_N_TICKETS;
 import static ch.epfl.tchu.gui.StringsFr.plural;
 import ch.epfl.tchu.gui.ActionHandlers.*;
 
@@ -73,9 +65,11 @@ public class GraphicalPlayer {
         ticketsHandler = new SimpleObjectProperty<>();
         routeHandler = new SimpleObjectProperty<>();
 
-        observableText = FXCollections.observableArrayList(
+        observableText = FXCollections.observableArrayList();
+
+               /* FXCollections.observableArrayList(
                 new Text("Première information.\n"),
-                new Text("\nSeconde information.\n"));
+                new Text("\nSeconde information.\n"));*/
 
         Pane mapView = MapViewCreator.createMapView(gameState, routeHandler, this::chooseClaimCards);
         VBox infoView = InfoViewCreator.createInfoView(playerId, playerNames, gameState, observableText);

@@ -2,7 +2,6 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
-import ch.epfl.tchu.game.PublicPlayerState;
 
 import java.io.*;
 import java.net.Socket;
@@ -71,7 +70,6 @@ public class RemotePlayerClient {
                         player.setInitialTicketChoice(Serdes.SORTED_BAG_TICKET.deserialize(data[1]));
                         break;
                     case CHOOSE_INITIAL_TICKETS:
-
                         writer.write(Serdes.SORTED_BAG_TICKET.serialize(player.chooseInitialTickets()) + "\n");
                         writer.flush();
                         break;
