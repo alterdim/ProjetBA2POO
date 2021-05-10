@@ -20,26 +20,26 @@ public class PublicGameState {
     private final Map<PlayerId, PublicPlayerState> playerState;
     private final PlayerId lastPlayer;
 
-    /** Constructeur de la partie publique de l'état d'une partie.
-     * @param ticketCount Nombre de tickets dans la pioche de tickets.
-     * @param cardState La partie publique des mains des joueurs.
+    /**
+     * Constructeur de la partie publique de l'état d'une partie.
+     *
+     * @param ticketCount     Nombre de tickets dans la pioche de tickets.
+     * @param cardState       La partie publique des mains des joueurs.
      * @param currentPlayerId L'identification du joueur en cours.
-     * @param playerState La partie publique de l'état des joueurs.
-     * @param lastPlayer Le dernier joueur.
-     * @throws IllegalArgumentException  si la taille de la pioche est strictement négative ou si playerState ne contient pas exactement deux paires clef/valeur
-     * @throws NullPointerException si l'un des autres arguments (lastPlayer excepté) est nul
+     * @param playerState     La partie publique de l'état des joueurs.
+     * @param lastPlayer      Le dernier joueur.
+     * @throws IllegalArgumentException si la taille de la pioche est strictement négative ou si playerState ne contient pas exactement deux paires clef/valeur
+     * @throws NullPointerException     si l'un des autres arguments (lastPlayer excepté) est nul
      */
     public PublicGameState(int ticketCount, PublicCardState cardState,
                            PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
         Preconditions.checkArgument(ticketCount >= 0);
         Preconditions.checkArgument(playerState.size() == PlayerId.COUNT);
-        Objects.requireNonNull(cardState);
-        Objects.requireNonNull(currentPlayerId);
-        Objects.requireNonNull(playerState);
+
         this.ticketCount = ticketCount;
-        this.cardState = cardState;
-        this.currentPlayerId = currentPlayerId;
-        this.playerState = Map.copyOf(playerState);
+        this.cardState = Objects.requireNonNull(cardState);
+        this.currentPlayerId = Objects.requireNonNull(currentPlayerId);
+        this.playerState = Map.copyOf(Objects.requireNonNull(playerState));
         this.lastPlayer = lastPlayer;
     }
 
@@ -54,7 +54,7 @@ public class PublicGameState {
      * @return Renvoie vrai si il y a plus d'un ticket dans la pioche des tickets.
      */
     public boolean canDrawTickets() {
-        return ticketCount != 0;
+        return ticketCount > 0;
     }
 
     /**

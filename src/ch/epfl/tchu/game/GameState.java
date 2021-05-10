@@ -5,6 +5,8 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
 
+import static ch.epfl.tchu.game.Constants.*;
+
 /**
  * Fichier créé à 14:16 le 15/03/2021
  *
@@ -31,7 +33,7 @@ public final class GameState extends PublicGameState {
         super(ticketDeck.size(), cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
         this.cardState = cardState;
         this.ticketDeck = ticketDeck;
-        this.playerStateMap = playerState;
+        this.playerStateMap = Map.copyOf(playerState);
     }
 
     /**
@@ -48,8 +50,8 @@ public final class GameState extends PublicGameState {
 
         Map<PlayerId, PlayerState> playerStateMap = new EnumMap<>(PlayerId.class);
         for (PlayerId playerId : PlayerId.values()) {
-            SortedBag<Card> initCardsPlayer = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
-            cardDeck = cardDeck.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
+            SortedBag<Card> initCardsPlayer = cardDeck.topCards(INITIAL_CARDS_COUNT);
+            cardDeck = cardDeck.withoutTopCards(INITIAL_CARDS_COUNT);
 
             playerStateMap.put(playerId, PlayerState.initial(initCardsPlayer));
         }
@@ -140,7 +142,7 @@ public final class GameState extends PublicGameState {
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
-        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        Map<PlayerId, PlayerState> newMap = new EnumMap<>(playerStateMap);
         newMap.put(playerId, playerState(playerId).withAddedTickets(chosenTickets));
         return new GameState(ticketDeck, cardState, currentPlayerId(), newMap, lastPlayer());
     }
@@ -154,7 +156,7 @@ public final class GameState extends PublicGameState {
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
         Deck<Ticket> newDeck = ticketDeck.withoutTopCards(drawnTickets.size());
-        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        Map<PlayerId, PlayerState> newMap = new EnumMap<>(playerStateMap);
         newMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
         return new GameState(newDeck, cardState, currentPlayerId(), newMap, lastPlayer());
     }
@@ -169,7 +171,7 @@ public final class GameState extends PublicGameState {
 
         Card c = cardState().faceUpCard(slot);
         CardState newCardState = cardState.withDrawnFaceUpCard(slot);
-        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        Map<PlayerId, PlayerState> newMap = new EnumMap<>(playerStateMap);
         newMap.put(currentPlayerId(), currentPlayerState().withAddedCard(c));
 
         return new GameState(ticketDeck, newCardState, currentPlayerId(), newMap, lastPlayer());
@@ -183,7 +185,7 @@ public final class GameState extends PublicGameState {
         Preconditions.checkArgument(canDrawCards());
         Card drawnCard = cardState.topDeckCard();
         CardState newCardState = cardState.withoutTopDeckCard();
-        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        Map<PlayerId, PlayerState> newMap = new EnumMap<>(playerStateMap);
         newMap.put(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(drawnCard));
         return new GameState(ticketDeck, newCardState, currentPlayerId(), newMap, lastPlayer());
 
@@ -195,7 +197,7 @@ public final class GameState extends PublicGameState {
      * @return Un GameState identique où le joueur courant à utilisé cards pour s'emparer de route.
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
-        Map<PlayerId, PlayerState> newMap = new TreeMap<>(playerStateMap);
+        Map<PlayerId, PlayerState> newMap = new EnumMap<>(playerStateMap);
         newMap.put(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
         return new GameState(ticketDeck, cardState.withMoreDiscardedCards(cards), currentPlayerId(), newMap, lastPlayer());
     }

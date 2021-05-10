@@ -8,9 +8,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- *
  * Serdes utile au projet
- *
+ * <p>
  * Créé le 13.04.2021 à 08:53
  *
  * @author Louis Gerard (296782)
@@ -24,14 +23,12 @@ public final class Serdes {
     public static final Serde<Integer> INTEGER = Serde.of(
             i -> Integer.toString(i),
             Integer::parseInt);
-
     /**
      * Serde utile pour les chaines de caractères
      */
     public static final Serde<String> STRING = Serde.of(
             s -> Base64.getEncoder().encodeToString(s.getBytes(StandardCharsets.UTF_8)),
             s -> new String(Base64.getDecoder().decode(s), StandardCharsets.UTF_8));
-
     /**
      * Serde utile pour PlayerID
      */
@@ -92,6 +89,8 @@ public final class Serdes {
      * Serde utile pour un PublicGameState
      */
     public static final Serde<PublicGameState> PUBLIC_GAME_STATE = Serde.of(Serdes::serializePGS, Serdes::deserializePGS);
+    private Serdes() {
+    }
 
     private static String serializePCS(PublicCardState publicCardState) {
         List<String> infos = new ArrayList<>();
@@ -158,7 +157,7 @@ public final class Serdes {
         String[] infos = Pattern.quote(string).split(":", -1);
         Map<PlayerId, PublicPlayerState> playerMap = new EnumMap<>(PlayerId.class);
         for (int i = 0; i < PlayerId.COUNT; i++) {
-            int index = i+3;
+            int index = i + 3;
             playerMap.put(PlayerId.values()[i], PUBLIC_PLAYER_STATE.deserialize(infos[index]));
         }
 
@@ -166,6 +165,6 @@ public final class Serdes {
                 PUBLIC_CARD_STATE.deserialize(infos[1]),
                 PLAYER_ID.deserialize(infos[2]),
                 playerMap,
-                PLAYER_ID.deserialize(infos[3+PlayerId.COUNT]));
+                PLAYER_ID.deserialize(infos[3 + PlayerId.COUNT]));
     }
 }

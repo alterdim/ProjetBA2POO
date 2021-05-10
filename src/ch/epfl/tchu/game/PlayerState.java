@@ -11,6 +11,8 @@ import java.util.List;
 import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 
 /**
+ * Représente l' état complet d' un joueur
+ * <p>
  * Créé le 08.03.2021 à 14:02
  *
  * @author Louis Gerard (296782)
@@ -20,7 +22,6 @@ public final class PlayerState extends PublicPlayerState {
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;
 
-
     /**
      * Construit un état de joueur
      *
@@ -29,8 +30,8 @@ public final class PlayerState extends PublicPlayerState {
      * @param routes  routes appartenant au joueur
      */
     public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
-        super(tickets.size(), cards.size(), routes); //cards est sortedBag (immuable) et routes n'est pas assigné à une variable dans cette classe, mais dispose bien d'une copy dans la classe mère
-        this.tickets = tickets; //SortedBag est immuable, donc pas besoin de faire une copy
+        super(tickets.size(), cards.size(), routes); // cards est sortedBag (immuable) et routes n'est pas assigné à une variable dans cette classe, mais dispose bien d'une copy dans la classe mère
+        this.tickets = tickets; // SortedBag est immuable, donc pas besoin de faire une copie
         this.cards = cards;
     }
 
@@ -97,7 +98,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return vrai s'il peut s'en emparer
      */
     public boolean canClaimRoute(Route route) {
-        if (carCount()>=route.length()) {
+        if (carCount() >= route.length()) {
             for (SortedBag<Card> combination : route.possibleClaimCards()) {
                 if (cards.contains(combination)) {
                     return true;
@@ -122,6 +123,8 @@ public final class PlayerState extends PublicPlayerState {
         }
         return listPossibleClaimCards;
     }
+
+    //TODO correction, utiliser difference() de SortedBag au lieu de méthode perso
 
     /**
      * Fonction qui calcule les cartes à "rejouer" pour s'emparer d'un tunnel et qui renvoie les façons pour le joueur de les jouer.
@@ -158,7 +161,7 @@ public final class PlayerState extends PublicPlayerState {
                 reducedHand.removeAll(Collections.singletonList(c));
             }
         }
-        if (reducedHand.size()  < additionalCardsCount) {
+        if (reducedHand.size() < additionalCardsCount) {
             return new ArrayList<>();
         }
         for (Card c : reducedHand) {
@@ -223,7 +226,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return Retourne la somme des points des tickets et des bonus de routes.
      */
     public int finalPoints() {
-        return ticketPoints()+claimPoints();
+        return ticketPoints() + claimPoints();
     }
 
 

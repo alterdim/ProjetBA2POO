@@ -10,16 +10,12 @@ import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+
 import java.util.List;
+
 import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
 
-abstract class MapViewCreator {
-
-    @FunctionalInterface
-    interface CardChooser {
-        void chooseCards(List<SortedBag<Card>> options,
-                         ActionHandlers.ChooseCardsHandler handler);
-    }
+abstract class MapViewCreator {//TODO vérifier si bien abstarct
 
     public static Pane createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandler, CardChooser cardChooser) {
         Group tempRouteGroup;
@@ -43,13 +39,12 @@ abstract class MapViewCreator {
             tempRouteGroup = new Group();
             if (r.color() != null) {
                 tempRouteGroup.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
-            }
-            else {
+            } else {
                 tempRouteGroup.getStyleClass().addAll("route", r.level().toString(), "NEUTRAL");
             }
             tempRouteGroup.setId(r.id());
 
-            for (int i = 0; i< r.length(); i++) {
+            for (int i = 0; i < r.length(); i++) {
                 //Création des groupes
                 tempCaseGroup = new Group();
                 tempCaseGroup.setId(r.id() + "_" + (i + 1));
@@ -79,12 +74,11 @@ abstract class MapViewCreator {
             tempRouteGroup.disableProperty().bind(claimRouteHandler.isNull().or(gameState.canClaimRoute(r).not()));
             tempRouteGroup.setOnMouseClicked((event) -> {
                 List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(r);
-                    if (possibleClaimCards.size()==1){
-                        claimRouteH.onClaimRoute(r, possibleClaimCards.get(0));
-                    }
-                    else {
-                        handleSpecialCardCase(gameState, r, claimRouteH, cardChooser);
-                    }
+                if (possibleClaimCards.size() == 1) {
+                    claimRouteH.onClaimRoute(r, possibleClaimCards.get(0));
+                } else {
+                    handleSpecialCardCase(gameState, r, claimRouteH, cardChooser);
+                }
             });
             canvas.getChildren().addAll(tempRouteGroup);
         }
@@ -95,6 +89,12 @@ abstract class MapViewCreator {
         List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(route);
         ActionHandlers.ChooseCardsHandler chooseCardsHandler = (chosenCards) -> claimRouteHandler.onClaimRoute(route, chosenCards);
         cardChooser.chooseCards(possibleClaimCards, chooseCardsHandler);
+    }
+
+    @FunctionalInterface
+    interface CardChooser {
+        void chooseCards(List<SortedBag<Card>> options,
+                         ActionHandlers.ChooseCardsHandler handler);
     }
 
 }

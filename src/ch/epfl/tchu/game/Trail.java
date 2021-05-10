@@ -19,7 +19,7 @@ public final class Trail {
     private Trail(Station stationFrom, Station stationTo, List<Route> routes, int length) {
         this.stationFrom=stationFrom;
         this.stationTo=stationTo;
-        this.routes=List.copyOf(routes);
+        this.routes=routes;
         this.length=length;
     }
 
@@ -31,37 +31,37 @@ public final class Trail {
     public static Trail longest(List<Route> routes){
         Trail longestTrail = new Trail(null, null, List.of(), 0);
 
-        List<Trail> cs = new ArrayList<>();
+        List<Trail> supplyTrail = new ArrayList<>();
 
         for (Route route:routes){
             if (longestTrail.length < route.length()) longestTrail=new Trail(route.station1(), route.station2(), List.of(route), route.length());
-            cs.add(new Trail(route.station1(), route.station2(), List.of(route), route.length()));
-            cs.add(new Trail(route.station2(), route.station1(), List.of(route), route.length()));
+            supplyTrail.add(new Trail(route.station1(), route.station2(), List.of(route), route.length()));
+            supplyTrail.add(new Trail(route.station2(), route.station1(), List.of(route), route.length()));
         }
 
-        while (!cs.isEmpty()){
-            List<Trail> cs2 = new ArrayList<>();
-            for(Trail c:cs){
-                List<Route> rs= new ArrayList<>(routes);
+        while (!supplyTrail.isEmpty()){
+            List<Trail> tempSupplyTrail = new ArrayList<>();
+            for(Trail trail:supplyTrail){
+                List<Route> supplyRoute= new ArrayList<>(routes);
 
                 //Retire toutes les routes déjà utilisée
-                rs.removeAll(c.routes);
+                supplyRoute.removeAll(trail.routes);
                 //Retire les routes qui ne permettent pas de prolonger le chemin
-                rs.removeIf(r -> !r.stations().contains(c.stationTo));
+                supplyRoute.removeIf(r -> !r.stations().contains(trail.stationTo));
 
-                for (Route r : rs){
-                    //Ajoute la route r au chemin
-                    List<Route> routeList = new ArrayList<>(c.routes);
-                    routeList.add(r);
+                for (Route route : supplyRoute){
+                    //Ajoute la route route au chemin
+                    List<Route> routeList = new ArrayList<>(trail.routes);
+                    routeList.add(route);
 
-                    int length=c.length+r.length();
-                    Trail trail = new Trail(c.stationFrom, r.stationOpposite(c.stationTo), routeList, length);
+                    int length=trail.length+route.length();
+                    Trail newTrail = new Trail(trail.stationFrom, route.stationOpposite(trail.stationTo), routeList, length);
                     //Ajoute a cs2 le nouveau chemin
-                    cs2.add(trail);
-                    if (longestTrail.length< length) longestTrail=trail;
+                    tempSupplyTrail.add(newTrail);
+                    if (longestTrail.length< length) longestTrail=newTrail;
                 }
             }
-            cs=cs2;
+            supplyTrail=tempSupplyTrail;
         }
         return longestTrail;
     }
@@ -71,7 +71,7 @@ public final class Trail {
      * @return station de départ du trajet
      */
     public Station station1() {
-        return ((length()!=0) ? stationFrom: null);
+        return stationFrom;
     }
 
     /**
@@ -79,7 +79,7 @@ public final class Trail {
      * @return station d'arrivée du trajet
      */
     public Station station2() {
-        return ((length()!=0) ? stationTo: null);
+        return stationTo;
     }
 
     public int length(){

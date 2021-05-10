@@ -7,12 +7,16 @@ import ch.epfl.tchu.gui.Info;
 import java.util.*;
 
 /**
+ * Représente une partie de tCHu
+ * <p>
  * Fichier créé à 14:49 le 22/03/2021
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
  */
 public final class Game {
+
+    private Game() {}
 
     /**
      * @param players     Une Map liant les id des joueurs (enum PlayerId) et les joueurs.
@@ -23,8 +27,8 @@ public final class Game {
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames,
                             SortedBag<Ticket> tickets, Random rng) {
         //Préconditions (nombre de joueurs adéquat)
-        Preconditions.checkArgument(players.values().size() == PlayerId.COUNT);
-        Preconditions.checkArgument(playerNames.values().size() == PlayerId.COUNT);
+        Preconditions.checkArgument(players.size() == PlayerId.COUNT);
+        Preconditions.checkArgument(playerNames.size() == PlayerId.COUNT);
 
         //Initialisation de variables utiles
         int twoMoreTurns = 0;
@@ -32,7 +36,7 @@ public final class Game {
 
         //Initialiser le jeu
         GameState gameState = GameState.initial(tickets, rng);
-        Map<PlayerId, Info> playerInfos = new HashMap<>();
+        Map<PlayerId, Info> playerInfos = new EnumMap<>(PlayerId.class);
 
         for (PlayerId p : players.keySet()) {
             Player player = players.get(p);
@@ -108,9 +112,9 @@ public final class Game {
                         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).attemptsTunnelClaim(claimedRoute, claimCards));
 
                         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
-                        for (int i = 0; i < 3; i++) {
+                        for (int i = 0; i < Constants.ADDITIONAL_TUNNEL_CARDS; i++) {
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
-                            builder.add(1, gameState.topCard());
+                            builder.add(gameState.topCard());
                             gameState = gameState.withoutTopCard();
 
                         }
@@ -134,8 +138,10 @@ public final class Game {
                                     break;
                                 }
                             }
-                            //le joueur ne prend pas la route
-                            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
+                            else {
+                                //le joueur ne prend pas la route
+                                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
+                            }
                         }
                         //claims si pas de cartes additionnelles
                         else {
@@ -163,6 +169,45 @@ public final class Game {
 
         //TODO faire une boucle sur PlayerId (pour permettre l'ajout de davantage de joueurs
         //Calcul du longestTrail, du total des points
+        /*Map<PlayerId, Trail> playersLongestTrail = new EnumMap<>(PlayerId.class);
+        int longestTrailLength=0;
+        for (PlayerId playerId : PlayerId.values()) {
+            Trail currentPlayerTrail = Trail.longest(gameState.playerState(playerId).routes());
+            int currentPlayerLength = currentPlayerTrail.length();
+            playersLongestTrail.put(playerId, currentPlayerTrail);
+            if (currentPlayerLength>longestTrailLength) {
+                longestTrailLength=currentPlayerLength;
+            }
+        }
+        Map<PlayerId, Integer> playersScores = new EnumMap<>(PlayerId.class);
+        int maxScore=0;
+        for (PlayerId playerId : PlayerId.values()) {
+            Trail currentPlayerTrail = playersLongestTrail.get(playerId);
+            int currentPlayerScore = gameState.playerState(playerId).finalPoints();
+            if (longestTrailLength==currentPlayerTrail.length()){
+                currentPlayerScore+=Constants.LONGEST_TRAIL_BONUS_POINTS;
+                tellEveryone(players, playerInfos.get(playerId).getsLongestTrailBonus(currentPlayerTrail));
+            }
+            if (currentPlayerScore>maxScore) maxScore = currentPlayerScore;
+            playersScores.put(playerId, currentPlayerScore);
+        }
+
+        for (PlayerId playerId : PlayerId.values()) {
+
+            int finalMaxScore = maxScore;
+            var n =playersScores.values().stream().filter(score -> score.equals(finalMaxScore)).count();
+
+            if (n==PlayerId.COUNT){
+                List<String> names = new ArrayList<>(playerNames.values());
+                tellEveryone(players, Info.draw(names, maxScore));
+            }
+            else if (n==1){
+//                tellEveryone(players, playerInfos.get(PlayerId.PLAYER_1).won(score1, score2));
+            }
+
+        }*/
+
+
         Trail longestTrail1 = Trail.longest(gameState.playerState(PlayerId.PLAYER_1).routes());
         Trail longestTrail2 = Trail.longest(gameState.playerState(PlayerId.PLAYER_2).routes());
         int score1 = gameState.playerState(PlayerId.PLAYER_1).finalPoints();
@@ -176,6 +221,7 @@ public final class Game {
             score2 += Constants.LONGEST_TRAIL_BONUS_POINTS;
             tellEveryone(players, playerInfos.get(PlayerId.PLAYER_2).getsLongestTrailBonus(longestTrail2));
         }
+
 
         //Annonce du gagnant ou de la gagnante de la partie.
         if (score1 == score2) {

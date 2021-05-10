@@ -22,8 +22,6 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
-    SortedBag.Builder<Card> cardsB;
-
     /**
      * @param id       L'identification unique de la route. Chaine de caractères, pas un int comme les stations !
      * @param station1 Station de départ
@@ -94,10 +92,7 @@ public final class Route {
      * @return Renvoie une liste des stations avec dans l'ordre la station 1 puis la 2.
      */
     public List<Station> stations() {
-        List<Station> stationList = new ArrayList<>();
-        stationList.add(station1);
-        stationList.add(station2);
-        return stationList;
+        return List.of(station1, station2);
     }
 
     /**
@@ -111,10 +106,13 @@ public final class Route {
         return station.equals(station1) ? station2 : station1;
     }
 
+
+//TODO correction lignes qui se ressemblent a double
     /**
      * @return Retourne toutes les combinaisons de cartes utilisables pour capturer la route dans une List de SortedBags
      */
     public List<SortedBag<Card>> possibleClaimCards() {
+        SortedBag.Builder<Card> cardsB;
         boolean rainbow = color == null;
         //Si la route ne possède pas le couleur, le flag rainbow s'active pour autoriser toutes les couleurs de cartes.
         List<SortedBag<Card>> bagList = new ArrayList<>();

@@ -8,9 +8,8 @@ import java.util.List;
 import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
 
 /**
- *
  * partie publique de l'état d'un joueur
- *
+ * <p>
  * Créé le 08.03.2021 à 13:01
  *
  * @author Louis Gerard (296782)
@@ -28,14 +27,15 @@ public class PublicPlayerState {
 
     /**
      * construit l'état public d'un joueur
+     *
      * @param ticketCount nombre de billets
-     * @param cardCount nombre de cartes
-     * @param routes liste de routes appartenant au joueur
+     * @param cardCount   nombre de cartes
+     * @param routes      liste de routes appartenant au joueur
      * @throws IllegalArgumentException si le nombre de billets ou de cartes sont négatifs
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
-        Preconditions.checkArgument(ticketCount>=0);
-        Preconditions.checkArgument(cardCount>=0);
+        Preconditions.checkArgument(ticketCount >= 0);
+        Preconditions.checkArgument(cardCount >= 0);
 
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
@@ -43,7 +43,7 @@ public class PublicPlayerState {
 
         int car = INITIAL_CAR_COUNT;
         int points = 0;
-        for (Route route:routes) {
+        for (Route route : routes) {
             car -= route.length();
             points += route.claimPoints();
         }
@@ -52,42 +52,37 @@ public class PublicPlayerState {
     }
 
     /**
-     *
      * @return le nombre de billets que possède le joueur
      */
-    public int ticketCount(){
+    public int ticketCount() {
         return ticketCount;
     }
 
     /**
-     *
      * @return le nombre de cartes que possède le joueur
      */
-    public int cardCount(){
+    public int cardCount() {
         return cardCount;
     }
 
     /**
-     *
      * @return les routes dont le joueur s'est emparé
      */
-    public List<Route> routes(){
+    public List<Route> routes() {
         return routes;
     }
 
     /**
-     *
      * @return le nombre de wagons que possède le joueur
      */
-    public int carCount(){
+    public int carCount() {
         return carCount;
     }
 
     /**
-     *
      * @return le nombre de points de construction obtenus par le joueur
      */
-    public int claimPoints(){
+    public int claimPoints() {
         return claimPoints;
     }
 

@@ -44,7 +44,7 @@ public enum Card {
     /**
      * Array qui ne contient que les couleurs de voitures (donc pas la locomotive)
      */
-    public static final List<Card> CARS = Arrays.asList(BLACK,VIOLET,BLUE,GREEN,YELLOW,ORANGE,RED,WHITE);
+    public static final List<Card> CARS = List.of(BLACK,VIOLET,BLUE,GREEN,YELLOW,ORANGE,RED,WHITE);
 
     /**
      * @param color Couleur de la carte à renvoyer
@@ -63,6 +63,6 @@ public enum Card {
      * @return Renvoie la couleur associé à la voiture donnée en argument, renvoie null pour la locomotive.
      */
     public Color color(){
-        return CARS.contains(this) ? this.color : null;
+        return this.color;
     }
 }

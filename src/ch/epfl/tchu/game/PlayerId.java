@@ -1,7 +1,5 @@
 package ch.epfl.tchu.game;
 
-import com.sun.java.accessibility.util.AccessibilityListenerList;
-
 import java.util.List;
 
 /**
