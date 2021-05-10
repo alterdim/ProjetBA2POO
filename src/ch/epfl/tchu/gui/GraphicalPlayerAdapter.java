@@ -32,7 +32,7 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-        graphicalPlayer = new GraphicalPlayer(ownId, playerNames);
+        runLater(() -> graphicalPlayer = new GraphicalPlayer(ownId, playerNames));
     }
 
     @Override
