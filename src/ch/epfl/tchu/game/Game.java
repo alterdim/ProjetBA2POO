@@ -31,7 +31,7 @@ public final class Game {
         Preconditions.checkArgument(playerNames.size() == PlayerId.COUNT);
 
         //Initialisation de variables utiles
-        int twoMoreTurns = 0;
+        int endingGameTrigger = 0;
 
 
         //Initialiser le jeu
@@ -65,7 +65,7 @@ public final class Game {
         }
 
         //Boucle de jeu
-        while (twoMoreTurns < 2) {
+        while (endingGameTrigger < 2) {
             Player currentPlayer = players.get(gameState.currentPlayerId());
             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay());
 
@@ -126,7 +126,7 @@ public final class Game {
                         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewAdditionalCards(drawnCards, addCardsCount));
 
                         if (addCardsCount > 0) {
-                            List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards, drawnCards);
+                            List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards/*, drawnCards*/);
                             if (!listPossibleAdditionalCards.isEmpty()) {
                                 SortedBag<Card> chosenCards = currentPlayer.chooseAdditionalCards(
                                         listPossibleAdditionalCards
@@ -158,7 +158,7 @@ public final class Game {
             }
 
             if (gameState.lastPlayer() != null) {
-                twoMoreTurns++;
+                endingGameTrigger++;
             }
 
             gameState = gameState.forNextTurn();

@@ -76,24 +76,6 @@ class PublicCardStateTest {
         assertThrows(IllegalArgumentException.class,  ()-> new PublicCardState(cards, -1,-1));
     }
 
-
-
-    @Test
-    void workOnTrivialTotalSize(){
-        List<Card> cards = new ArrayList<>();
-        cards.add(Card.LOCOMOTIVE);
-        cards.add(Card.BLUE);
-        cards.add(Card.BLACK);
-        cards.add(Card.WHITE);
-        cards.add(Card.GREEN);
-        int x = 0;
-        int y= 0;
-        int totalSize= cards.size()+x+y;
-
-        var publicC = new PublicCardState(cards, x,y);
-        assertEquals(totalSize, publicC.totalSize());
-    }
-
     @Test
     void workOnTrivialfaceUpCards(){
         List<Card> cards = new ArrayList<>();
@@ -239,17 +221,6 @@ class PublicCardStateTest {
         var cardState = new PublicCardState(faceUpCards, 0, 0);
         faceUpCards.clear();
         assertEquals(FACE_UP_CARDS, cardState.faceUpCards());
-    }
-
-    @Test
-    void totalSizeReturnsTotalSize() {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                var cardState = new PublicCardState(FACE_UP_CARDS, i, j);
-                var expectedTotal = i + j + FACE_UP_CARDS.size();
-                assertEquals(expectedTotal, cardState.totalSize());
-            }
-        }
     }
 
     @Test

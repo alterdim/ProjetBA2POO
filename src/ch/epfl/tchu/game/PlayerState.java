@@ -82,16 +82,6 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     /**
-     * Ajoute des cartes
-     *
-     * @param additionalCards des cartes
-     * @return Un nouvel état du joueur avec des cartes en plus
-     */
-    public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
-        return new PlayerState(tickets(), additionalCards.union(cards()), routes());
-    }
-
-    /**
      * Le joueur possède-t-il les wagons et les cartes pour s'emparer de la route
      *
      * @param route une route
@@ -131,25 +121,25 @@ public final class PlayerState extends PublicPlayerState {
      *
      * @param additionalCardsCount le nombre de cartes additionnelles à jouer
      * @param initialCards         les cartes jouées initialement
-     * @param drawnCards           les cartes piochées
+//     * @param drawnCards           les cartes piochées
      * @return une liste de SortedBags contenant les possibilités de cartes à jouer pour finir la prise d'un tunnel.
      * @throws IllegalArgumentException si le nombre de carte pas compris entre 1 et 3 (inclus), si ensemble cartes initiales vide ou contient plus de 2 types de cartes différents, l'ensemble des cartes tirées ne contient pas exactement 3 cartes
      */
-    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards/*, SortedBag<Card> drawnCards*/) {
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= ADDITIONAL_TUNNEL_CARDS); //nb de cartes 3>=x>=1
         Preconditions.checkArgument(!initialCards.isEmpty()); // InitialCards vide
         Preconditions.checkArgument(initialCards.toMap().keySet().size() <= 2); // MAX 2 types de cartes
-        Preconditions.checkArgument(drawnCards.size() == ADDITIONAL_TUNNEL_CARDS); //3 éléments dans drawncards
+//        Preconditions.checkArgument(drawnCards.size() == ADDITIONAL_TUNNEL_CARDS); //3 éléments dans drawncards
 
         ArrayList<SortedBag<Card>> options; // liste qui sera renvoyée
         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
         SortedBag<Card> possibleCards = builder.build(); //won't do anything but we initialize it
-        for (Card c : drawnCards) {
-            if (initialCards.contains(c)) {
-                builder.add(c);
-            }
-            possibleCards = builder.build(); //list of cards the player can add to capture the route for good
-        }
+//        for (Card c : drawnCards) {
+//            if (initialCards.contains(c)) {
+//                builder.add(c);
+//            }
+//            possibleCards = builder.build(); //list of cards the player can add to capture the route for good
+//        }
         builder = new SortedBag.Builder<>(); //clean the builder
         List<Card> reducedHand = cards.toList();
 

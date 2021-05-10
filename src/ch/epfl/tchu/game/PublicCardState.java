@@ -32,14 +32,6 @@ public class PublicCardState {
         this.faceUpCards = List.copyOf(faceUpCards);
         this.deckSize = deckSize;
         this.discardSize = discardSize;
-
-    }
-
-    /**
-     * @return la somme de la taille de la pioche, la défausse et les cartes visibles.
-     */
-    public int totalSize() {
-        return discardSize + deckSize + faceUpCards.size();
     }
 
     /**

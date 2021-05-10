@@ -27,7 +27,7 @@ class InfoTest {
     void cardName() {
         assertEquals("noire", Info.cardName(Card.BLACK, 1));
         assertEquals("noires", Info.cardName(Card.BLACK, 2));
-        assertEquals("noires", Info.cardName(Card.BLACK, 0));
+        assertEquals("noire", Info.cardName(Card.BLACK, 0));
         assertEquals("noires", Info.cardName(Card.BLACK, 10));
     }
 
@@ -487,7 +487,7 @@ class InfoTest {
         var info = new Info("Martin");
 
         var actual1 = info.lastTurnBegins(0);
-        var expected1 = "\nMartin n'a plus que 0 wagons, le dernier tour commence !\n";
+        var expected1 = "\nMartin n'a plus que 0 wagon, le dernier tour commence !\n";
         assertEquals(expected1, actual1);
 
         var actual2 = info.lastTurnBegins(1);
