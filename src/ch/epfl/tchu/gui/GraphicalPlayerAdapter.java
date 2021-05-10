@@ -19,7 +19,14 @@ import static javafx.application.Platform.runLater;
  * @author Célien Muller (310777)
  */
 public class GraphicalPlayerAdapter implements Player {
-    GraphicalPlayer graphicalPlayer;
+    private GraphicalPlayer graphicalPlayer;
+
+    private BlockingQueue<SortedBag<Ticket>> ticketQueue = new ArrayBlockingQueue<>(1);
+    private BlockingQueue<Integer> intQueue = new ArrayBlockingQueue<>(1);
+    private BlockingQueue<TurnKind> turnKindQueue = new ArrayBlockingQueue<>(1);
+    private BlockingQueue<Route> routeQueue= new ArrayBlockingQueue<>(1);
+    private BlockingQueue<SortedBag<Card>> cardQueue = new ArrayBlockingQueue<>(1);
+
     public GraphicalPlayerAdapter() {
     }
 
@@ -40,50 +47,77 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-        runLater(() -> graphicalPlayer.chooseTickets(tickets, null));//TODO
+        runLater(() -> graphicalPlayer.chooseTickets(tickets, handler -> ticketQueue.add(tickets)));
     }
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-        BlockingQueue<ActionHandlers.ChooseTicketsHandler> q = new ArrayBlockingQueue<>(1);
-        return null;
+        return (SortedBag<Ticket>) take(ticketQueue);
     }
 
     @Override
     public TurnKind nextTurn() {
-        return null;
+        runLater(() -> graphicalPlayer.startTurn(() -> turnKindQueue.add(TurnKind.DRAW_TICKETS),
+                (slot) -> {
+                    turnKindQueue.add(TurnKind.DRAW_CARDS);
+                    intQueue.add(slot);
+                },
+                ((route, cards) -> {
+                    turnKindQueue.add(TurnKind.CLAIM_ROUTE);
+                    routeQueue.add(route);
+                    cardQueue.add(cards);
+                })));
+        return (TurnKind) take(turnKindQueue);
     }
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        BlockingQueue<ActionHandlers.ChooseTicketsHandler> q = new ArrayBlockingQueue<>(1);
-        runLater(() -> {
-            try {
-                graphicalPlayer.chooseTickets(options, q.take());
-            } catch (InterruptedException e) {
-                throw new Error(e);
-            }
-        }); //TODO
-        return null;
+        setInitialTicketChoice(options);
+        return chooseInitialTickets();
     }
 
     @Override
     public int drawSlot() {
-        return 0;
+        if (intQueue.isEmpty()) {
+            runLater(() -> graphicalPlayer.drawCard(new ActionHandlers.DrawCardHandler() {
+                @Override
+                public void onDrawCard(int slot) {
+                    put(intQueue, slot);
+                }
+            }));
+        }
+        return (int) take(intQueue);
     }
 
     @Override
     public Route claimedRoute() {
-        return null;
+        return (Route) take(routeQueue);
     }
 
     @Override
     public SortedBag<Card> initialClaimCards() {
-        return null;
+        return (SortedBag<Card>) take(cardQueue);
     }
 
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
-        return null;
+        runLater(() -> graphicalPlayer.chooseAdditionalCards(options, cards -> put(cardQueue, cards)));
+        return (SortedBag<Card>) take(cardQueue);
+    }
+
+    private Object take(BlockingQueue queue) {
+        try {
+            return queue.take();
+        } catch (InterruptedException e) {
+            throw new Error();
+        }
+    }
+
+    private void put(BlockingQueue queue, Object item) {
+        try {
+            queue.put(item);
+        } catch (InterruptedException e) {
+            throw new Error();
+        }
     }
 }

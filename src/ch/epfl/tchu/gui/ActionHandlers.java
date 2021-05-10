@@ -19,6 +19,7 @@ public interface ActionHandlers {
     /**
      * Interface pour lorsque le joueur désire tirer des billets
      */
+    @FunctionalInterface
     interface DrawTicketsHandler {
         void onDrawTickets();
     }
@@ -26,6 +27,7 @@ public interface ActionHandlers {
     /**
      *  Interface pour lorsque le joueur désire tirer une carte à un emplacement donné (0 à 4 ou -1 pour la pioche)
      */
+    @FunctionalInterface
     interface DrawCardHandler {
         void onDrawCard(int slot);
     }
@@ -33,6 +35,7 @@ public interface ActionHandlers {
     /**
      * Interface pour lorsque le joueur désire capturer une route au moyen des cartes données.
      */
+    @FunctionalInterface
     interface ClaimRouteHandler {
         void onClaimRoute(Route route, SortedBag<Card> cards);
     }
@@ -40,6 +43,7 @@ public interface ActionHandlers {
     /**
      * Interface pour lorsque le joueur a choisi de garder les billets donnés à la suite d'un tirage.
      */
+    @FunctionalInterface
     interface ChooseTicketsHandler {
         void onChooseTickets(SortedBag<Ticket> tickets);
     }
@@ -47,6 +51,7 @@ public interface ActionHandlers {
     /**
      * Interface pour lorsque le joueur a choisi de capturer ou d'abandonner un tunnel avec des cartes additionnelles.
      */
+    @FunctionalInterface
     interface ChooseCardsHandler {
         void onChooseCards(SortedBag<Card> cards);
     }

@@ -27,8 +27,6 @@ abstract class MapViewCreator {//TODO vérifier si bien abstarct
         Circle tempCirc1;
         Circle tempCirc2;
 
-        ClaimRouteHandler claimRouteH = claimRouteHandler.get();
-
         Pane canvas = new Pane();
         canvas.getStylesheets().add("map.css");
         canvas.getStylesheets().add("colors.css");
@@ -75,9 +73,9 @@ abstract class MapViewCreator {//TODO vérifier si bien abstarct
             tempRouteGroup.setOnMouseClicked((event) -> {
                 List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(r);
                 if (possibleClaimCards.size() == 1) {
-                    claimRouteH.onClaimRoute(r, possibleClaimCards.get(0));
+                    claimRouteHandler.get().onClaimRoute(r, possibleClaimCards.get(0));
                 } else {
-                    handleSpecialCardCase(gameState, r, claimRouteH, cardChooser);
+                    handleSpecialCardCase(gameState, r, claimRouteHandler.get(), cardChooser);
                 }
             });
             canvas.getChildren().addAll(tempRouteGroup);

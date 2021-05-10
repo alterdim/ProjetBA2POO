@@ -4,6 +4,7 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -37,6 +38,7 @@ import java.util.zip.CheckedOutputStream;
 
 import static ch.epfl.tchu.gui.StringsFr.KEPT_N_TICKETS;
 import static ch.epfl.tchu.gui.StringsFr.plural;
+import ch.epfl.tchu.gui.ActionHandlers.*;
 
 /**
  * Représente l'interface graphique d'un joueur.
@@ -54,9 +56,9 @@ public class GraphicalPlayer {
 
     private Stage mainWindow;
 
-    private ActionHandlers.DrawCardHandler cardHandler;
-    private ActionHandlers.DrawTicketsHandler ticketsHandler;
-    private ActionHandlers.ClaimRouteHandler routeHandler;
+    private ObjectProperty<DrawCardHandler> cardHandler;
+    private ObjectProperty<DrawTicketsHandler> ticketsHandler;
+    private ObjectProperty<ClaimRouteHandler> routeHandler;
 
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
         assert Platform.isFxApplicationThread();
@@ -67,14 +69,18 @@ public class GraphicalPlayer {
         Scene scene = new Scene(borderPane);
         mainWindow.setScene(scene);
 
+        cardHandler = new SimpleObjectProperty<>();
+        ticketsHandler = new SimpleObjectProperty<>();
+        routeHandler = new SimpleObjectProperty<>();
+
         observableText = FXCollections.observableArrayList(
                 new Text("Première information.\n"),
                 new Text("\nSeconde information.\n"));
 
-        Pane mapView = MapViewCreator.createMapView(gameState, new SimpleObjectProperty<>(routeHandler), this::chooseClaimCards);
+        Pane mapView = MapViewCreator.createMapView(gameState, routeHandler, this::chooseClaimCards);
         VBox infoView = InfoViewCreator.createInfoView(playerId, playerNames, gameState, observableText);
-        VBox deckView = DecksViewCreator.createCardsView(gameState, new SimpleObjectProperty<>(ticketsHandler),
-                new SimpleObjectProperty<>(cardHandler));
+        VBox deckView = DecksViewCreator.createCardsView(gameState, ticketsHandler,
+                cardHandler);
         HBox handView = DecksViewCreator.createHandView(gameState);
         borderPane.centerProperty().setValue(mapView);
         borderPane.bottomProperty().setValue(handView);
@@ -99,22 +105,43 @@ public class GraphicalPlayer {
         observableText.add(new Text(message));
     }
 
-    public void startTurn(ActionHandlers.DrawTicketsHandler ticketsHandler,
-                          ActionHandlers.DrawCardHandler cardHandler,
-                          ActionHandlers.ClaimRouteHandler routeHandler) {
+    public void startTurn(ActionHandlers.DrawTicketsHandler newTicketHandler,
+                          ActionHandlers.DrawCardHandler newCardHandler,
+                          ActionHandlers.ClaimRouteHandler newRouteHandler) {
         assert Platform.isFxApplicationThread();
         if (gameState.canDrawTickets()) {
-            this.ticketsHandler = ticketsHandler;
+            this.ticketsHandler.setValue(() -> {
+                newTicketHandler.onDrawTickets();
+                this.cardHandler.set(null);
+                this.ticketsHandler.set(null);
+                this.routeHandler.set(null);
+            });
+
         }
         if (gameState.canDrawCards()) {
-            this.cardHandler = cardHandler;
+            this.cardHandler.setValue((slot) -> {
+                newCardHandler.onDrawCard(slot);
+                this.cardHandler.set(null);
+                this.ticketsHandler.set(null);
+                this.routeHandler.set(null);
+            });
         }
-        this.routeHandler = routeHandler;
+        this.routeHandler.set((route, cards) -> {
+            newRouteHandler.onClaimRoute(route, cards);
+            this.cardHandler.set(null);
+            this.ticketsHandler.set(null);
+            this.routeHandler.set(null);
+        });
     }
 
     public void drawCard(ActionHandlers.DrawCardHandler cardHandler) {
         assert Platform.isFxApplicationThread();
-        this.cardHandler = cardHandler;
+        this.cardHandler.setValue((slot) -> {
+            cardHandler.onDrawCard(slot);
+            this.cardHandler.set(null);
+            this.ticketsHandler.set(null);
+            this.routeHandler.set(null);
+        });
     }
 
     public void chooseTickets(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler handler) {
@@ -157,9 +184,7 @@ public class GraphicalPlayer {
                     builder.add(t);
                 }
                 handler.onChooseTickets(builder.build());
-                ticketsHandler = null;
-                cardHandler = null;
-                routeHandler = null;
+
             }
         });
     }
