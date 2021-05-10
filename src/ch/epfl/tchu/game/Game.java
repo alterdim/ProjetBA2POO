@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Info;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Représente une partie de tCHu
@@ -167,11 +168,10 @@ public final class Game {
         updateEveryone(players, gameState);
 
 
-        //TODO faire une boucle sur PlayerId (pour permettre l'ajout de davantage de joueurs
-        //Calcul du longestTrail, du total des points
-        /*Map<PlayerId, Trail> playersLongestTrail = new EnumMap<>(PlayerId.class);
+        //Calcul du longestTrail de la partie
+        Map<PlayerId, Trail> playersLongestTrail = new EnumMap<>(PlayerId.class);
         int longestTrailLength=0;
-        for (PlayerId playerId : PlayerId.values()) {
+        for (PlayerId playerId : PlayerId.ALL) {
             Trail currentPlayerTrail = Trail.longest(gameState.playerState(playerId).routes());
             int currentPlayerLength = currentPlayerTrail.length();
             playersLongestTrail.put(playerId, currentPlayerTrail);
@@ -179,58 +179,29 @@ public final class Game {
                 longestTrailLength=currentPlayerLength;
             }
         }
+
+        //Calcul les points obtenu par chacun des joueurs
         Map<PlayerId, Integer> playersScores = new EnumMap<>(PlayerId.class);
-        int maxScore=0;
-        for (PlayerId playerId : PlayerId.values()) {
+        for (PlayerId playerId : PlayerId.ALL) {
             Trail currentPlayerTrail = playersLongestTrail.get(playerId);
             int currentPlayerScore = gameState.playerState(playerId).finalPoints();
             if (longestTrailLength==currentPlayerTrail.length()){
                 currentPlayerScore+=Constants.LONGEST_TRAIL_BONUS_POINTS;
                 tellEveryone(players, playerInfos.get(playerId).getsLongestTrailBonus(currentPlayerTrail));
             }
-            if (currentPlayerScore>maxScore) maxScore = currentPlayerScore;
             playersScores.put(playerId, currentPlayerScore);
         }
 
-        for (PlayerId playerId : PlayerId.values()) {
-
-            int finalMaxScore = maxScore;
-            var n =playersScores.values().stream().filter(score -> score.equals(finalMaxScore)).count();
-
-            if (n==PlayerId.COUNT){
-                List<String> names = new ArrayList<>(playerNames.values());
-                tellEveryone(players, Info.draw(names, maxScore));
-            }
-            else if (n==1){
-//                tellEveryone(players, playerInfos.get(PlayerId.PLAYER_1).won(score1, score2));
-            }
-
-        }*/
-
-
-        Trail longestTrail1 = Trail.longest(gameState.playerState(PlayerId.PLAYER_1).routes());
-        Trail longestTrail2 = Trail.longest(gameState.playerState(PlayerId.PLAYER_2).routes());
-        int score1 = gameState.playerState(PlayerId.PLAYER_1).finalPoints();
-        int score2 = gameState.playerState(PlayerId.PLAYER_2).finalPoints();
-
-        if (longestTrail1.length() >= longestTrail2.length()) {
-            score1 += Constants.LONGEST_TRAIL_BONUS_POINTS;
-            tellEveryone(players, playerInfos.get(PlayerId.PLAYER_1).getsLongestTrailBonus(longestTrail1));
+        //Détermine le gagnant
+        int maxScore = Collections.max(playersScores.values()); //Score le plus élevé
+        List<PlayerId> playersWithMaxScore = playersScores.entrySet().stream().filter(map -> map.getValue()==maxScore).map(Map.Entry::getKey).collect(Collectors.toList()); //List de playerId qui ont le plus grand score
+        if (playersWithMaxScore.size() == PlayerId.COUNT) { // S'il y autant de joueur que joueurs au plus gros score -> égalité
+            List<String> names = playersWithMaxScore.stream().map(Enum::name).collect(Collectors.toList());
+            tellEveryone(players, Info.draw(names, maxScore));
         }
-        if (longestTrail2.length() >= longestTrail1.length()) {
-            score2 += Constants.LONGEST_TRAIL_BONUS_POINTS;
-            tellEveryone(players, playerInfos.get(PlayerId.PLAYER_2).getsLongestTrailBonus(longestTrail2));
-        }
-
-
-        //Annonce du gagnant ou de la gagnante de la partie.
-        if (score1 == score2) {
-            List<String> names = new ArrayList<>(playerNames.values());
-            tellEveryone(players, Info.draw(names, score1));
-        } else if (score1 > score2) {
-            tellEveryone(players, playerInfos.get(PlayerId.PLAYER_1).won(score1, score2));
-        } else {
-            tellEveryone(players, playerInfos.get(PlayerId.PLAYER_2).won(score2, score1));
+        else { //Sinon il y a un gagnant
+            PlayerId playerWinner = playersWithMaxScore.get(0);
+            tellEveryone(players, playerInfos.get(playerWinner).won(maxScore, playersScores.get(playerWinner.next())));
         }
     }
 

@@ -222,7 +222,7 @@ public final class Info {
     }
 
     private String generateRouteString(Route route) {
-        return route.station1() + EN_DASH_SEPARATOR + route.station2();
+        return String.join(EN_DASH_SEPARATOR, route.station1().name(), route.station2().name());
     }
 
 }
