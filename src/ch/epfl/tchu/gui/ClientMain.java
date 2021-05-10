@@ -33,6 +33,6 @@ public class ClientMain extends Application {
         }
 
         RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address, port);
-        new Thread(() -> remoteClient.run());
+        new Thread(remoteClient::run).start();
     }
 }
