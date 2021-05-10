@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Map;
@@ -17,6 +18,9 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  * @author Célien Muller (310777)
  */
 public final class GraphicalPlayerTest extends Application {
+
+    public static void main(String[] args) { launch(args); }
+
     private void setState(GraphicalPlayer player) {
         // … construit exactement les mêmes états que la méthode setState
         // du test de l'étape 9
