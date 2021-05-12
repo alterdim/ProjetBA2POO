@@ -23,7 +23,6 @@ public final class FakeServer {
             "CHOOSE_INITIAL_TICKETS");
 
     public static void main(String[] args) throws IOException {
-        System.out.println("A");
         try (ServerSocket s0 = new ServerSocket(5108);
              Socket s = s0.accept();
              BufferedReader r = new BufferedReader(
@@ -32,10 +31,8 @@ public final class FakeServer {
              BufferedWriter w = new BufferedWriter(
                      new OutputStreamWriter(s.getOutputStream(),
                              US_ASCII))) {
-            System.out.println("xo");
             // Envoi des messages
             for (String m : MESSAGES) {
-                System.out.println("send");
                 w.write(m + '\n');
                 w.flush();
             }

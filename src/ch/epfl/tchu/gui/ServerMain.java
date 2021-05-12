@@ -50,9 +50,9 @@ public class ServerMain extends Application {
             Player p2 = new RemotePlayerProxy(socket);
             playersMap.put(PlayerId.PLAYER_2, p2);
 
-            new Thread(() ->  Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random())).start();
+            Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random());
+//            new Thread(() ->  Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random())).start();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new Error(e);
         }
     }

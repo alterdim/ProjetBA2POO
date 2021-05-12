@@ -52,12 +52,14 @@ public interface Serde<T> {
         return new Serde<>() {
             @Override
             public String serialize(T t) {
-                return String.valueOf(list.indexOf(t));
+                if (t!=null) return String.valueOf(list.indexOf(t));
+                else return "";
             }
 
             @Override
             public T deserialize(String str) {
-                return list.get(Integer.parseInt(str));
+                if (str.length()>0) return list.get(Integer.parseInt(str));
+                else return null;
             }
         };
     }
@@ -85,7 +87,8 @@ public interface Serde<T> {
             public List<T> deserialize(String str) {
                 List<T> listT = new ArrayList<>();
                 for (String s : str.split(Pattern.quote(c), -1)) {
-                    listT.add(serde.deserialize(s));
+                    T object = serde.deserialize(s);
+                    if (object !=null) listT.add(object);
                 }
                 return listT;
             }
@@ -115,7 +118,8 @@ public interface Serde<T> {
             public SortedBag<T> deserialize(String str) {
                 SortedBag.Builder<T> bagT = new SortedBag.Builder<>();
                 for (String s : str.split(Pattern.quote(c), -1)) {
-                    bagT.add(serde.deserialize(s));
+                    T object = serde.deserialize(s);
+                    if (object !=null) bagT.add(object);
                 }
                 return bagT.build();
             }
