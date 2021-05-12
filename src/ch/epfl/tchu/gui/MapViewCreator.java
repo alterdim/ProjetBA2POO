@@ -20,7 +20,6 @@ abstract class MapViewCreator {//TODO vérifier si bien abstarct
     public static Pane createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandler, CardChooser cardChooser) {
         Group tempRouteGroup;
         Group tempCaseGroup;
-        Group tempVoieGroup;
         Group tempWagonGroup;
         Rectangle tempRect;
         Rectangle tempRect2;

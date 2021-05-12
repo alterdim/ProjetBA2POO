@@ -30,17 +30,17 @@ import java.util.List;
 import java.util.Map;
 
 import static ch.epfl.tchu.gui.StringsFr.plural;
+
 import ch.epfl.tchu.gui.ActionHandlers.*;
 
 /**
- * Représente l'interface graphique d'un joueur.
- * <p>
+ * Représente l' interface graphique d' un joueur.
+ *
  * Fichier créé à 08:45 le 07/05/2021
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
  */
-
 public class GraphicalPlayer {
 
     private ObservableGameState gameState;
@@ -52,6 +52,12 @@ public class GraphicalPlayer {
     private ObjectProperty<DrawTicketsHandler> ticketsHandler;
     private ObjectProperty<ClaimRouteHandler> routeHandler;
 
+    /**
+     * Constructeur
+     *
+     * @param playerId    l'identité du joueur auquel l'instance correspond
+     * @param playerNames table associative des noms des joueurs
+     */
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
         assert Platform.isFxApplicationThread();
         gameState = new ObservableGameState(playerId);
@@ -67,14 +73,9 @@ public class GraphicalPlayer {
 
         observableText = FXCollections.observableArrayList();
 
-               /* FXCollections.observableArrayList(
-                new Text("Première information.\n"),
-                new Text("\nSeconde information.\n"));*/
-
         Pane mapView = MapViewCreator.createMapView(gameState, routeHandler, this::chooseClaimCards);
         VBox infoView = InfoViewCreator.createInfoView(playerId, playerNames, gameState, observableText);
-        VBox deckView = DecksViewCreator.createCardsView(gameState, ticketsHandler,
-                cardHandler);
+        VBox deckView = DecksViewCreator.createCardsView(gameState, ticketsHandler, cardHandler);
         HBox handView = DecksViewCreator.createHandView(gameState);
         borderPane.centerProperty().setValue(mapView);
         borderPane.bottomProperty().setValue(handView);
@@ -82,15 +83,23 @@ public class GraphicalPlayer {
         borderPane.rightProperty().setValue(deckView);
 
         mainWindow.show();
-
-
     }
 
+    /**
+     * Appelle la méthode setState sur l'état observable, qui met à jour la totalité des propriétés
+     *
+     * @param newGameState   la partie publique du jeu
+     * @param newPlayerState l 'état complet du joueur auquel elle correspond
+     */
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
         assert Platform.isFxApplicationThread();
         gameState.setState(newGameState, newPlayerState);
     }
 
+    /**
+     *  Ajoutant le message au bas des informations sur le déroulement de la partie
+     * @param message message informant sur l'état de la partie
+     */
     public void receiveInfo(String message) {
         assert Platform.isFxApplicationThread();
         if (observableText.size() >= 5) {
@@ -99,6 +108,12 @@ public class GraphicalPlayer {
         observableText.add(new Text(message));
     }
 
+    /**
+     * Permet d'effectuer une action
+     * @param newTicketHandler gestionnaire d'actions pour les tickets
+     * @param newCardHandler  gestionnaire d'actions pour les cartes
+     * @param newRouteHandler gestionnaire d'actions pour les routes
+     */
     public void startTurn(ActionHandlers.DrawTicketsHandler newTicketHandler,
                           ActionHandlers.DrawCardHandler newCardHandler,
                           ActionHandlers.ClaimRouteHandler newRouteHandler) {
@@ -128,6 +143,10 @@ public class GraphicalPlayer {
         });
     }
 
+    /**
+     * Permet au joueur de sélectionner une carte
+     * @param cardHandler un gestionnaire de tirage de carte
+     */
     public void drawCard(ActionHandlers.DrawCardHandler cardHandler) {
         assert Platform.isFxApplicationThread();
         this.cardHandler.setValue((slot) -> {
@@ -138,6 +157,11 @@ public class GraphicalPlayer {
         });
     }
 
+    /**
+     * ouvre une fenêtre permettant au joueur de faire son choix de tickets
+     * @param tickets un multi ensemble contenant cinq ou trois billets
+     * @param handler gestionnaire de choix de billets
+     */
     public void chooseTickets(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler handler) {
         assert Platform.isFxApplicationThread();
 
@@ -189,6 +213,11 @@ public class GraphicalPlayer {
         chooseTicketsStage.show();
     }
 
+    /**
+     * ouvre une fenêtre permettant au joueur de faire son choix de cartes
+     * @param cardLists une liste de multi ensembles de cartes
+     * @param cardsHandler un gestionnaire de choix de cartes
+     */
     public void chooseClaimCards(List<SortedBag<Card>> cardLists, ActionHandlers.ChooseCardsHandler cardsHandler) {
         assert Platform.isFxApplicationThread();
 
@@ -230,6 +259,11 @@ public class GraphicalPlayer {
         stage.show();
     }
 
+    /**
+     * ouvre une fenêtre permettant au joueur de faire son choix de cartes additionnelles
+     * @param cardLists une liste de multi ensembles de cartes additionnelles possible pour s' emparer du tunnel
+     * @param cardsHandler gestionnaire de choix de cartes
+     */
     public void chooseAdditionalCards(List<SortedBag<Card>> cardLists, ActionHandlers.ChooseCardsHandler cardsHandler) {
         assert Platform.isFxApplicationThread();
 
@@ -269,6 +303,4 @@ public class GraphicalPlayer {
         });
         stage.show();
     }
-
-
 }
