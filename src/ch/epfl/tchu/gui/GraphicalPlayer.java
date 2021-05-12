@@ -5,10 +5,7 @@ import ch.epfl.tchu.game.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -176,15 +173,16 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         chooseTicketsVBox.getChildren().add(vboxButton);
-        vboxButton.disableProperty().bind(new SimpleBooleanProperty(ticketList.getSelectionModel().getSelectedItems().size() < ticketCount));
+        IntegerBinding ticketChoiceBinding = Bindings.size(ticketList.getSelectionModel().getSelectedItems());
+        vboxButton.disableProperty().bind(ticketChoiceBinding.lessThan(3));
         vboxButton.setText(StringsFr.CHOOSE);
         vboxButton.setOnAction(event -> {
-            chooseTicketsStage.hide();
             SortedBag.Builder<Ticket> builder = new SortedBag.Builder<>();
             for (Ticket t : ticketList.getSelectionModel().getSelectedItems()) {
                 builder.add(t);
             }
             handler.onChooseTickets(builder.build());
+            chooseTicketsStage.hide();
 
         });
 
@@ -220,18 +218,14 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         vBox.getChildren().add(vboxButton);
-        IntegerBinding ticketChoiceWatcher = Bindings.size(listView.getSelectionModel().getSelectedItems());
-        vboxButton.disableProperty().bind(ticketChoiceWatcher.lessThan(3));
+        vboxButton.disableProperty();
         vboxButton.setText(StringsFr.CHOOSE);
-        vboxButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                stage.hide();
-                cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
-                cardHandler.set(null);
-                ticketsHandler.set(null);
-                routeHandler.set(null);
-            }
+        vboxButton.setOnAction(event -> {
+            stage.hide();
+            cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
+            cardHandler.set(null);
+            ticketsHandler.set(null);
+            routeHandler.set(null);
         });
         stage.show();
     }
