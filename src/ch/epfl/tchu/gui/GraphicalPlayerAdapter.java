@@ -21,11 +21,11 @@ import static javafx.application.Platform.runLater;
 public class GraphicalPlayerAdapter implements Player {
     private GraphicalPlayer graphicalPlayer;
 
-    private BlockingQueue<SortedBag<Ticket>> ticketQueue = new ArrayBlockingQueue<>(1);
-    private BlockingQueue<Integer> intQueue = new ArrayBlockingQueue<>(1);
-    private BlockingQueue<TurnKind> turnKindQueue = new ArrayBlockingQueue<>(1);
-    private BlockingQueue<Route> routeQueue= new ArrayBlockingQueue<>(1);
-    private BlockingQueue<SortedBag<Card>> cardQueue = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<SortedBag<Ticket>> ticketQueue = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<Integer> intQueue = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<TurnKind> turnKindQueue = new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<Route> routeQueue= new ArrayBlockingQueue<>(1);
+    private final BlockingQueue<SortedBag<Card>> cardQueue = new ArrayBlockingQueue<>(1);
 
     public GraphicalPlayerAdapter() {
     }
@@ -52,7 +52,7 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-        return (SortedBag<Ticket>) take(ticketQueue);
+        return take(ticketQueue);
     }
 
     @Override
@@ -67,45 +67,40 @@ public class GraphicalPlayerAdapter implements Player {
                     routeQueue.add(route);
                     cardQueue.add(cards);
                 })));
-        return (TurnKind) take(turnKindQueue);
+        return take(turnKindQueue);
     }
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        setInitialTicketChoice(options);
-        return chooseInitialTickets();
+        runLater(() -> graphicalPlayer.chooseTickets(options, handler -> ticketQueue.add(options)));
+        return take(ticketQueue);
     }
 
     @Override
     public int drawSlot() {
         if (intQueue.isEmpty()) {
-            runLater(() -> graphicalPlayer.drawCard(new ActionHandlers.DrawCardHandler() {
-                @Override
-                public void onDrawCard(int slot) {
-                    put(intQueue, slot);
-                }
-            }));
+            runLater(() -> graphicalPlayer.drawCard(slot -> put(intQueue, slot)));
         }
-        return (int) take(intQueue);
+        return take(intQueue);
     }
 
     @Override
     public Route claimedRoute() {
-        return (Route) take(routeQueue);
+        return take(routeQueue);
     }
 
     @Override
     public SortedBag<Card> initialClaimCards() {
-        return (SortedBag<Card>) take(cardQueue);
+        return take(cardQueue);
     }
 
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         runLater(() -> graphicalPlayer.chooseAdditionalCards(options, cards -> put(cardQueue, cards)));
-        return (SortedBag<Card>) take(cardQueue);
+        return take(cardQueue);
     }
 
-    private Object take(BlockingQueue queue) {
+    private <T> T take(BlockingQueue<T> queue) {
         try {
             return queue.take();
         } catch (InterruptedException e) {
@@ -113,7 +108,7 @@ public class GraphicalPlayerAdapter implements Player {
         }
     }
 
-    private void put(BlockingQueue queue, Object item) {
+    private <T> void put(BlockingQueue<T> queue, T item) {
         try {
             queue.put(item);
         } catch (InterruptedException e) {
