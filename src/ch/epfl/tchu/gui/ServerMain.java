@@ -42,18 +42,20 @@ public class ServerMain extends Application {
                 playersNameMap.put(PlayerId.PLAYER_1, parameters.get(0));
                 break;
         }
-        try (ServerSocket serverSocket = new ServerSocket(5108);
-             Socket socket = serverSocket.accept()) {
-            Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
-            Player p1 = new GraphicalPlayerAdapter();
-            playersMap.put(PlayerId.PLAYER_1, p1);
-            Player p2 = new RemotePlayerProxy(socket);
-            playersMap.put(PlayerId.PLAYER_2, p2);
+
+        new Thread(()->{
+            try (ServerSocket serverSocket = new ServerSocket(5108);
+                 Socket socket = serverSocket.accept()) {
+                Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
+                Player p1 = new GraphicalPlayerAdapter();
+                playersMap.put(PlayerId.PLAYER_1, p1);
+                Player p2 = new RemotePlayerProxy(socket);
+                playersMap.put(PlayerId.PLAYER_2, p2);
 
             Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random());
-//            new Thread(() ->  Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random())).start();
-        } catch (IOException e) {
-            throw new Error(e);
-        }
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }).start();
     }
 }
