@@ -16,6 +16,8 @@ import java.util.Random;
 
 
 /**
+ * Contient le programme principal du serveur tCHu. .
+ *
  * Créé le 10.05.2021 à 16:20
  *
  * @author Louis Gerard (296782)
@@ -23,10 +25,19 @@ import java.util.Random;
  */
 public class ServerMain extends Application {
 
+    /**
+     * Démarre l' application graphique
+     * @param args Paramètres de l' application
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+
+    /**
+     * Démarre le client
+     * @param primaryStage Scène principale de l' interface (ignoré dans le cas présent)
+     */
     @Override
     public void start(Stage primaryStage) {
         List<String> parameters = getParameters().getRaw();
