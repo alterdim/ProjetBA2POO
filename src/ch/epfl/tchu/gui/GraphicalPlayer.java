@@ -215,9 +215,9 @@ public class GraphicalPlayer {
             public void handle(ActionEvent event) {
                 stage.hide();
                 cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
-                ticketsHandler = null;
-                cardHandler = null;
-                routeHandler = null;
+                cardHandler.set(null);
+                ticketsHandler.set(null);
+                routeHandler.set(null);
             }
         });
     }
@@ -253,9 +253,9 @@ public class GraphicalPlayer {
             public void handle(ActionEvent event) {
                 stage.hide();
                 cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
-                ticketsHandler = null;
-                cardHandler = null;
-                routeHandler = null;
+                cardHandler.set(null);
+                ticketsHandler.set(null);
+                routeHandler.set(null);
             }
         });
     }
