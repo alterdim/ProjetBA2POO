@@ -17,6 +17,8 @@ import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
 
 abstract class MapViewCreator {//TODO vérifier si bien abstarct
 
+    public static final int CAR_CIRCLE_RADIUS = 3;
+
     public static Pane createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandler, CardChooser cardChooser) {
         Group tempRouteGroup;
         Group tempCaseGroup;
@@ -56,10 +58,10 @@ abstract class MapViewCreator {//TODO vérifier si bien abstarct
 
 
                 // Cercles
-                tempCirc1 = new Circle(3);
+                tempCirc1 = new Circle(CAR_CIRCLE_RADIUS);
                 tempCirc1.centerXProperty().setValue(12);
                 tempCirc1.centerYProperty().setValue(6);
-                tempCirc2 = new Circle(3);
+                tempCirc2 = new Circle(CAR_CIRCLE_RADIUS);
                 tempCirc1.centerXProperty().setValue(24);
                 tempCirc2.centerYProperty().setValue(6);
 

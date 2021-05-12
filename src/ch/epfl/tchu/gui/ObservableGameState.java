@@ -37,7 +37,7 @@ public class ObservableGameState {
     private PublicGameState currentPublicGameState;
     private PlayerState currentPlayerState;
 
-    private  Map<Route, Route> doubleRoute;
+    private Map<Route, Route> doubleRoute;
 
     /**
      * Constructeur
@@ -142,16 +142,16 @@ public class ObservableGameState {
 
     //groupe 1
     private void updateLeftCardsPercentage(PublicCardState cardState) {
-        double percentage = ((double)cardState.deckSize() / (double) Constants.TOTAL_CARDS_COUNT) * 100;
+        double percentage = ((double) cardState.deckSize() / (double) Constants.TOTAL_CARDS_COUNT) * 100;
         if (leftCardsPercentage.get() != percentage) {
-            leftCardsPercentage.set((int)percentage);
+            leftCardsPercentage.set((int) percentage);
         }
     }
 
     private void updateLeftTicketsPercentage(PublicGameState gameState) {
-        double percentage = ((double)gameState.ticketsCount() / (double)ChMap.tickets().size()) * 100;
+        double percentage = ((double) gameState.ticketsCount() / (double) ChMap.tickets().size()) * 100;
         if (leftTicketsPercentage.get() != percentage) {
-            leftTicketsPercentage.set((int)percentage);
+            leftTicketsPercentage.set((int) percentage);
         }
     }
 
@@ -214,7 +214,7 @@ public class ObservableGameState {
     }
 
     private void updateCards(PlayerState playerState) {
-        for (Card card : playerState.cards()) {
+        for (Card card : Card.values()) {
             if (cards.get(card).get() != playerState.cards().countOf(card)) {
                 cards.get(card).set(playerState.cards().countOf(card));
             }
@@ -222,7 +222,7 @@ public class ObservableGameState {
     }
 
     private void updateRoutes(PublicGameState gameState, PlayerState playerState) {
-        for (Route route : routes.keySet()) {
+        for (Route route : ChMap.routes()) {
             boolean isRouteClaimable = (gameState.currentPlayerId().equals(player) && !gameState.claimedRoutes().contains(route) && checkClaimDoubleRoute(route) && playerState.canClaimRoute(route));
             if (routes.get(route).get() != isRouteClaimable) {
                 routes.get(route).set(isRouteClaimable);
