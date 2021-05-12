@@ -3,6 +3,9 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -171,15 +174,20 @@ public class GraphicalPlayer {
         Stage chooseTicketsStage = new Stage(StageStyle.UTILITY);
         chooseTicketsStage.initOwner(mainWindow);
         chooseTicketsStage.initModality(Modality.WINDOW_MODAL);
+        chooseTicketsStage.setTitle(StringsFr.TICKETS_CHOICE);
         VBox chooseTicketsVBox = new VBox();
         Scene chooseTicketsScene = new Scene(chooseTicketsVBox);
         chooseTicketsScene.getStylesheets().add("chooser.css");
         chooseTicketsStage.setOnCloseRequest(Event::consume);
 
+        chooseTicketsStage.setScene(chooseTicketsScene);
+
         //Texte
         TextFlow chooseTicketsTextFlow = new TextFlow();
         Text chooseTicketsText = new Text(String.format(StringsFr.CHOOSE_TICKETS, ticketCount, plural(ticketCount))); //TODO DEMANDER ASSITANT
         chooseTicketsTextFlow.getChildren().add(chooseTicketsText);
+
+        chooseTicketsVBox.getChildren().add(chooseTicketsTextFlow);
 
         //ListView
         ObservableList<Ticket> observableTickets = FXCollections.observableArrayList(tickets.toList());
@@ -192,18 +200,19 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         chooseTicketsVBox.getChildren().add(vboxButton);
-        vboxButton.disableProperty().bind(new SimpleBooleanProperty(ticketList.getSelectionModel().getSelectedItems().size() == ticketCount));
-        vboxButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                chooseTicketsStage.hide();
-                SortedBag.Builder<Ticket> builder = new SortedBag.Builder<>();
-                for (Ticket t : ticketList.getSelectionModel().getSelectedItems()) {
-                    builder.add(t);
-                }
-                handler.onChooseTickets(builder.build());
+        vboxButton.disableProperty().bind(new SimpleBooleanProperty(ticketList.getSelectionModel().getSelectedItems().size() < ticketCount));
+        vboxButton.setText(StringsFr.CHOOSE);
+        vboxButton.setOnAction(event -> {
+            chooseTicketsStage.hide();
+            SortedBag.Builder<Ticket> builder = new SortedBag.Builder<>();
+            for (Ticket t : ticketList.getSelectionModel().getSelectedItems()) {
+                builder.add(t);
             }
+            handler.onChooseTickets(builder.build());
+
         });
+
+        chooseTicketsStage.show();
     }
 
     /**
@@ -223,11 +232,14 @@ public class GraphicalPlayer {
         Scene scene = new Scene(vBox);
         scene.getStylesheets().add("chooser.css");
         stage.setOnCloseRequest(Event::consume);
+        stage.setScene(scene);
 
         //Texte
         TextFlow flow = new TextFlow();
         Text description = new Text(StringsFr.CHOOSE_CARDS);
         flow.getChildren().add(description);
+
+        vBox.getChildren().add(flow);
 
         //ListView
         ListView<SortedBag<Card>> listView = new ListView(FXCollections.observableList(cardLists));
@@ -237,7 +249,9 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         vBox.getChildren().add(vboxButton);
-        vboxButton.disableProperty().bind(new SimpleBooleanProperty(listView.getSelectionModel().getSelectedItem().size() == 0));
+        IntegerBinding ticketChoiceWatcher = Bindings.size(listView.getSelectionModel().getSelectedItems());
+        vboxButton.disableProperty().bind(ticketChoiceWatcher.lessThan(3));
+        vboxButton.setText(StringsFr.CHOOSE);
         vboxButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -248,6 +262,7 @@ public class GraphicalPlayer {
                 routeHandler.set(null);
             }
         });
+        stage.show();
     }
 
     /**
@@ -267,11 +282,14 @@ public class GraphicalPlayer {
         Scene scene = new Scene(vBox);
         scene.getStylesheets().add("chooser.css");
         stage.setOnCloseRequest(Event::consume);
+        stage.setScene(scene);
 
         //Texte
         TextFlow flow = new TextFlow();
         Text description = new Text(StringsFr.CHOOSE_ADDITIONAL_CARDS);
         flow.getChildren().add(description);
+
+        vBox.getChildren().add(flow);
 
         //ListView
         ListView<SortedBag<Card>> listView = new ListView(FXCollections.observableList(cardLists));
@@ -281,15 +299,14 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         vBox.getChildren().add(vboxButton);
-        vboxButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                stage.hide();
-                cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
-                cardHandler.set(null);
-                ticketsHandler.set(null);
-                routeHandler.set(null);
-            }
+        vboxButton.setText(StringsFr.CHOOSE);
+        vboxButton.setOnAction(event -> {
+            stage.hide();
+            cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
+            cardHandler.set(null);
+            ticketsHandler.set(null);
+            routeHandler.set(null);
         });
+        stage.show();
     }
 }
