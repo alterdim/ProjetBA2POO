@@ -97,7 +97,8 @@ public class GraphicalPlayer {
     }
 
     /**
-     *  Ajoutant le message au bas des informations sur le déroulement de la partie
+     * Ajoutant le message au bas des informations sur le déroulement de la partie
+     *
      * @param message message informant sur l'état de la partie
      */
     public void receiveInfo(String message) {
@@ -110,9 +111,10 @@ public class GraphicalPlayer {
 
     /**
      * Permet d'effectuer une action
+     *
      * @param newTicketHandler gestionnaire d'actions pour les tickets
-     * @param newCardHandler  gestionnaire d'actions pour les cartes
-     * @param newRouteHandler gestionnaire d'actions pour les routes
+     * @param newCardHandler   gestionnaire d'actions pour les cartes
+     * @param newRouteHandler  gestionnaire d'actions pour les routes
      */
     public void startTurn(ActionHandlers.DrawTicketsHandler newTicketHandler,
                           ActionHandlers.DrawCardHandler newCardHandler,
@@ -145,6 +147,7 @@ public class GraphicalPlayer {
 
     /**
      * Permet au joueur de sélectionner une carte
+     *
      * @param cardHandler un gestionnaire de tirage de carte
      */
     public void drawCard(ActionHandlers.DrawCardHandler cardHandler) {
@@ -159,6 +162,7 @@ public class GraphicalPlayer {
 
     /**
      * ouvre une fenêtre permettant au joueur de faire son choix de tickets
+     *
      * @param tickets un multi ensemble contenant cinq ou trois billets
      * @param handler gestionnaire de choix de billets
      */
@@ -190,9 +194,8 @@ public class GraphicalPlayer {
         ObservableList<Ticket> observableTickets = FXCollections.observableArrayList(tickets.toList());
         ListView<Ticket> ticketList = new ListView(observableTickets);
         chooseTicketsVBox.getChildren().add(ticketList);
-        if (ticketCount > 1) {
-            ticketList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        }
+
+        ticketList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         //Bouton
         Button vboxButton = new Button();
@@ -215,7 +218,8 @@ public class GraphicalPlayer {
 
     /**
      * ouvre une fenêtre permettant au joueur de faire son choix de cartes
-     * @param cardLists une liste de multi ensembles de cartes
+     *
+     * @param cardLists    une liste de multi ensembles de cartes
      * @param cardsHandler un gestionnaire de choix de cartes
      */
     public void chooseClaimCards(List<SortedBag<Card>> cardLists, ActionHandlers.ChooseCardsHandler cardsHandler) {
@@ -261,7 +265,8 @@ public class GraphicalPlayer {
 
     /**
      * ouvre une fenêtre permettant au joueur de faire son choix de cartes additionnelles
-     * @param cardLists une liste de multi ensembles de cartes additionnelles possible pour s' emparer du tunnel
+     *
+     * @param cardLists    une liste de multi ensembles de cartes additionnelles possible pour s' emparer du tunnel
      * @param cardsHandler gestionnaire de choix de cartes
      */
     public void chooseAdditionalCards(List<SortedBag<Card>> cardLists, ActionHandlers.ChooseCardsHandler cardsHandler) {

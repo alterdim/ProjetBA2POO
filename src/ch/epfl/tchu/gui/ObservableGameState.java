@@ -20,8 +20,8 @@ import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 public class ObservableGameState {
     private final PlayerId player;
     //Groupe 1, état publique de la partie
-    private final IntegerProperty leftTicketsPercentage;
-    private final IntegerProperty leftCardsPercentage;
+    private final DoubleProperty leftTicketsPercentage;
+    private final DoubleProperty leftCardsPercentage;
     private final List<ObjectProperty<Card>> faceUpCards;
     private final Map<Route, ObjectProperty<PlayerId>> routesOwned;
     //Groupe 2, état publique des joueurs
@@ -48,8 +48,8 @@ public class ObservableGameState {
         this.player = player;
         //groupe 1
         this.faceUpCards = createFaceUpCards();
-        this.leftTicketsPercentage = new SimpleIntegerProperty(0);
-        this.leftCardsPercentage = new SimpleIntegerProperty(0);
+        this.leftTicketsPercentage = new SimpleDoubleProperty(0);
+        this.leftCardsPercentage = new SimpleDoubleProperty(0);
         this.routesOwned = createRoutesOwned();
 
         //groupe 2
@@ -144,14 +144,14 @@ public class ObservableGameState {
     private void updateLeftCardsPercentage(PublicCardState cardState) {
         double percentage = ((double) cardState.deckSize() / (double) Constants.TOTAL_CARDS_COUNT) * 100;
         if (leftCardsPercentage.get() != percentage) {
-            leftCardsPercentage.set((int) percentage);
+            leftCardsPercentage.set(percentage);
         }
     }
 
     private void updateLeftTicketsPercentage(PublicGameState gameState) {
         double percentage = ((double) gameState.ticketsCount() / (double) ChMap.tickets().size()) * 100;
         if (leftTicketsPercentage.get() != percentage) {
-            leftTicketsPercentage.set((int) percentage);
+            leftTicketsPercentage.set(percentage);
         }
     }
 
@@ -275,14 +275,14 @@ public class ObservableGameState {
      *
      * @return le pourcentage de cartes restant dans la pioche
      */
-    public ReadOnlyIntegerProperty leftCardsPercentage() {
+    public ReadOnlyDoubleProperty leftCardsPercentage() {
         return leftCardsPercentage;
     }
 
     /**
      * @return le pourcentage de tickets restant dans la pioche,
      */
-    public ReadOnlyIntegerProperty leftTicketsPercentage() {
+    public ReadOnlyDoubleProperty leftTicketsPercentage() {
         return leftTicketsPercentage;
     }
 

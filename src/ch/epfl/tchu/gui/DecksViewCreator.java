@@ -5,6 +5,7 @@ import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -137,7 +138,7 @@ abstract class DecksViewCreator {
         return stackPane;
     }
 
-    private static Button createButton(ReadOnlyIntegerProperty percentage) {
+    private static Button createButton(ReadOnlyDoubleProperty percentage) {
         Button button = new Button();
         button.getStyleClass().add("gauged");
         Group group = new Group();
