@@ -3,7 +3,11 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
+import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Route;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.shape.Rectangle;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
@@ -20,14 +24,6 @@ abstract class MapViewCreator {//TODO vérifier si bien abstarct
     public static final int CAR_CIRCLE_RADIUS = 3;
 
     public static Pane createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandler, CardChooser cardChooser) {
-        Group tempRouteGroup;
-        Group tempCaseGroup;
-        Group tempWagonGroup;
-        Rectangle tempRect;
-        Rectangle tempRect2;
-        Circle tempCirc1;
-        Circle tempCirc2;
-
         Pane canvas = new Pane();
         canvas.getStylesheets().add("map.css");
         canvas.getStylesheets().add("colors.css");
@@ -35,43 +31,45 @@ abstract class MapViewCreator {//TODO vérifier si bien abstarct
         canvas.getChildren().add(background);
 
         for (Route r : ChMap.routes()) {
-            tempRouteGroup = new Group();
+            Group routeGroup = new Group();
             if (r.color() != null) {
-                tempRouteGroup.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
+                routeGroup.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
             } else {
-                tempRouteGroup.getStyleClass().addAll("route", r.level().toString(), "NEUTRAL");
+                routeGroup.getStyleClass().addAll("route", r.level().toString(), "NEUTRAL");
             }
-            tempRouteGroup.setId(r.id());
+            routeGroup.setId(r.id());
 
             for (int i = 0; i < r.length(); i++) {
                 //Création des groupes
-                tempCaseGroup = new Group();
-                tempCaseGroup.setId(r.id() + "_" + (i + 1));
-                tempWagonGroup = new Group();
-                tempWagonGroup.getStyleClass().add("car");
+                Group caseGroup = new Group();
+                caseGroup.setId(r.id() + "_" + (i + 1));
+                Group wagonGroup = new Group();
+                wagonGroup.getStyleClass().add("car");
 
                 //Rectangle
-                tempRect = new Rectangle(36, 12);
-                tempRect.getStyleClass().addAll("track", "filled");
-                tempRect2 = new Rectangle(36, 12);
-                tempRect2.getStyleClass().add("filled");
-
+                Rectangle trackRectangle = new Rectangle(36, 12);
+                trackRectangle.getStyleClass().addAll("track", "filled");
+                Rectangle carRectangle = new Rectangle(36, 12);
+                carRectangle.getStyleClass().add("filled");
 
                 // Cercles
-                tempCirc1 = new Circle(CAR_CIRCLE_RADIUS);
-                tempCirc1.centerXProperty().setValue(12);
-                tempCirc1.centerYProperty().setValue(6);
-                tempCirc2 = new Circle(CAR_CIRCLE_RADIUS);
-                tempCirc1.centerXProperty().setValue(24);
-                tempCirc2.centerYProperty().setValue(6);
+                Circle circle1 = new Circle(12, 6, CAR_CIRCLE_RADIUS);
+                Circle circle2 = new Circle(24, 6, CAR_CIRCLE_RADIUS);
 
                 //On réunit et organise en groupes
-                tempWagonGroup.getChildren().addAll(tempRect2, tempCirc1, tempCirc2);
-                tempCaseGroup.getChildren().addAll(tempRect, tempWagonGroup);
-                tempRouteGroup.getChildren().add(tempCaseGroup);
+                wagonGroup.getChildren().addAll(carRectangle, circle1, circle2);
+                caseGroup.getChildren().addAll(trackRectangle, wagonGroup);
+                routeGroup.getChildren().add(caseGroup);
             }
-            tempRouteGroup.disableProperty().bind(claimRouteHandler.isNull().or(gameState.canClaimRoute(r).not()));
-            tempRouteGroup.setOnMouseClicked((event) -> {
+
+            gameState.routeOwner(r).addListener((observable, oldValue, newValue) -> {
+                if (oldValue == null && newValue != null) {
+                    routeGroup.getStyleClass().add(newValue.name());
+                }
+            });
+
+            routeGroup.disableProperty().bind(claimRouteHandler.isNull().or(gameState.canClaimRoute(r).not()));
+            routeGroup.setOnMouseClicked((event) -> {
                 List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(r);
                 if (possibleClaimCards.size() == 1) {
                     claimRouteHandler.get().onClaimRoute(r, possibleClaimCards.get(0));
@@ -79,7 +77,7 @@ abstract class MapViewCreator {//TODO vérifier si bien abstarct
                     handleSpecialCardCase(gameState, r, claimRouteHandler.get(), cardChooser);
                 }
             });
-            canvas.getChildren().addAll(tempRouteGroup);
+            canvas.getChildren().addAll(routeGroup);
         }
         return canvas;
     }
