@@ -198,7 +198,7 @@ public class GraphicalPlayer {
         Button vboxButton = new Button();
         chooseTicketsVBox.getChildren().add(vboxButton);
         IntegerBinding ticketChoiceBinding = Bindings.size(ticketList.getSelectionModel().getSelectedItems());
-        vboxButton.disableProperty().bind(ticketChoiceBinding.lessThan(3));
+        vboxButton.disableProperty().bind(ticketChoiceBinding.lessThan(ticketCount));
         vboxButton.setText(StringsFr.CHOOSE);
         vboxButton.setOnAction(event -> {
             SortedBag.Builder<Ticket> builder = new SortedBag.Builder<>();

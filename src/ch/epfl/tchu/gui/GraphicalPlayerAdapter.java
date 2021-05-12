@@ -47,7 +47,7 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-        runLater(() -> graphicalPlayer.chooseTickets(tickets, chosenTickets -> ticketQueue.add(chosenTickets)));
+        runLater(() -> graphicalPlayer.chooseTickets(tickets, ticketQueue::add));
     }
 
     @Override
@@ -72,7 +72,6 @@ public class GraphicalPlayerAdapter implements Player {
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        runLater(() -> graphicalPlayer.chooseTickets(options, handler -> ticketQueue.add(options)));
         return take(ticketQueue);
     }
 
