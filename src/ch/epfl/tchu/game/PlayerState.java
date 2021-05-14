@@ -4,7 +4,6 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 
 /**
  * Représente l' état complet d' un joueur
- *
+ * <p>
  * Créé le 08.03.2021 à 14:02
  *
  * @author Louis Gerard (296782)
@@ -114,62 +113,41 @@ public final class PlayerState extends PublicPlayerState {
         return listPossibleClaimCards;
     }
 
-    //TODO correction, utiliser difference() de SortedBag au lieu de méthode perso
-
     /**
      * Fonction qui calcule les cartes à "rejouer" pour s'emparer d'un tunnel et qui renvoie les façons pour le joueur de les jouer.
      *
      * @param additionalCardsCount le nombre de cartes additionnelles à jouer
      * @param initialCards         les cartes jouées initialement
-//     * @param drawnCards           les cartes piochées
+     *                             //     * @param drawnCards           les cartes piochées
      * @return une liste de SortedBags contenant les possibilités de cartes à jouer pour finir la prise d'un tunnel.
      * @throws IllegalArgumentException si le nombre de carte pas compris entre 1 et 3 (inclus), si ensemble cartes initiales vide ou contient plus de 2 types de cartes différents, l'ensemble des cartes tirées ne contient pas exactement 3 cartes
      */
-    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
-        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= ADDITIONAL_TUNNEL_CARDS); //nb de cartes 3>=x>=1
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards) {
+        Preconditions.checkArgument(additionalCardsCount >= 1); //nb de cartes 3>=x>=1
+        Preconditions.checkArgument(additionalCardsCount <= ADDITIONAL_TUNNEL_CARDS);
+
         Preconditions.checkArgument(!initialCards.isEmpty()); // InitialCards vide
         Preconditions.checkArgument(initialCards.toMap().keySet().size() <= 2); // MAX 2 types de cartes
-        Preconditions.checkArgument(drawnCards.size() == ADDITIONAL_TUNNEL_CARDS); //3 éléments dans drawncards
-//TODO remove drawnCards
-        ArrayList<SortedBag<Card>> options; // liste qui sera renvoyée
-        SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
-        SortedBag<Card> possibleCards = builder.build(); //won't do anything but we initialize it
-        for (Card c : drawnCards) {
-            if (initialCards.contains(c)) {
-                builder.add(c);
-            }
-            possibleCards = builder.build(); //list of cards the player can add to capture the route for good
-        }
-        builder = new SortedBag.Builder<>(); //clean the builder
-        List<Card> reducedHand = cards.toList();
 
-        for (Card c : Card.values()) {
-            if (initialCards.contains(c)) {
-                removeMultipleFromList(reducedHand, c, initialCards.countOf(c));
-            }
-            if (!possibleCards.contains(c)) {
-                reducedHand.removeAll(Collections.singletonList(c));
-            }
-        }
-        if (reducedHand.size() < additionalCardsCount) {
+
+        SortedBag.Builder<Card> usableCardsType = new SortedBag.Builder<>();
+        //Calcul les cartes qui restent dans la main et qui pourraient être utilisées
+        for (Card cardsLeft : cards.difference(initialCards))
+            if (initialCards.contains(cardsLeft) || cardsLeft.equals(Card.LOCOMOTIVE)) usableCardsType.add(cardsLeft);
+
+        //Détermine les sous-ensembles
+        List<SortedBag<Card>> options;
+        if (usableCardsType.build().size() < additionalCardsCount) {
             return new ArrayList<>();
-        }
-        for (Card c : reducedHand) {
-            builder.add(c);
-        }
-        if (cards.contains(Card.LOCOMOTIVE)) {
-            builder.add(additionalCardsCount, Card.LOCOMOTIVE);
-        }
+        } else
+            options = new ArrayList<>(usableCardsType.build().subsetsOfSize(additionalCardsCount)); // liste qui sera renvoyée
 
-        options = new ArrayList<>(builder.build().subsetsOfSize(additionalCardsCount));
-        options.sort(Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE))); // tri par nombre de locomotives
+        // Trie la liste en fonction du nombre de locomotives
+        options.sort(
+                Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE))
+        );
+
         return options;
-    }
-
-    private void removeMultipleFromList(List<Card> list, Card card, int count) {
-        for (int i = 0; i < count; i++) {
-            list.remove(card);
-        }
     }
 
     /**

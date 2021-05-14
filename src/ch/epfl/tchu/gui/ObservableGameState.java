@@ -142,7 +142,7 @@ public class ObservableGameState {
 
     //groupe 1
     private void updateLeftCardsPercentage(PublicCardState cardState) {
-        double percentage = ((double) cardState.deckSize() / (double) Constants.TOTAL_CARDS_COUNT) * 100;
+        double percentage = ((double) (cardState.deckSize() + cardState.discardsSize()) / (double) Constants.TOTAL_CARDS_COUNT) * 100;
         if (leftCardsPercentage.get() != percentage) {
             leftCardsPercentage.set(percentage);
         }

@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
  */
 public final class Game {
 
-    private Game() {}
+    private Game() {
+    }
 
     /**
      * @param players     Une Map liant les id des joueurs (enum PlayerId) et les joueurs.
@@ -127,7 +128,7 @@ public final class Game {
                         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewAdditionalCards(drawnCards, addCardsCount));
 
                         if (addCardsCount > 0) {
-                            List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards, drawnCards);
+                            List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards);
                             if (!listPossibleAdditionalCards.isEmpty()) {
                                 SortedBag<Card> chosenCards = currentPlayer.chooseAdditionalCards(
                                         listPossibleAdditionalCards
@@ -135,11 +136,9 @@ public final class Game {
                                 //prends la route avec les cartes initiales et additionnels
                                 if (!chosenCards.isEmpty()) {
                                     gameState = gameState.withClaimedRoute(claimedRoute, chosenCards.union(claimCards));
-                                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
-                                    break;
+                                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, chosenCards.union(claimCards)));
                                 }
-                            }
-                            else {
+                            } else {
                                 //le joueur ne prend pas la route
                                 tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
                             }
@@ -170,13 +169,13 @@ public final class Game {
 
         //Calcul du longestTrail de la partie
         Map<PlayerId, Trail> playersLongestTrail = new EnumMap<>(PlayerId.class);
-        int longestTrailLength=0;
+        int longestTrailLength = 0;
         for (PlayerId playerId : PlayerId.ALL) {
             Trail currentPlayerTrail = Trail.longest(gameState.playerState(playerId).routes());
             int currentPlayerLength = currentPlayerTrail.length();
             playersLongestTrail.put(playerId, currentPlayerTrail);
-            if (currentPlayerLength>longestTrailLength) {
-                longestTrailLength=currentPlayerLength;
+            if (currentPlayerLength > longestTrailLength) {
+                longestTrailLength = currentPlayerLength;
             }
         }
 
@@ -185,8 +184,8 @@ public final class Game {
         for (PlayerId playerId : PlayerId.ALL) {
             Trail currentPlayerTrail = playersLongestTrail.get(playerId);
             int currentPlayerScore = gameState.playerState(playerId).finalPoints();
-            if (longestTrailLength==currentPlayerTrail.length()){
-                currentPlayerScore+=Constants.LONGEST_TRAIL_BONUS_POINTS;
+            if (longestTrailLength == currentPlayerTrail.length()) {
+                currentPlayerScore += Constants.LONGEST_TRAIL_BONUS_POINTS;
                 tellEveryone(players, playerInfos.get(playerId).getsLongestTrailBonus(currentPlayerTrail));
             }
             playersScores.put(playerId, currentPlayerScore);
@@ -194,12 +193,11 @@ public final class Game {
 
         //Détermine le gagnant
         int maxScore = Collections.max(playersScores.values()); //Score le plus élevé
-        List<PlayerId> playersWithMaxScore = playersScores.entrySet().stream().filter(map -> map.getValue()==maxScore).map(Map.Entry::getKey).collect(Collectors.toList()); //List de playerId qui ont le plus grand score
+        List<PlayerId> playersWithMaxScore = playersScores.entrySet().stream().filter(map -> map.getValue() == maxScore).map(Map.Entry::getKey).collect(Collectors.toList()); //List de playerId qui ont le plus grand score
         if (playersWithMaxScore.size() == PlayerId.COUNT) { // S'il y autant de joueur que joueurs au plus gros score -> égalité
             List<String> names = playersWithMaxScore.stream().map(Enum::name).collect(Collectors.toList());
             tellEveryone(players, Info.draw(names, maxScore));
-        }
-        else { //Sinon il y a un gagnant
+        } else { //Sinon il y a un gagnant
             PlayerId playerWinner = playersWithMaxScore.get(0);
             tellEveryone(players, playerInfos.get(playerWinner).won(maxScore, playersScores.get(playerWinner.next())));
         }
