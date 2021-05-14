@@ -12,7 +12,7 @@ import static ch.epfl.tchu.gui.StringsFr.*;
 
 /**
  * Générations des messages des actions des joueurs
- * <p>
+ *
  * Fichier créé à 14:34 le 02/03/2021
  *
  * @author Louis Gerard (296782)

@@ -21,9 +21,9 @@ import java.util.regex.Pattern;
  * @author Célien Muller (310777)
  */
 public class RemotePlayerClient {
-    private Player player;
-    private String address;
-    private int port;
+    private final Player player;
+    private final String address;
+    private final int port;
 
     /**
      *Initialise le RemotePlayerClient

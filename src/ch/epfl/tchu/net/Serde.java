@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * serde (de serializer-deserializer), à savoir un objet capable de sérialiser et désérialiser des valeurs d'un type donné.
- * <p>
+ *
  * Créé le 12.04.2021 à 15:03
  *
  * @author Louis Gerard (296782)
@@ -26,7 +26,7 @@ public interface Serde<T> {
      * @param <T> Type de l'object à  (dé)sérialiser
      * @return Un Serde correspond à l´objet
      */
-    public static <T> Serde<T> of(Function<T, String> fs, Function<String, T> fd) {
+    static <T> Serde<T> of(Function<T, String> fs, Function<String, T> fd) {
         return new Serde<>() {
             @Override
             public String serialize(T t) {
@@ -47,7 +47,7 @@ public interface Serde<T> {
      * @param <T>  Type de l'object à  (dé)sérialiser
      * @return Un Serde correspond à l'objet
      */
-    public static <T> Serde<T> oneOf(List<T> list) {
+    static <T> Serde<T> oneOf(List<T> list) {
         Preconditions.checkArgument(!list.isEmpty());
         return new Serde<>() {
             @Override
@@ -72,8 +72,8 @@ public interface Serde<T> {
      * @param <T>   Type de l´objet
      * @return Un Serde correspond à la liste
      */
-    public static <T> Serde<List<T>> listOf(Serde<T> serde, String c) {
-        return new Serde<List<T>>() {
+    static <T> Serde<List<T>> listOf(Serde<T> serde, String c) {
+        return new Serde<>() {
             @Override
             public String serialize(List<T> list) {
                 List<String> listString = new ArrayList<>();
@@ -103,8 +103,8 @@ public interface Serde<T> {
      * @param <T>   Type de l´objet
      * @return Un Serde correspond au SortedBag
      */
-    public static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, String c) {
-        return new Serde<SortedBag<T>>() {
+    static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, String c) {
+        return new Serde<>() {
             @Override
             public String serialize(SortedBag<T> bag) {
                 List<String> listString = new ArrayList<>();
@@ -132,7 +132,7 @@ public interface Serde<T> {
      * @param t Objet à sérialiser
      * @return String de l'objet sérialisé
      */
-    public abstract String serialize(T t);
+    String serialize(T t);
 
     /**
      * Méthode de désérialisation
@@ -140,6 +140,6 @@ public interface Serde<T> {
      * @param str chaîne correspond à la sérialisation de l'objet
      * @return Retourne l´objet correspond à la sérialisation
      */
-    public abstract T deserialize(String str);
+    T deserialize(String str);
 
 }

@@ -37,7 +37,7 @@ public class ObservableGameState {
     private PublicGameState currentPublicGameState;
     private PlayerState currentPlayerState;
 
-    private Map<Route, Route> doubleRoute;
+    private final Map<Route, Route> doubleRoute;
 
     /**
      * Constructeur

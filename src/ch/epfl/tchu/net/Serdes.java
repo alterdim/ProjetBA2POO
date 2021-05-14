@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 /**
  * Serdes utile au projet
- * <p>
+ *
  * Créé le 13.04.2021 à 08:53
  *
  * @author Louis Gerard (296782)

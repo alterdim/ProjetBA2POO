@@ -8,9 +8,7 @@ import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -29,9 +27,9 @@ import javafx.stage.StageStyle;
 import java.util.List;
 import java.util.Map;
 
-import static ch.epfl.tchu.gui.StringsFr.plural;
-
 import ch.epfl.tchu.gui.ActionHandlers.*;
+
+import static ch.epfl.tchu.gui.StringsFr.*;
 
 /**
  * Représente l' interface graphique d' un joueur.
@@ -43,14 +41,14 @@ import ch.epfl.tchu.gui.ActionHandlers.*;
  */
 public class GraphicalPlayer {
 
-    private ObservableGameState gameState;
-    private ObservableList<Text> observableText;
+    private final ObservableGameState gameState;
+    private final ObservableList<Text> observableText;
 
-    private Stage mainWindow;
+    private final Stage mainWindow;
 
-    private ObjectProperty<DrawCardHandler> cardHandler;
-    private ObjectProperty<DrawTicketsHandler> ticketsHandler;
-    private ObjectProperty<ClaimRouteHandler> routeHandler;
+    private final ObjectProperty<DrawCardHandler> cardHandler;
+    private final ObjectProperty<DrawTicketsHandler> ticketsHandler;
+    private final ObjectProperty<ClaimRouteHandler> routeHandler;
 
     /**
      * Constructeur
@@ -192,7 +190,7 @@ public class GraphicalPlayer {
 
         //ListView
         ObservableList<Ticket> observableTickets = FXCollections.observableArrayList(tickets.toList());
-        ListView<Ticket> ticketList = new ListView(observableTickets);
+        ListView<Ticket> ticketList = new ListView<>(observableTickets);
         chooseTicketsVBox.getChildren().add(ticketList);
 
         ticketList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -244,7 +242,7 @@ public class GraphicalPlayer {
         vBox.getChildren().add(flow);
 
         //ListView
-        ListView<SortedBag<Card>> listView = new ListView(FXCollections.observableList(cardLists));
+        ListView<SortedBag<Card>> listView = new ListView<>(FXCollections.observableList(cardLists));
         listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
         vBox.getChildren().add(listView);
 
@@ -292,7 +290,7 @@ public class GraphicalPlayer {
         vBox.getChildren().add(flow);
 
         //ListView
-        ListView<SortedBag<Card>> listView = new ListView(FXCollections.observableList(cardLists));
+        ListView<SortedBag<Card>> listView = new ListView<>(FXCollections.observableList(cardLists));
         listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
         vBox.getChildren().add(listView);
 

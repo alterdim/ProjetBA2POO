@@ -5,7 +5,6 @@ import ch.epfl.tchu.game.*;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +21,8 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  */
 public class RemotePlayerProxy implements Player {
 
-    private BufferedWriter writer;
-    private BufferedReader reader;
+    private final BufferedWriter writer;
+    private final BufferedReader reader;
 
     /**
      * Constructeur pour le mandataire d'un joueur distant.

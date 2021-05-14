@@ -3,11 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
-import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Route;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.shape.Rectangle;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
@@ -19,7 +15,7 @@ import java.util.List;
 
 import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
 
-abstract class MapViewCreator {//TODO vérifier si bien abstarct
+abstract class MapViewCreator {//TODO vérifier si bien abstract
 
     public static final int CAR_CIRCLE_RADIUS = 3;
 
