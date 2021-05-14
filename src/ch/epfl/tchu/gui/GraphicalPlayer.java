@@ -251,7 +251,8 @@ public class GraphicalPlayer {
         //Bouton
         Button vboxButton = new Button();
         vBox.getChildren().add(vboxButton);
-        vboxButton.disableProperty();
+        IntegerBinding selectionModelObserver = Bindings.size(listView.getSelectionModel().getSelectedItems());
+        vboxButton.disableProperty().bind(selectionModelObserver.isNotEqualTo(1));
         vboxButton.setText(StringsFr.CHOOSE);
         vboxButton.setOnAction(event -> {
             stage.hide();
@@ -299,6 +300,8 @@ public class GraphicalPlayer {
         Button vboxButton = new Button();
         vBox.getChildren().add(vboxButton);
         vboxButton.setText(StringsFr.CHOOSE);
+        IntegerBinding selectionModelObserver = Bindings.size(listView.getSelectionModel().getSelectedItems());
+        vboxButton.disableProperty().bind(selectionModelObserver.isNotEqualTo(1));
         vboxButton.setOnAction(event -> {
             stage.hide();
             cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
