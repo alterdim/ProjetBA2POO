@@ -301,7 +301,7 @@ public class GraphicalPlayer {
         vBox.getChildren().add(vboxButton);
         vboxButton.setText(StringsFr.CHOOSE);
         IntegerBinding selectionModelObserver = Bindings.size(listView.getSelectionModel().getSelectedItems());
-        vboxButton.disableProperty().bind(selectionModelObserver.isNotEqualTo(1));
+        vboxButton.disableProperty().bind(selectionModelObserver.lessThan(1));
         vboxButton.setOnAction(event -> {
             stage.hide();
             cardsHandler.onChooseCards(listView.getSelectionModel().getSelectedItem());
