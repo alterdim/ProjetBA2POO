@@ -127,7 +127,7 @@ public final class Game {
                         tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewAdditionalCards(drawnCards, addCardsCount));
 
                         if (addCardsCount > 0) {
-                            List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards/*, drawnCards*/);
+                            List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards, drawnCards);
                             if (!listPossibleAdditionalCards.isEmpty()) {
                                 SortedBag<Card> chosenCards = currentPlayer.chooseAdditionalCards(
                                         listPossibleAdditionalCards
