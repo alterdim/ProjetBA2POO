@@ -2,9 +2,20 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static ch.epfl.tchu.gui.StringsFr.*;
+import static ch.epfl.tchu.gui.StringsFr.START;
 
 /**
  * Contient le programme principal du client tCHu.
@@ -30,19 +41,82 @@ public class ClientMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         List<String> parameters = getParameters().getRaw();
-        String address = "localhost";
-        int port = 5108;
+        AtomicReference<String> address = new AtomicReference<>("localhost");
+        AtomicInteger port = new AtomicInteger(5108);
         switch (parameters.size()) {
             case 2:
-                address = parameters.get(0);
-                port = Integer.parseInt(parameters.get(1));
+                address.set(parameters.get(0));
+                port.set(Integer.parseInt(parameters.get(1)));
                 break;
             case 1:
-                address = parameters.get(0);
+                address.set(parameters.get(0));
                 break;
         }
 
-        RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address, port);
-        new Thread(remoteClient::run).start();
+        //Titre du stage
+        primaryStage.setTitle(GAME_CLIENT_NAME);
+        //Création d'un pane
+        TilePane pane = new TilePane();
+
+        //Création de l'inputDialog
+        TextInputDialog addressInputDialog = new TextInputDialog();
+        addressInputDialog.setTitle(ADDRESS_CHOICE_TITLE);
+        addressInputDialog.setHeaderText(CHOOSE_ADDRESS_HEADER);
+        addressInputDialog.setContentText(CHOOSE_ADDRESS_CONTENT);
+        addressInputDialog.setGraphic(null);
+
+
+        Label addressLabel = new Label(address.get());
+        Button addessButton = new Button(CHOOSE);
+        addessButton.setOnAction(e -> {
+            Optional<String> result =addressInputDialog.showAndWait();
+
+            if (result.isPresent()) {
+                String tempAddress = addressInputDialog.getEditor().getText();
+                if (tempAddress.length() > 0) {
+                    address.set(tempAddress);
+                    addressLabel.setText(tempAddress);
+                }
+            }
+        });
+        pane.getChildren().add(addessButton);
+        pane.getChildren().add(addressLabel);
+
+        //Création de l'inputDialog
+        TextInputDialog portInputDialog = new TextInputDialog();
+        portInputDialog.setTitle(PORT_CHOICE_TITLE);
+        portInputDialog.setHeaderText(CHOOSE_PORT_HEADER);
+        portInputDialog.setContentText(CHOOSE_PORT_CONTENT);
+        portInputDialog.setGraphic(null);
+
+
+        Label portLabel = new Label(String.valueOf(port.get()));
+        Button portButton = new Button(CHOOSE);
+        portButton.setOnAction(e -> {
+            Optional<String> result =portInputDialog.showAndWait();
+
+            if (result.isPresent()) {
+                String addressString = portInputDialog.getEditor().getText();
+                if (addressString.length() > 0) {
+                    port.set(Integer.parseInt(addressString));
+                    portLabel.setText(addressString);
+                }
+            }
+        });
+        pane.getChildren().add(portButton);
+        pane.getChildren().add(portLabel);
+        Scene scene = new Scene(pane, 500, 300);
+
+        Button startButton = new Button(START);
+        startButton.setOnAction(e -> {
+            RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address.get(), port.get());
+            new Thread(remoteClient::run).start();
+        });
+        pane.getChildren().add(startButton);
+
+
+        primaryStage.setScene(scene);
+
+        primaryStage.show();
     }
 }

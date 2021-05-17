@@ -82,4 +82,24 @@ public final class StringsFr {
     public static String plural(int value) {
         return Math.abs(value) > 1 ? "s" : "";
     }
+
+    //Ajout
+    public static final String GAME_NAME = "tCHu";
+    public static final String GAME_CLIENT_NAME = "tCHu - client";
+    public static final String GAME_SERVER_NAME = "tCHu - server";
+
+    //InputDialog
+    public static final String NAME_CHOICE_TITLE = "Choix du pseudo";
+    public static final String CHOOSE_NAME_HEADER =  "Choisissez votre pseudo :";
+    public static final String CHOOSE_NAME_CONTENT =  "Pseudo :";
+
+    public static final String ADDRESS_CHOICE_TITLE = "Choix de l'adresse";
+    public static final String CHOOSE_ADDRESS_HEADER =  "Choisissez votre adresse :";
+    public static final String CHOOSE_ADDRESS_CONTENT =  "ip :";
+
+    public static final String PORT_CHOICE_TITLE = "Choix du port";
+    public static final String CHOOSE_PORT_HEADER =  "Choisissez votre port :";
+    public static final String CHOOSE_PORT_CONTENT =  "port :";
+
+    public static final String START = "Démarrer";
 }

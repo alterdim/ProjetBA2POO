@@ -3,9 +3,16 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
@@ -23,13 +30,74 @@ public final class Stage11Test extends Application {
     @Override
     public void start(Stage primaryStage) {
         SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
-        Map<PlayerId, String> names =
-                Map.of(PLAYER_1, "Ada", PLAYER_2, "Charles");
+        Map<PlayerId, String> names = new EnumMap<>(PlayerId.class);
+        names.put(PLAYER_1, "Ada");
+        names.put(PLAYER_2, "Charles");
+
         Map<PlayerId, Player> players =
                 Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
                         PLAYER_2, new GraphicalPlayerAdapter());
         Random rng = new Random();
-        new Thread(() -> Game.play(players, names, tickets, rng))
-                .start();
+
+
+        // set title for the stage
+        primaryStage.setTitle("tCHu");
+
+        // create a tile pane
+        TilePane pane = new TilePane();
+
+
+        // create a text input dialog
+        TextInputDialog playerNameInputDialog = new TextInputDialog();
+        playerNameInputDialog.setTitle("Pseudo");
+        playerNameInputDialog.setHeaderText("Choissez votre pseudo");
+        playerNameInputDialog.setContentText("Pseudo : ");
+        playerNameInputDialog.setGraphic(null);
+
+
+        // create a label to show the input in text dialog
+        Label pseudoPlayer = new Label(names.get(PLAYER_1));
+        // create a button
+        Button pseudoButton = new Button("Pseudo");
+
+        // create and set on action of event
+        pseudoButton.setOnAction(e -> {
+            // show the text input dialog
+            Optional<String> result =playerNameInputDialog.showAndWait();
+
+            if (result.isPresent()) {
+                // set the text of the label
+                String username = playerNameInputDialog.getEditor().getText();
+                if (username.length() > 0) {
+                    names.put(PLAYER_1, username);
+                    pseudoPlayer.setText(username);
+                }
+            }
+        });
+
+        // add button and label
+        pane.getChildren().add(pseudoButton);
+        pane.getChildren().add(pseudoPlayer);
+
+
+
+        // create a button
+        Button startButton = new Button("Start");
+        startButton.setOnAction(e -> {
+            System.out.println("start");
+            new Thread(() -> Game.play(players, names, tickets, rng))
+                    .start();
+//            primaryStage.hide();
+
+        });
+        pane.getChildren().add(startButton);
+
+        // create a scene
+        Scene scene = new Scene(pane, 500, 300);
+
+        // set the scene
+        primaryStage.setScene(scene);
+
+        primaryStage.show();
     }
 }

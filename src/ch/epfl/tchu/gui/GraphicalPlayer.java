@@ -65,6 +65,8 @@ public class GraphicalPlayer {
         Scene scene = new Scene(borderPane);
         mainWindow.setScene(scene);
 
+        mainWindow.setTitle(GAME_NAME);
+
         cardHandler = new SimpleObjectProperty<>();
         ticketsHandler = new SimpleObjectProperty<>();
         routeHandler = new SimpleObjectProperty<>();
