@@ -2,6 +2,7 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -40,6 +41,7 @@ public class ClientMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
+        Platform.setImplicitExit(false);
         List<String> parameters = getParameters().getRaw();
         AtomicReference<String> address = new AtomicReference<>("localhost");
         AtomicInteger port = new AtomicInteger(5108);
@@ -76,6 +78,7 @@ public class ClientMain extends Application {
                 if (tempAddress.length() > 0) {
                     address.set(tempAddress);
                     addressLabel.setText(tempAddress);
+
                 }
             }
         });
@@ -110,6 +113,7 @@ public class ClientMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address.get(), port.get());
+            primaryStage.hide();
             new Thread(remoteClient::run).start();
         });
         pane.getChildren().add(startButton);

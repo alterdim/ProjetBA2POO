@@ -4,10 +4,9 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
@@ -45,6 +44,7 @@ public class ServerMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
+        Platform.setImplicitExit(false);
         List<String> parameters = getParameters().getRaw();
         Map<PlayerId, String> playersNameMap = new EnumMap<>(PlayerId.class);
         playersNameMap.put(PlayerId.PLAYER_1, "Ada");
@@ -77,7 +77,7 @@ public class ServerMain extends Application {
         Label pseudoPlayer = new Label(playersNameMap.get(PLAYER_1));
         Button pseudoButton = new Button(CHOOSE);
         pseudoButton.setOnAction(e -> {
-            Optional<String> result =playerNameInputDialog.showAndWait();
+            Optional<String> result = playerNameInputDialog.showAndWait();
 
             if (result.isPresent()) {
                 String username = playerNameInputDialog.getEditor().getText();
@@ -89,15 +89,16 @@ public class ServerMain extends Application {
         });
         pane.getChildren().add(pseudoButton);
         pane.getChildren().add(pseudoPlayer);
+        Scene scene = new Scene(pane, 500, 300);
 
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             mainWindow.hide();
+            System.out.println("i'm fucking retarded");
             startGame(playersNameMap);
         });
         pane.getChildren().add(startButton);
 
-        Scene scene = new Scene(pane, 500, 300);
 
         mainWindow.setScene(scene);
 
