@@ -60,8 +60,9 @@ public class ServerMain extends Application {
         }
 
 
+        Stage mainWindow = new Stage();
         //Titre du stage
-        primaryStage.setTitle(GAME_SERVER_NAME);
+        mainWindow.setTitle(GAME_SERVER_NAME);
         //Création d'un pane
         TilePane pane = new TilePane();
 
@@ -91,16 +92,16 @@ public class ServerMain extends Application {
 
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
+            mainWindow.hide();
             startGame(playersNameMap);
         });
         pane.getChildren().add(startButton);
 
         Scene scene = new Scene(pane, 500, 300);
 
-        primaryStage.setScene(scene);
+        mainWindow.setScene(scene);
 
-        primaryStage.show();
-
+        mainWindow.show();
     }
 
     private void startGame(Map<PlayerId, String> playersNameMap){
