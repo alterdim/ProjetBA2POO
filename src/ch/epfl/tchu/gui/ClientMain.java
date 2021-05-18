@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static ch.epfl.tchu.gui.StringsFr.*;
-import static ch.epfl.tchu.gui.StringsFr.START;
 
 /**
  * Contient le programme principal du client tCHu.
