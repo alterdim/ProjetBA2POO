@@ -72,6 +72,16 @@ public class RemotePlayerProxy implements Player {
     }
 
     /**
+     * est appelée avant le début de la partie afin de choisir le nom du joueur distant
+     * @return le pseudo du joueur distant
+     */
+    public String chooseUsername() {
+        String readyString = stringBaker(MessageId.CHOOSE_USERNAME.name());
+        String usernameSerded = sendThisAndListen(readyString);
+        return Serdes.STRING.deserialize(usernameSerded);
+    }
+
+    /**
      * est appelée au début de la partie pour communiquer au joueur son nom et la liste de tous les joueurs (le siens inclus)
      *
      * @param ownId       sa propre identité

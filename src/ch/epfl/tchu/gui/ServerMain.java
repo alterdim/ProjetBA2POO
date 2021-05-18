@@ -16,6 +16,7 @@ import java.net.Socket;
 import java.util.*;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 import static ch.epfl.tchu.gui.StringsFr.*;
 
 
@@ -98,18 +99,10 @@ public class ServerMain extends Application {
         });
         pane.getChildren().add(startButton);
 
-        mainWindow.setOnCloseRequest(windowsEvent -> {
-            System.exit(0);
-        });
-
-
         mainWindow.setScene(scene);
-
         mainWindow.show();
 
-        mainWindow.setOnCloseRequest(windowsEvent -> {
-            System.exit(0);
-        });
+        mainWindow.setOnCloseRequest(windowsEvent -> System.exit(0));
     }
 
     private void startGame(Map<PlayerId, String> playersNameMap){
@@ -119,8 +112,9 @@ public class ServerMain extends Application {
                 Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
                 Player p1 = new GraphicalPlayerAdapter();
                 playersMap.put(PLAYER_1, p1);
-                Player p2 = new RemotePlayerProxy(socket);
+                RemotePlayerProxy p2 = new RemotePlayerProxy(socket);
                 playersMap.put(PlayerId.PLAYER_2, p2);
+                playersNameMap.put(PLAYER_2, p2.chooseUsername());
 
                 Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random());
             } catch (IOException e) {

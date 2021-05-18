@@ -9,6 +9,7 @@ package ch.epfl.tchu.net;
  * @author Célien Muller (310777)
  */
 public enum MessageId {
+    CHOOSE_USERNAME,
     INIT_PLAYERS,
     RECEIVE_INFO,
     UPDATE_STATE,

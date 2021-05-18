@@ -113,7 +113,6 @@ public class ClientMain extends Application {
         pane.getChildren().add(portLabel);
 
 
-
         TextInputDialog playerNameInputDialog = new TextInputDialog();
         playerNameInputDialog.setTitle(NAME_CHOICE_TITLE);
         playerNameInputDialog.setHeaderText(CHOOSE_NAME_HEADER);
@@ -142,19 +141,15 @@ public class ClientMain extends Application {
 
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
-            RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address.get(), port.get());
+            RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address.get(), port.get(), username.get());
             mainWindow.hide();
             new Thread(remoteClient::run).start();
         });
         pane.getChildren().add(startButton);
 
-
         mainWindow.setScene(scene);
-
         mainWindow.show();
 
-        mainWindow.setOnCloseRequest(windowsEvent -> {
-            System.exit(0);
-        });
+        mainWindow.setOnCloseRequest(windowsEvent -> System.exit(0));
     }
 }

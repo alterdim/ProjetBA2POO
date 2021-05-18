@@ -12,9 +12,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- *
  * Client de joueur distant
- *
+ * <p>
  * Créé le 19.04.2021 à 12:48
  *
  * @author Louis Gerard (296782)
@@ -24,18 +23,35 @@ public class RemotePlayerClient {
     private final Player player;
     private final String address;
     private final int port;
+    private final String username;
 
     /**
-     *Initialise le RemotePlayerClient
+     * Initialise le RemotePlayerClient
      *
      * @param player  le joueur auquel elle doit fournir un accès distant
      * @param address nom à utiliser pour se connecter au mandataire
-     * @param port port à utiliser pour se connecter au mandataire
+     * @param port    port à utiliser pour se connecter au mandataire
      */
     public RemotePlayerClient(Player player, String address, int port) {
         this.player = player;
         this.address = address;
         this.port = port;
+        this.username = "Charles"; //Pseudo par défaut
+    }
+
+    /**
+     * Initialise le RemotePlayerClient
+     *
+     * @param player  le joueur auquel elle doit fournir un accès distant
+     * @param address nom à utiliser pour se connecter au mandataire
+     * @param port    port à utiliser pour se connecter au mandataire
+     * @param username pseudo du joueur
+     */
+    public RemotePlayerClient(Player player, String address, int port, String username) {
+        this.player = player;
+        this.address = address;
+        this.port = port;
+        this.username = username;
     }
 
     /**
@@ -51,12 +67,16 @@ public class RemotePlayerClient {
                      new OutputStreamWriter(s.getOutputStream(),
                              StandardCharsets.US_ASCII)
              )
-        ){
+        ) {
             String message;
             while ((message = reader.readLine()) != null) {
                 String[] data = message.split(Pattern.quote(" "));
 
                 switch (MessageId.valueOf(data[0])) {
+                    case CHOOSE_USERNAME:
+                        writer.write(Serdes.STRING.serialize(username) + "\n");
+                        writer.flush();
+                        break;
                     case INIT_PLAYERS:
                         player.initPlayers(Serdes.PLAYER_ID.deserialize(data[1]), getPlayerNames(Serdes.LIST_STRING.deserialize(data[2])));
                         break;
@@ -94,7 +114,7 @@ public class RemotePlayerClient {
                         writer.flush();
                         break;
                     case CHOOSE_ADDITIONAL_CARDS:
-                        writer.write(Serdes.SORTED_BAG_CARD.serialize(player.chooseAdditionalCards(Serdes.LIST_SORTED_BAG_CARD.deserialize(data[1])))+ "\n");
+                        writer.write(Serdes.SORTED_BAG_CARD.serialize(player.chooseAdditionalCards(Serdes.LIST_SORTED_BAG_CARD.deserialize(data[1]))) + "\n");
                         writer.flush();
                         break;
                 }
@@ -106,6 +126,7 @@ public class RemotePlayerClient {
 
     /**
      * Convertit une liste en map de noms de joueurs
+     *
      * @param names Liste de String avec les noms de joueurs
      * @return Map des noms de joueurs
      */
