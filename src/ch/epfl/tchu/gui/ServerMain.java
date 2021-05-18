@@ -94,7 +94,6 @@ public class ServerMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             mainWindow.hide();
-            System.out.println("i'm fucking retarded");
             startGame(playersNameMap);
         });
         pane.getChildren().add(startButton);
@@ -107,6 +106,10 @@ public class ServerMain extends Application {
         mainWindow.setScene(scene);
 
         mainWindow.show();
+
+        mainWindow.setOnCloseRequest(windowsEvent -> {
+            System.exit(0);
+        });
     }
 
     private void startGame(Map<PlayerId, String> playersNameMap){

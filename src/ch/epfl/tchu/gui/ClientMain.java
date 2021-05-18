@@ -3,8 +3,6 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -59,8 +57,9 @@ public class ClientMain extends Application {
 
         AtomicReference<String> username= new AtomicReference<>("Charles");
 
+        Stage mainWindow = new Stage();
         //Titre du stage
-        primaryStage.setTitle(GAME_CLIENT_NAME);
+        mainWindow.setTitle(GAME_CLIENT_NAME);
         //Création d'un pane
         TilePane pane = new TilePane();
 
@@ -144,17 +143,18 @@ public class ClientMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address.get(), port.get());
-            primaryStage.hide();
+            mainWindow.hide();
             new Thread(remoteClient::run).start();
         });
         pane.getChildren().add(startButton);
 
-        primaryStage.setOnCloseRequest(windowsEvent -> {
+
+        mainWindow.setScene(scene);
+
+        mainWindow.show();
+
+        mainWindow.setOnCloseRequest(windowsEvent -> {
             System.exit(0);
         });
-
-        primaryStage.setScene(scene);
-
-        primaryStage.show();
     }
 }

@@ -83,6 +83,10 @@ public class GraphicalPlayer {
         borderPane.rightProperty().setValue(deckView);
 
         mainWindow.show();
+
+        mainWindow.setOnCloseRequest(windowsEvent -> {
+            System.exit(0);
+        });
     }
 
     /**
