@@ -55,8 +55,9 @@ public class ClientMain extends Application {
                 break;
         }
 
+        Stage mainWindow = new Stage();
         //Titre du stage
-        primaryStage.setTitle(GAME_CLIENT_NAME);
+        mainWindow.setTitle(GAME_CLIENT_NAME);
         //Création d'un pane
         TilePane pane = new TilePane();
 
@@ -113,14 +114,18 @@ public class ClientMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             RemotePlayerClient remoteClient = new RemotePlayerClient(new GraphicalPlayerAdapter(), address.get(), port.get());
-            primaryStage.hide();
+            mainWindow.hide();
             new Thread(remoteClient::run).start();
         });
         pane.getChildren().add(startButton);
 
 
-        primaryStage.setScene(scene);
+        mainWindow.setScene(scene);
 
-        primaryStage.show();
+        mainWindow.show();
+
+        mainWindow.setOnCloseRequest(windowsEvent -> {
+            System.exit(0);
+        });
     }
 }
