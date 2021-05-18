@@ -99,6 +99,10 @@ public class ServerMain extends Application {
         });
         pane.getChildren().add(startButton);
 
+        mainWindow.setOnCloseRequest(windowsEvent -> {
+            System.exit(0);
+        });
+
 
         mainWindow.setScene(scene);
 

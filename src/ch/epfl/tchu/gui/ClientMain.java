@@ -3,6 +3,8 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -54,6 +56,8 @@ public class ClientMain extends Application {
                 address.set(parameters.get(0));
                 break;
         }
+
+        AtomicReference<String> username= new AtomicReference<>("Charles");
 
         //Titre du stage
         primaryStage.setTitle(GAME_CLIENT_NAME);
@@ -108,6 +112,33 @@ public class ClientMain extends Application {
         });
         pane.getChildren().add(portButton);
         pane.getChildren().add(portLabel);
+
+
+
+        TextInputDialog playerNameInputDialog = new TextInputDialog();
+        playerNameInputDialog.setTitle(NAME_CHOICE_TITLE);
+        playerNameInputDialog.setHeaderText(CHOOSE_NAME_HEADER);
+        playerNameInputDialog.setContentText(CHOOSE_NAME_CONTENT);
+        playerNameInputDialog.setGraphic(null);
+
+
+        Label pseudoPlayer = new Label(username.get());
+        Button pseudoButton = new Button(CHOOSE);
+        pseudoButton.setOnAction(e -> {
+            Optional<String> result = playerNameInputDialog.showAndWait();
+
+            if (result.isPresent()) {
+                String newUsername = playerNameInputDialog.getEditor().getText();
+                if (newUsername.length() > 0) {
+                    username.set(newUsername);
+                    pseudoPlayer.setText(newUsername);
+                }
+            }
+        });
+        pane.getChildren().add(pseudoButton);
+        pane.getChildren().add(pseudoPlayer);
+
+
         Scene scene = new Scene(pane, 500, 300);
 
         Button startButton = new Button(START);
@@ -118,6 +149,9 @@ public class ClientMain extends Application {
         });
         pane.getChildren().add(startButton);
 
+        primaryStage.setOnCloseRequest(windowsEvent -> {
+            System.exit(0);
+        });
 
         primaryStage.setScene(scene);
 
