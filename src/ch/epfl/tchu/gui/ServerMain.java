@@ -15,8 +15,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
-import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
+import static ch.epfl.tchu.game.PlayerId.*;
 import static ch.epfl.tchu.gui.StringsFr.*;
 
 
@@ -48,15 +47,15 @@ public class ServerMain extends Application {
         Platform.setImplicitExit(false);
         List<String> parameters = getParameters().getRaw();
         Map<PlayerId, String> playersNameMap = new EnumMap<>(PlayerId.class);
-        playersNameMap.put(PlayerId.PLAYER_1, "Ada");
-        playersNameMap.put(PlayerId.PLAYER_2, "Charles");
+        playersNameMap.put(PLAYER_1, "Ada");
+        playersNameMap.put(PLAYER_2, "Charles");
         switch (parameters.size()) {
             case 2:
-                playersNameMap.put(PlayerId.PLAYER_1, parameters.get(0));
-                playersNameMap.put(PlayerId.PLAYER_2, parameters.get(1));
+                playersNameMap.put(PLAYER_1, parameters.get(0));
+                playersNameMap.put(PLAYER_2, parameters.get(1));
                 break;
             case 1:
-                playersNameMap.put(PlayerId.PLAYER_1, parameters.get(0));
+                playersNameMap.put(PLAYER_1, parameters.get(0));
                 break;
         }
 
@@ -113,7 +112,7 @@ public class ServerMain extends Application {
                 Player p1 = new GraphicalPlayerAdapter();
                 playersMap.put(PLAYER_1, p1);
                 RemotePlayerProxy p2 = new RemotePlayerProxy(socket);
-                playersMap.put(PlayerId.PLAYER_2, p2);
+                playersMap.put(PLAYER_2, p2);
                 playersNameMap.put(PLAYER_2, p2.chooseUsername());
 
                 Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random());
