@@ -1,0 +1,11 @@
+*Ajout de page de démarrage, permettant de modifier différents paramètres:
+-Client : choix du pseudo, adresse et port du serveur
+-Server : choix du pseudo
+
+Cette page utilise des boutons qui sont associé à des TextInputDialog ou l'on peut renseigner nos choix concernant les différents paramètre, ou laisser les choix par défaut. Si le texte renseigné est vide (length =< 0), ou si le bouton annuler à été sélectionner, l'ancien texte est conservé.
+Nous avons été contraint de définir Platform.setImplicitExit(false); pour permettre à la page de démarrage de se fermer une fois la partie démarrée. De plus nous faisons appel à la méthode setOnCloseRequest() exécutant System.exit(0) afin de stopper le programme lorsque que l'on ferme la fenêtre.
+
+*Laisser au client le choix de son pseudo (au lieu que le serveur gère tout les pseudos)
+
+Nous renseignons le choix du pseudo (choisi grâce à la page de démarrage) en paramètre de RemotePlayerClient. Ce pseudo est renvoyé lorsque le client reçoit la nouvelle commande CHOOSE_USERNAME, définie dans MessageId. Le RemotePlayerProxy qui a envoyé cette commande attend attend la réception de la réponse. Cette réponse modifie la Map de pseudo qui est renseigné à la méthode play() de Game définie dans ServerMain.
+Nous avons choisi de ne pas modifier l'interface Player, car le choix du pseudo est inutile dans les autres implémentations de cette interface.
