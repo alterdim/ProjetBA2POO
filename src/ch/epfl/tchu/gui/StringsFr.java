@@ -85,8 +85,9 @@ public final class StringsFr {
 
     //Ajout
     public static final String GAME_NAME = "tCHu";
+    public static final String GAME_SPECTATOR_NAME = "tCHu - spectateur";
     public static final String GAME_CLIENT_NAME = "tCHu - client";
-    public static final String GAME_SERVER_NAME = "tCHu - server";
+    public static final String GAME_SERVER_NAME = "tCHu - serveur";
 
     //InputDialog
     public static final String NAME_CHOICE_TITLE = "Choix du pseudo";

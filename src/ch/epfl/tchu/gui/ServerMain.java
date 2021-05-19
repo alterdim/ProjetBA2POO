@@ -110,12 +110,14 @@ public class ServerMain extends Application {
                  Socket socket = serverSocket.accept()) {
                 Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
                 Player p1 = new GraphicalPlayerAdapter();
+                Player s1 = new GraphicalPlayerAdapter();
+                Player s2 = new GraphicalPlayerAdapter();
                 playersMap.put(PLAYER_1, p1);
                 RemotePlayerProxy p2 = new RemotePlayerProxy(socket);
                 playersMap.put(PLAYER_2, p2);
                 playersNameMap.put(PLAYER_2, p2.chooseUsername());
 
-                Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random());
+                Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random(), List.of());
             } catch (IOException e) {
                 throw new Error(e);
             }

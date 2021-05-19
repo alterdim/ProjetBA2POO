@@ -27,7 +27,7 @@ public final class Game {
      * @param rng         Un générateur de nombre aléatoires.
      */
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames,
-                            SortedBag<Ticket> tickets, Random rng) {
+                     SortedBag<Ticket> tickets, Random rng, List<Spectator> spectators) {
         //Préconditions (nombre de joueurs adéquat)
         Preconditions.checkArgument(players.size() == PlayerId.COUNT);
         Preconditions.checkArgument(playerNames.size() == PlayerId.COUNT);
@@ -47,7 +47,7 @@ public final class Game {
         }
 
         //Annoncer le premier joueur
-        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).willPlayFirst());
+        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).willPlayFirst(), spectators);
 
         //Générer les premiers tickets
         for (PlayerId p : players.keySet()) {
@@ -55,7 +55,7 @@ public final class Game {
 
             player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
             gameState = gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
-            updateEveryone(players, gameState);
+            updateEveryone(players, gameState, spectators);
             gameState = gameState.withInitiallyChosenTickets(p, player.chooseInitialTickets());
 
         }
@@ -63,38 +63,38 @@ public final class Game {
         //Annoncer le nombre de tickets gardés
         for (PlayerId p : players.keySet()) {
             tellEveryone(players,
-                    playerInfos.get(p).keptTickets(gameState.playerState(p).ticketCount()));
+                    playerInfos.get(p).keptTickets(gameState.playerState(p).ticketCount()), spectators);
         }
 
         //Boucle de jeu
         while (endingGameTrigger < 2) {
             Player currentPlayer = players.get(gameState.currentPlayerId());
-            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay());
+            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay(), spectators);
 
-            updateEveryone(players, gameState);
+            updateEveryone(players, gameState, spectators);
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
                     //Sélectionne les 3 premiers tickets
                     SortedBag<Ticket> drawnTickets = gameState.topTickets(Constants.IN_GAME_TICKETS_COUNT);
-                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewTickets(drawnTickets.size()));
+                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewTickets(drawnTickets.size()), spectators);
 
                     //demande au joueur quels tickets il conserve
                     SortedBag<Ticket> keptTickets = currentPlayer.chooseTickets(drawnTickets);
                     gameState = gameState.withChosenAdditionalTickets(drawnTickets, keptTickets);
-                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).keptTickets(keptTickets.size()));
+                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).keptTickets(keptTickets.size()), spectators);
                     break;
                 case DRAW_CARDS:
                     for (int i = 0; i < 2; i++) {
                         gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
-                        updateEveryone(players, gameState);
+                        updateEveryone(players, gameState, spectators);
                         int drawSlot = currentPlayer.drawSlot();
                         if (drawSlot == Constants.DECK_SLOT) {
-                            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewBlindCard());
+                            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewBlindCard(), spectators);
                             gameState = gameState.withBlindlyDrawnCard();
                         } else {
                             tellEveryone(players, playerInfos
                                     .get(gameState.currentPlayerId())
-                                    .drewVisibleCard(gameState.cardState().faceUpCard(drawSlot))
+                                    .drewVisibleCard(gameState.cardState().faceUpCard(drawSlot)), spectators
                             );
                             gameState = gameState.withCardsDeckRecreatedIfNeeded(rng).withDrawnFaceUpCard(drawSlot);
                         }
@@ -107,11 +107,11 @@ public final class Game {
                     if (claimedRoute.level().equals(Route.Level.OVERGROUND)) {
                         //claim route surface
                         gameState = gameState.withClaimedRoute(claimedRoute, claimCards);
-                        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
+                        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards), spectators);
                     }
                     //Tunnel
                     else {
-                        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).attemptsTunnelClaim(claimedRoute, claimCards));
+                        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).attemptsTunnelClaim(claimedRoute, claimCards), spectators);
 
                         SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
                         for (int i = 0; i < Constants.ADDITIONAL_TUNNEL_CARDS; i++) {
@@ -125,7 +125,7 @@ public final class Game {
                         int addCardsCount = claimedRoute.additionalClaimCardsCount(claimCards, drawnCards);
                         gameState = gameState.withMoreDiscardedCards(drawnCards);
 
-                        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewAdditionalCards(drawnCards, addCardsCount));
+                        tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).drewAdditionalCards(drawnCards, addCardsCount), spectators);
 
                         if (addCardsCount > 0) {
                             List<SortedBag<Card>> listPossibleAdditionalCards = gameState.currentPlayerState().possibleAdditionalCards(addCardsCount, claimCards);
@@ -136,17 +136,17 @@ public final class Game {
                                 //prends la route avec les cartes initiales et additionnels
                                 if (!chosenCards.isEmpty()) {
                                     gameState = gameState.withClaimedRoute(claimedRoute, chosenCards.union(claimCards));
-                                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, chosenCards.union(claimCards)));
+                                    tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, chosenCards.union(claimCards)), spectators);
                                 }
                             } else {
                                 //le joueur ne prend pas la route
-                                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute));
+                                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).didNotClaimRoute(claimedRoute), spectators);
                             }
                         }
                         //claims si pas de cartes additionnelles
                         else {
                             gameState = gameState.withClaimedRoute(claimedRoute, claimCards);
-                            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards));
+                            tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).claimedRoute(claimedRoute, claimCards), spectators);
                         }
                     }
                     break;
@@ -154,7 +154,7 @@ public final class Game {
 
             //Gestion des derniers tours et annonce de la fin.
             if (gameState.lastTurnBegins()) {
-                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()));
+                tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).lastTurnBegins(gameState.currentPlayerState().carCount()), spectators);
             }
 
             if (gameState.lastPlayer() != null) {
@@ -164,7 +164,7 @@ public final class Game {
             gameState = gameState.forNextTurn();
         }
         //Informe les joueurs de l'état du jeu à la fin de la partie
-        updateEveryone(players, gameState);
+        updateEveryone(players, gameState, spectators);
 
 
         //Calcul du longestTrail de la partie
@@ -186,7 +186,7 @@ public final class Game {
             int currentPlayerScore = gameState.playerState(playerId).finalPoints();
             if (longestTrailLength == currentPlayerTrail.length()) {
                 currentPlayerScore += Constants.LONGEST_TRAIL_BONUS_POINTS;
-                tellEveryone(players, playerInfos.get(playerId).getsLongestTrailBonus(currentPlayerTrail));
+                tellEveryone(players, playerInfos.get(playerId).getsLongestTrailBonus(currentPlayerTrail), spectators);
             }
             playersScores.put(playerId, currentPlayerScore);
         }
@@ -196,23 +196,29 @@ public final class Game {
         List<PlayerId> playersWithMaxScore = playersScores.entrySet().stream().filter(map -> map.getValue() == maxScore).map(Map.Entry::getKey).collect(Collectors.toList()); //List de playerId qui ont le plus grand score
         if (playersWithMaxScore.size() == PlayerId.COUNT) { // S'il y autant de joueur que joueurs au plus gros score -> égalité
             List<String> names = playersWithMaxScore.stream().map(Enum::name).collect(Collectors.toList());
-            tellEveryone(players, Info.draw(names, maxScore));
+            tellEveryone(players, Info.draw(names, maxScore), spectators);
         } else { //Sinon il y a un gagnant
             PlayerId playerWinner = playersWithMaxScore.get(0);
-            tellEveryone(players, playerInfos.get(playerWinner).won(maxScore, playersScores.get(playerWinner.next())));
+            tellEveryone(players, playerInfos.get(playerWinner).won(maxScore, playersScores.get(playerWinner.next())), spectators);
         }
     }
 
-    private static void tellEveryone(Map<PlayerId, Player> players, String info) {
+    private static void tellEveryone(Map<PlayerId, Player> players, String info, List<Spectator> spectators) {
         for (Player p : players.values()) {
             p.receiveInfo(info);
         }
+        for (Spectator spectator : spectators) {
+            spectator.receiveInfo(info);
+        }
     }
 
-    private static void updateEveryone(Map<PlayerId, Player> players, GameState newState) {
+    private static void updateEveryone(Map<PlayerId, Player> players, GameState newState, List<Spectator> spectators) {
         for (PlayerId p : players.keySet()) {
             Player player = players.get(p);
             player.updateState(newState, newState.playerState(p));
+        }
+        for (Spectator spectator : spectators) {
+            spectator.updateState(newState, newState.currentPlayerState());
         }
     }
 }

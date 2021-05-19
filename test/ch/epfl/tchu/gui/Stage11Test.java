@@ -10,10 +10,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
@@ -26,9 +23,11 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  */
 public final class Stage11Test extends Application {
     public static void main(String[] args) { launch(args); }
+    private List<Spectator> spectators;
 
     @Override
     public void start(Stage primaryStage) {
+        spectators=new ArrayList<>();
         SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
         Map<PlayerId, String> names = new EnumMap<>(PlayerId.class);
         names.put(PLAYER_1, "Ada");
@@ -79,13 +78,16 @@ public final class Stage11Test extends Application {
         pane.getChildren().add(pseudoButton);
         pane.getChildren().add(pseudoPlayer);
 
-
+        Spectator s1 = new GraphicalSpectatorAdapter();
+        s1.launchSpectator(names, true);
+        s1.launchSpectator(names, false);
+        spectators.add(s1);
 
         // create a button
         Button startButton = new Button("Start");
         startButton.setOnAction(e -> {
             System.out.println("start");
-            new Thread(() -> Game.play(players, names, tickets, rng))
+            new Thread(() -> Game.play(players, names, tickets, rng, spectators))
                     .start();
 //            primaryStage.hide();
 
