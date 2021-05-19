@@ -34,6 +34,10 @@
 }
 
 /* Tickets and cards pane (right) */
+#card-pane .card:hover {
+    -fx-scale-x: 1.06;
+    -fx-scale-y: 1.06;
+}
 
 #card-pane {
     -fx-spacing: 10;
