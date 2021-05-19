@@ -56,9 +56,9 @@ public class GraphicalSpectator {
 
         mainWindow.show();
 
-        /*mainWindow.setOnCloseRequest(windowsEvent -> {
+        mainWindow.setOnCloseRequest(windowsEvent -> {
             System.exit(0);
-        });*/
+        });
     }
 
     /**

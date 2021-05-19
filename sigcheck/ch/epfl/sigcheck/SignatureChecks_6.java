@@ -17,5 +17,5 @@ final class SignatureChecks_6 {
     ch.epfl.tchu.SortedBag<ch.epfl.tchu.game.Ticket> v03;
     java.util.Random v04;
 
-    java.util.List<ch.epfl.tchu.game.Spectator> v05;
+    java.util.List<ch.epfl.tchu.game.Player> v05;
 }

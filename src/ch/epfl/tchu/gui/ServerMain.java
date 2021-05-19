@@ -28,6 +28,7 @@ import static ch.epfl.tchu.gui.StringsFr.*;
  * @author Célien Muller (310777)
  */
 public class ServerMain extends Application {
+    private List<Player> spectators;
 
     /**
      * Démarre l' application graphique
@@ -47,6 +48,7 @@ public class ServerMain extends Application {
         Platform.setImplicitExit(false);
         List<String> parameters = getParameters().getRaw();
         Map<PlayerId, String> playersNameMap = new EnumMap<>(PlayerId.class);
+        this.spectators=new ArrayList<>();
         playersNameMap.put(PLAYER_1, "Ada");
         playersNameMap.put(PLAYER_2, "Charles");
         switch (parameters.size()) {
@@ -94,6 +96,7 @@ public class ServerMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             mainWindow.hide();
+//            setSpectators(playersNameMap);
             startGame(playersNameMap);
         });
         pane.getChildren().add(startButton);
@@ -106,21 +109,38 @@ public class ServerMain extends Application {
 
     private void startGame(Map<PlayerId, String> playersNameMap){
         new Thread(()->{
+
             try (ServerSocket serverSocket = new ServerSocket(5108);
-                 Socket socket = serverSocket.accept()) {
+                 Socket socket = serverSocket.accept();
+                ServerSocket serverSocket2 = new ServerSocket(5109);
+                /*Socket socket2 = serverSocket2.accept()*/) {
                 Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
                 Player p1 = new GraphicalPlayerAdapter();
-                Player s1 = new GraphicalPlayerAdapter();
-                Player s2 = new GraphicalPlayerAdapter();
                 playersMap.put(PLAYER_1, p1);
                 RemotePlayerProxy p2 = new RemotePlayerProxy(socket);
                 playersMap.put(PLAYER_2, p2);
                 playersNameMap.put(PLAYER_2, p2.chooseUsername());
 
-                Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random(), List.of());
+               //Uncomment this line to activate spectator
+                /*Socket socket2 = serverSocket2.accept();
+                Player sp = new RemotePlayerProxy(socket2);
+                spectators.add(sp);
+                sp.initPlayers(PLAYER_1, playersNameMap);*/
+
+
+                Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random(), spectators);
             } catch (IOException e) {
                 throw new Error(e);
             }
+            /*try (ServerSocket serverSocket = new ServerSocket(5109);
+                 Socket socket = serverSocket.accept()) {
+                //Uncomment this line to activate spectator
+                Player sp = new RemotePlayerProxy(socket);
+                spectators.add(sp);
+                sp.initPlayers(PLAYER_1, playersNameMap);
+            } catch (IOException e) {
+                throw new Error(e);
+            }*/
         }).start();
     }
 }

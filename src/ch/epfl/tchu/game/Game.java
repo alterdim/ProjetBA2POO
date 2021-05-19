@@ -27,7 +27,7 @@ public final class Game {
      * @param rng         Un générateur de nombre aléatoires.
      */
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames,
-                     SortedBag<Ticket> tickets, Random rng, List<Spectator> spectators) {
+                     SortedBag<Ticket> tickets, Random rng, List<Player> spectators) {
         //Préconditions (nombre de joueurs adéquat)
         Preconditions.checkArgument(players.size() == PlayerId.COUNT);
         Preconditions.checkArgument(playerNames.size() == PlayerId.COUNT);
@@ -203,21 +203,21 @@ public final class Game {
         }
     }
 
-    private static void tellEveryone(Map<PlayerId, Player> players, String info, List<Spectator> spectators) {
+    private static void tellEveryone(Map<PlayerId, Player> players, String info, List<Player> spectators) {
         for (Player p : players.values()) {
             p.receiveInfo(info);
         }
-        for (Spectator spectator : spectators) {
+        for (Player spectator : spectators) {
             spectator.receiveInfo(info);
         }
     }
 
-    private static void updateEveryone(Map<PlayerId, Player> players, GameState newState, List<Spectator> spectators) {
+    private static void updateEveryone(Map<PlayerId, Player> players, GameState newState, List<Player> spectators) {
         for (PlayerId p : players.keySet()) {
             Player player = players.get(p);
             player.updateState(newState, newState.playerState(p));
         }
-        for (Spectator spectator : spectators) {
+        for (Player spectator : spectators) {
             spectator.updateState(newState, newState.currentPlayerState());
         }
     }

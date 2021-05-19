@@ -23,7 +23,7 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  */
 public final class Stage11Test extends Application {
     public static void main(String[] args) { launch(args); }
-    private List<Spectator> spectators;
+    private List<Player> spectators;
 
     @Override
     public void start(Stage primaryStage) {
@@ -78,9 +78,9 @@ public final class Stage11Test extends Application {
         pane.getChildren().add(pseudoButton);
         pane.getChildren().add(pseudoPlayer);
 
-        Spectator s1 = new GraphicalSpectatorAdapter();
-        s1.launchSpectator(names, true);
-        s1.launchSpectator(names, false);
+        Player s1 = new GraphicalSpectatorAdapter(/*names,*/ true);
+//        s1.launchSpectator(names, true);
+//        s1.launchSpectator(names, false);
         spectators.add(s1);
 
         // create a button
