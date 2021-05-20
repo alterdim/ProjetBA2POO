@@ -1,9 +1,9 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
-import ch.epfl.tchu.game.Card;
-import ch.epfl.tchu.game.ChMap;
-import ch.epfl.tchu.game.Route;
+import ch.epfl.tchu.game.*;
+import com.sun.javafx.property.adapter.PropertyDescriptor;
+import javafx.collections.ListChangeListener;
 import javafx.scene.shape.Rectangle;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
@@ -26,8 +26,47 @@ abstract class MapViewCreator {//TODO vérifier si bien abstract
         ImageView background = new ImageView();
         canvas.getChildren().add(background);
 
+        for (Station station : ChMap.stations()) {
+            Circle circle = new Circle(7);
+            circle.setId(String.valueOf(station.id()));
+            circle.getStyleClass().addAll("RED","filled");
+           /* gameState.tickets().addListener((ListChangeListener<Ticket>) c -> {
+                for (Ticket ticket : c.getList()) {
+                    System.out.println(ticket);
+                }
+//                System.out.println(c);
+                System.out.println("listener");
+            });*/
+//            canvas.getChildren().add(circle);
+        }
+        gameState.tickets().addListener((ListChangeListener<Ticket>) c -> {
+//            System.out.println("added");
+            while (c.next()){
+                System.out.println(c.getAddedSubList());
+                for (Ticket ticket : c.getAddedSubList()) {
+                    for (Station station : ticket.stationsExtremity()) {
+                        Circle circle = new Circle(7);
+                        circle.setId(String.valueOf(station.id()));
+                        canvas.getChildren().add(circle);
+                    }
+                }
+            }
+//            System.out.println(c.getAddedSubList());
+            /*for (Ticket ticket : c.getAddedSubList()) {
+                System.out.println(ticket);
+            }*/
+//            System.out.println("ALL");
+//            System.out.println(c.getList());
+            /*for (Ticket ticket : c.getList()) {
+                System.out.println(ticket);
+            }*/
+//                System.out.println(c);
+//            System.out.println("listener");
+        });
+
         for (Route r : ChMap.routes()) {
             Group routeGroup = new Group();
+
             if (r.color() != null) {
                 routeGroup.getStyleClass().addAll("route", r.level().toString(), r.color().toString());
             } else {

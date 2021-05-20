@@ -103,4 +103,16 @@ public final class Ticket implements Comparable<Ticket> {
     public String toString() {
         return text();
     }
+
+    public Station from(){
+        return trips.get(0).from();
+    }
+
+    public Station to(){
+        return trips.get(trips.size()-1).to();
+    }
+
+    public List<Station> stationsExtremity(){
+        return List.of(from(), to());
+    }
 }

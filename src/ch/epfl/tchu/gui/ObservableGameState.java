@@ -209,7 +209,13 @@ public class ObservableGameState {
     //Groupe 3
     private void updateTickets(PlayerState playerState) {
         if (!tickets.equals(playerState.tickets().toList())) {
-            tickets.setAll(playerState.tickets().toList());
+            for (Ticket ticket : playerState.tickets()) {
+                if (!tickets.contains(ticket)){
+                    tickets.add(ticket);
+                }
+            }
+            tickets.removeIf(ticket -> !playerState.tickets().contains(ticket));
+//            tickets.setAll(playerState.tickets().toList()); //Pose problèmes pour un ChangeListener
         }
     }
 
