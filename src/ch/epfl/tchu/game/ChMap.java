@@ -20,6 +20,20 @@ public final class ChMap {
         return ALL_TICKETS;
     }
 
+    public static boolean isForeign(Station station){
+        for (List<Station> foreignStation : FOREIGN_STATIONS) {
+            if (foreignStation.contains(station)) return true;
+        }
+        return false;
+    }
+
+    public static List<Station> getForeignStations(Station station){
+        for (List<Station> foreignStation : FOREIGN_STATIONS) {
+            if (foreignStation.contains(station)) return foreignStation;
+        }
+        return new ArrayList<>();
+    }
+
     // Stations - cities
     private static final Station BAD = new Station(0, "Baden");
     private static final Station BAL = new Station(1, "Bâle");
@@ -81,6 +95,13 @@ public final class ChMap {
     private static final List<Station> IT = List.of(IT1, IT2, IT3, IT4, IT5);
     private static final List<Station> FR = List.of(FR1, FR2, FR3, FR4);
 
+    private static final List<List<Station>> FOREIGN_STATIONS = List.of(DE, AT, IT, FR);
+    /*private static final List<Station> FOREIGN_STATIONS = List.of(
+            DE1, DE2, DE3, DE4, DE5,
+            AT1, AT2, AT3,
+            IT1, IT2, IT3, IT4, IT5,
+            FR1, FR2, FR3, FR4
+    );*/
     private static final List<Station> ALL_STATIONS = List.of(
             BAD, BAL, BEL, BER, BRI, BRU, COI, DAV, DEL, FRI, GEN, INT, KRE, LAU, LCF, LOC, LUC,
             LUG, MAR, NEU, OLT, PFA, SAR, SCE, SCZ, SIO, SOL, STG, VAD, WAS, WIN, YVE, ZOU, ZUR,

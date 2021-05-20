@@ -26,42 +26,42 @@ abstract class MapViewCreator {//TODO vérifier si bien abstract
         ImageView background = new ImageView();
         canvas.getChildren().add(background);
 
-        for (Station station : ChMap.stations()) {
+        /*for (Station station : ChMap.stations()) {
             Circle circle = new Circle(7);
             circle.setId(String.valueOf(station.id()));
             circle.getStyleClass().addAll("RED","filled");
-           /* gameState.tickets().addListener((ListChangeListener<Ticket>) c -> {
+           *//* gameState.tickets().addListener((ListChangeListener<Ticket>) c -> {
                 for (Ticket ticket : c.getList()) {
                     System.out.println(ticket);
                 }
 //                System.out.println(c);
                 System.out.println("listener");
-            });*/
+            });*//*
 //            canvas.getChildren().add(circle);
-        }
+        }*/
         gameState.tickets().addListener((ListChangeListener<Ticket>) c -> {
-//            System.out.println("added");
             while (c.next()){
-                System.out.println(c.getAddedSubList());
                 for (Ticket ticket : c.getAddedSubList()) {
                     for (Station station : ticket.stationsExtremity()) {
-                        Circle circle = new Circle(7);
-                        circle.setId(String.valueOf(station.id()));
-                        canvas.getChildren().add(circle);
+                        //Si c'est une station qui se trouve à l'étranger, il faut rajouter toutes les stations du pays
+                        if (ChMap.isForeign(station)){
+                            for (Station foreignStation : ChMap.getForeignStations(station)) {
+                                Circle circle = new Circle(11);
+                                circle.setId(String.valueOf(foreignStation.id()));
+                                circle.getStyleClass().add("station");
+                                canvas.getChildren().add(circle);
+                            }
+                        }
+                        //Si c'est une station suisse
+                        else {
+                            Circle circle = new Circle(7);
+                            circle.setId(String.valueOf(station.id()));
+                            circle.getStyleClass().add("station");
+                            canvas.getChildren().add(circle);
+                        }
                     }
                 }
             }
-//            System.out.println(c.getAddedSubList());
-            /*for (Ticket ticket : c.getAddedSubList()) {
-                System.out.println(ticket);
-            }*/
-//            System.out.println("ALL");
-//            System.out.println(c.getList());
-            /*for (Ticket ticket : c.getList()) {
-                System.out.println(ticket);
-            }*/
-//                System.out.println(c);
-//            System.out.println("listener");
         });
 
         for (Route r : ChMap.routes()) {

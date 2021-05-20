@@ -49,6 +49,10 @@ ImageView {
     visibility: visible;
 }
 
+.station {
+    -fx-fill: red;
+}
+
 /* Position of individual track segments */
 #BAD_BAL_1_1 { -fx-translate-x: 497; -fx-translate-y: 123; -fx-rotate: 27 }
 #BAD_BAL_1_2 { -fx-translate-x: 457; -fx-translate-y: 107; -fx-rotate: 17 }
