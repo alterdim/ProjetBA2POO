@@ -104,15 +104,41 @@ public final class Ticket implements Comparable<Ticket> {
         return text();
     }
 
-    public Station from(){
-        return trips.get(0).from();
+    /**
+     * Liste les stations de départs du ticket
+     * @return les stations de départ du ticket
+     */
+    public Set<Station> from(){
+        //Utilisation de Set pour éviter les duplicats
+        Set<Station> stations = new HashSet<>();
+        for (Trip trip : trips) {
+            stations.add(trip.from());
+        }
+        return stations;
     }
 
-    public Station to(){
-        return trips.get(trips.size()-1).to();
+    /**
+     * Liste les stations d'arrivé du ticket
+     * @return les stations d'arrivé du ticket
+     */
+    public Set<Station> to(){
+        //Utilisation de Set pour éviter les duplicats
+        Set<Station> stations = new HashSet<>();
+        for (Trip trip : trips) {
+            stations.add(trip.to());
+        }
+        return stations;
     }
 
-    public List<Station> stationsExtremity(){
-        return List.of(from(), to());
+    /**
+     * Récupère une liste contenant les stations d'arrivés et de départ du ticket
+     * @return Liste contenant toutes les stations associés au billet
+     */
+    public List<Station> stations(){
+        List<Station> stations = new ArrayList<>();
+        stations.addAll(from());
+        stations.addAll(to());
+
+        return stations;
     }
 }

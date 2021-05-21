@@ -2,7 +2,6 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import com.sun.javafx.property.adapter.PropertyDescriptor;
 import javafx.collections.ListChangeListener;
 import javafx.scene.shape.Rectangle;
 import javafx.beans.property.ObjectProperty;
@@ -11,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
@@ -26,34 +26,16 @@ abstract class MapViewCreator {//TODO vérifier si bien abstract
         ImageView background = new ImageView();
         canvas.getChildren().add(background);
 
-        /*for (Station station : ChMap.stations()) {
-            Circle circle = new Circle(7);
-            circle.setId(String.valueOf(station.id()));
-            circle.getStyleClass().addAll("RED","filled");
-           *//* gameState.tickets().addListener((ListChangeListener<Ticket>) c -> {
-                for (Ticket ticket : c.getList()) {
-                    System.out.println(ticket);
-                }
-//                System.out.println(c);
-                System.out.println("listener");
-            });*//*
-//            canvas.getChildren().add(circle);
-        }*/
+        //Contient les stations ou un ticket va
+        List<Station> stationsOnTicket = new ArrayList<>();
+
         gameState.tickets().addListener((ListChangeListener<Ticket>) c -> {
-            while (c.next()){
+            while (c.next()) {
                 for (Ticket ticket : c.getAddedSubList()) {
-                    for (Station station : ticket.stationsExtremity()) {
-                        //Si c'est une station qui se trouve à l'étranger, il faut rajouter toutes les stations du pays
-                        if (ChMap.isForeign(station)){
-                            for (Station foreignStation : ChMap.getForeignStations(station)) {
-                                Circle circle = new Circle(11);
-                                circle.setId(String.valueOf(foreignStation.id()));
-                                circle.getStyleClass().add("station");
-                                canvas.getChildren().add(circle);
-                            }
-                        }
-                        //Si c'est une station suisse
-                        else {
+                    for (Station station : ticket.stations()) {
+                        //Vérifie que aucun billet ne va déjà à cette station (pour éviter des éléments superposé)
+                        if (!stationsOnTicket.contains(station)) {
+                            stationsOnTicket.add(station);
                             Circle circle = new Circle(7);
                             circle.setId(String.valueOf(station.id()));
                             circle.getStyleClass().add("station");
