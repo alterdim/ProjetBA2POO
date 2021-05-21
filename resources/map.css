@@ -50,7 +50,8 @@ ImageView {
 }
 
 .station {
-    -fx-fill: red;
+    -fx-fill: #ff0000;
+    -fx-opacity: 0.3;
 }
 
 /* Position of individual track segments */

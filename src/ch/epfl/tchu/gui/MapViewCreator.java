@@ -36,7 +36,7 @@ abstract class MapViewCreator {//TODO vérifier si bien abstract
                         //Vérifie que aucun billet ne va déjà à cette station (pour éviter des éléments superposé)
                         if (!stationsOnTicket.contains(station)) {
                             stationsOnTicket.add(station);
-                            Circle circle = new Circle(7);
+                            Circle circle = new Circle(10);
                             circle.setId(String.valueOf(station.id()));
                             circle.getStyleClass().add("station");
                             canvas.getChildren().add(circle);
