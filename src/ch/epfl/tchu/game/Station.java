@@ -8,8 +8,6 @@ import ch.epfl.tchu.Preconditions;
  *
  *  @author Louis Gerard (296782)
  *  @author Célien Muller (310777)
- *
- *
  */
 
 public final class Station {
