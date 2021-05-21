@@ -22,6 +22,10 @@ public final class FakeServer {
             "UPDATE_STATE 36:6,7,4,7,1;97;0:0:0;4;:0;4;: ;0,1,5,5;",
             "CHOOSE_INITIAL_TICKETS");
 
+    /** Lance un serveur de test
+     * @param args Arguments (ici inutiles)
+     * @throws IOException Lance une erreur si les sockets ne peuvent pas être ouverts correctement
+     */
     public static void main(String[] args) throws IOException {
         try (ServerSocket s0 = new ServerSocket(5108);
              Socket s = s0.accept();
