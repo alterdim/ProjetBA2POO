@@ -15,6 +15,9 @@ import java.util.List;
 
 import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
 
+/**
+ * Permet de créer la vue de la carte
+ */
 abstract class MapViewCreator {//TODO vérifier si bien abstract
 
     public static final int CAR_CIRCLE_RADIUS = 3;
