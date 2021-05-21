@@ -45,7 +45,7 @@ public class SpectatorMain extends Application {
 
         Stage mainWindow = new Stage();
         //Titre du stage
-        mainWindow.setTitle(GAME_CLIENT_NAME);
+        mainWindow.setTitle(GAME_SPECTATOR_NAME);
         //Création d'un pane
         TilePane pane = new TilePane();
 
