@@ -82,6 +82,9 @@ public final class Trail {
         return stationTo;
     }
 
+    /**
+     * @return Renvoie la longueur de la route
+     */
     public int length(){
         return length;
     }

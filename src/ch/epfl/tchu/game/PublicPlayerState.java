@@ -2,14 +2,13 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
-import java.util.Collections;
 import java.util.List;
 
 import static ch.epfl.tchu.game.Constants.INITIAL_CAR_COUNT;
 
 /**
  * partie publique de l'état d'un joueur
- * <p>
+ *
  * Créé le 08.03.2021 à 13:01
  *
  * @author Louis Gerard (296782)

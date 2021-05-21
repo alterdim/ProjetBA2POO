@@ -15,10 +15,22 @@ import java.util.List;
 
 import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
 
-abstract class MapViewCreator {//TODO vérifier si bien abstract
+/**
+ * Permet de créer la vue de la carte
+ */
+abstract class MapViewCreator {
 
+    /**
+     * Constante qui régit la taille des cercles des wagons
+     */
     public static final int CAR_CIRCLE_RADIUS = 3;
 
+    /**
+     * @param gameState L'état de jeu observable
+     * @param claimRouteHandler Le handler de prise de route
+     * @param cardChooser Le cardChooser (voir plus bas)
+     * @return Retourne un pane qui contient la vue de la carte (contenant routes, stations...)
+     */
     public static Pane createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHandler, CardChooser cardChooser) {
         Pane canvas = new Pane();
         canvas.getStylesheets().add("map.css");
@@ -105,6 +117,9 @@ abstract class MapViewCreator {//TODO vérifier si bien abstract
         cardChooser.chooseCards(possibleClaimCards, chooseCardsHandler);
     }
 
+    /**
+     * Interface permettant de gérer le choix de cartes parmi une liste.
+     */
     @FunctionalInterface
     interface CardChooser {
         void chooseCards(List<SortedBag<Card>> options,
