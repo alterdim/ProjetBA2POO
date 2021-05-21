@@ -11,7 +11,7 @@ import static ch.epfl.tchu.game.Constants.ADDITIONAL_TUNNEL_CARDS;
 
 /**
  * Représente l' état complet d' un joueur
- * <p>
+ *
  * Créé le 08.03.2021 à 14:02
  *
  * @author Louis Gerard (296782)

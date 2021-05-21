@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 /**
  * Représente une partie de tCHu
- * <p>
+ *
  * Fichier créé à 14:49 le 22/03/2021
  *
  * @author Louis Gerard (296782)
