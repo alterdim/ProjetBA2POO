@@ -9,3 +9,7 @@ Nous avons été contraint de définir Platform.setImplicitExit(false); pour per
 
 Nous renseignons le choix du pseudo (choisi grâce à la page de démarrage) en paramètre de RemotePlayerClient. Ce pseudo est renvoyé lorsque le client reçoit la nouvelle commande CHOOSE_USERNAME, définie dans MessageId. Le RemotePlayerProxy qui a envoyé cette commande attend attend la réception de la réponse. Cette réponse modifie la Map de pseudo qui est renseigné à la méthode play() de Game définie dans ServerMain.
 Nous avons choisi de ne pas modifier l'interface Player, car le choix du pseudo est inutile dans les autres implémentations de cette interface.
+
+
+*Ajout d'un indicateur concernant les stations de départs et d'arrivées associées aux tickets sélectionné par le joueur
+Il a fallu récupéré les coordonnées de chaque stations, elles ont été renseignée dans map.css, en s'inspirant de ce qui été utilisé pour les tronçons, associé avec leurs id (le nom n'est pas unique et en plus les accents auraient posé problème). Ensuite il a fallu rajouter des méthodes à la classe Ticket permettant de récupérer les stations. Dans MapViewCreator, nous avons rajouter un ChangeListener pour agir dès que la main du joueur à de nouveaux tickets, un cercle est rajouter à la carte, avec des propriétés suffisamment similaire aux tronçons pour ne pas être expliquer.

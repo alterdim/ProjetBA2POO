@@ -11,7 +11,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="JUnit 5.7.0" level="project" />
-    <orderEntry type="library" name="javafx-swt" level="application" />
-    <orderEntry type="library" exported="" name="OpenJFX 11" level="application" />
+    <orderEntry type="library" name="Open JFX 11" level="application" />
   </component>
 </module>
