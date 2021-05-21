@@ -21,7 +21,7 @@ import static ch.epfl.tchu.gui.StringsFr.*;
 
 /**
  * Contient le programme principal du serveur tCHu.
- *
+ * <p>
  * Créé le 10.05.2021 à 16:20
  *
  * @author Louis Gerard (296782)
@@ -98,11 +98,8 @@ public class ServerMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             mainWindow.hide();
-//            setSpectators(playersNameMap);
-            startGame(playersNameMap);
-//            while (true) {
-            askSpectators(playersNameMap);
-//            }
+            new Thread(() -> startGame(playersNameMap)).start();
+            new Thread(() -> addSpectator(playersNameMap)).start();
         });
         pane.getChildren().add(startButton);
 
@@ -113,33 +110,31 @@ public class ServerMain extends Application {
     }
 
     private void startGame(Map<PlayerId, String> playersNameMap) {
-        new Thread(() -> {
-            try {
-                ServerSocket serverSocket = new ServerSocket(5108);
-                Socket socket = serverSocket.accept();
+        try {
+            ServerSocket serverSocket = new ServerSocket(5108);
+            Socket socket = serverSocket.accept();
 
-                Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
-                Player p1 = new GraphicalPlayerAdapter();
-                playersMap.put(PLAYER_1, p1);
-                RemotePlayerProxy p2 = new RemotePlayerProxy(socket);
-                playersMap.put(PLAYER_2, p2);
-                playersNameMap.put(PLAYER_2, p2.chooseUsername());
+            Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
+            Player p1 = new GraphicalPlayerAdapter();
+            playersMap.put(PLAYER_1, p1);
+            RemotePlayerProxy p2 = new RemotePlayerProxy(socket);
+            playersMap.put(PLAYER_2, p2);
+            playersNameMap.put(PLAYER_2, p2.chooseUsername());
 
-                //Uncomment this line to activate spectator
+            //Uncomment this line to activate spectator
                 /*Socket socket2 = serverSocket2.accept();
                 Player sp = new RemotePlayerProxy(socket2);
                 spectators.add(sp);
                 sp.initPlayers(PLAYER_1, playersNameMap);*/
 
 
-                Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random(), spectators);
-            } catch (IOException e) {
-                throw new Error(e);
-            }
-        }).start();
+            Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random(), spectators);
+        } catch (IOException e) {
+            throw new Error(e);
+        }
     }
 
-    private void askSpectators(Map<PlayerId, String> playersNameMap) {
+  /*  private void askSpectators(Map<PlayerId, String> playersNameMap) {
         new Thread(() -> {
             try {
                 ServerSocket serverSocket2 = new ServerSocket(5109);
@@ -153,6 +148,22 @@ public class ServerMain extends Application {
                 throw new Error(e);
             }
         }).start();
+    }*/
+
+    private void addSpectator(Map<PlayerId, String> playersNameMap) {
+        try {
+            ServerSocket serverSocket2 = new ServerSocket(5109);
+            System.out.println("THREAD bed accept");
+            Socket socket2 = serverSocket2.accept();
+            System.out.println("THREAD");
+
+            Player sp = new RemotePlayerProxy(socket2);
+            spectators.add(sp);
+            sp.initPlayers(PLAYER_1, playersNameMap);
+
+        } catch (IOException e) {
+            throw new Error(e);
+        }
     }
 
 }
