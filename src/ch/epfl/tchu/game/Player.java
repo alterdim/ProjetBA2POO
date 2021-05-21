@@ -56,7 +56,7 @@ public interface Player {
     void setInitialTicketChoice(SortedBag<Ticket> tickets);
 
     /**
-     * demande au joueur quels billets qu'on lui a distribué initialement(au début de la partie) il garde
+     * @return Retourne les billets lorsqu'au début de partie on demande au joueur quels billets qu'on lui a distribué initialement(au début de la partie) il garde
      */
     SortedBag<Ticket> chooseInitialTickets();
 
@@ -79,8 +79,9 @@ public interface Player {
      */
     int drawSlot();
 
+
     /**
-     * est appelée lorsque le joueur a décidé de (tenter de) s'emparer d'une route, afin de savoir de quelle route il s'agit
+     * @return Retourne la route choisie par le joueur
      */
     Route claimedRoute();
 

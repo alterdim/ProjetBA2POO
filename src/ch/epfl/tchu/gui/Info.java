@@ -84,6 +84,11 @@ public final class Info {
         return String.format(DRAW, names, points);
     }
 
+    /**
+     * @param cards Les cartes dont il faut générer une chaîne de caractères (string)
+     * @return Retourne une chaîne de caractères "propre" contenant les cartes données en argument sous la forme
+     * 1 rouge, 1 bleue...
+     */
     public static String generateCardString(SortedBag<Card> cards) {
         String cardString = "";
         List<Card> presentCards = new ArrayList<>();

@@ -13,6 +13,10 @@ import java.net.NetworkInterface;
  * @author Célien Muller (310777)
  */
 public final class ShowMyIpAddress {
+    /** Test de serveur permettant de montrer l'adresse ip.
+     * @param args ici inutiles
+     * @throws IOException si les sockets n'ont pas pu s'ouvrir ou se fermer correctement
+     */
     public static void main(String[] args) throws IOException {
         NetworkInterface.networkInterfaces()
                 .filter(i -> {
