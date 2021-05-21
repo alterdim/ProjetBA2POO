@@ -20,7 +20,7 @@ import static ch.epfl.tchu.gui.StringsFr.*;
 
 
 /**
- * Contient le programme principal du serveur tCHu. .
+ * Contient le programme principal du serveur tCHu.
  *
  * Créé le 10.05.2021 à 16:20
  *
@@ -28,9 +28,11 @@ import static ch.epfl.tchu.gui.StringsFr.*;
  * @author Célien Muller (310777)
  */
 public class ServerMain extends Application {
+    private List<Player> spectators;
 
     /**
      * Démarre l' application graphique
+     *
      * @param args Paramètres de l' application
      */
     public static void main(String[] args) {
@@ -40,6 +42,7 @@ public class ServerMain extends Application {
 
     /**
      * Démarre le client
+     *
      * @param primaryStage Scène principale de l' interface (ignoré dans le cas présent)
      */
     @Override
@@ -47,6 +50,7 @@ public class ServerMain extends Application {
         Platform.setImplicitExit(false);
         List<String> parameters = getParameters().getRaw();
         Map<PlayerId, String> playersNameMap = new EnumMap<>(PlayerId.class);
+        this.spectators = new ArrayList<>();
         playersNameMap.put(PLAYER_1, "Ada");
         playersNameMap.put(PLAYER_2, "Charles");
         switch (parameters.size()) {
@@ -94,7 +98,11 @@ public class ServerMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             mainWindow.hide();
+//            setSpectators(playersNameMap);
             startGame(playersNameMap);
+//            while (true) {
+            askSpectators(playersNameMap);
+//            }
         });
         pane.getChildren().add(startButton);
 
@@ -104,10 +112,12 @@ public class ServerMain extends Application {
         mainWindow.setOnCloseRequest(windowsEvent -> System.exit(0));
     }
 
-    private void startGame(Map<PlayerId, String> playersNameMap){
-        new Thread(()->{
-            try (ServerSocket serverSocket = new ServerSocket(5108);
-                 Socket socket = serverSocket.accept()) {
+    private void startGame(Map<PlayerId, String> playersNameMap) {
+        new Thread(() -> {
+            try {
+                ServerSocket serverSocket = new ServerSocket(5108);
+                Socket socket = serverSocket.accept();
+
                 Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
                 Player p1 = new GraphicalPlayerAdapter();
                 playersMap.put(PLAYER_1, p1);
@@ -115,10 +125,34 @@ public class ServerMain extends Application {
                 playersMap.put(PLAYER_2, p2);
                 playersNameMap.put(PLAYER_2, p2.chooseUsername());
 
-                Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random());
+                //Uncomment this line to activate spectator
+                /*Socket socket2 = serverSocket2.accept();
+                Player sp = new RemotePlayerProxy(socket2);
+                spectators.add(sp);
+                sp.initPlayers(PLAYER_1, playersNameMap);*/
+
+
+                Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random(), spectators);
             } catch (IOException e) {
                 throw new Error(e);
             }
         }).start();
     }
+
+    private void askSpectators(Map<PlayerId, String> playersNameMap) {
+        new Thread(() -> {
+            try {
+                ServerSocket serverSocket2 = new ServerSocket(5109);
+                Socket socket2 = serverSocket2.accept();
+
+                Player sp = new RemotePlayerProxy(socket2);
+                spectators.add(sp);
+                sp.initPlayers(PLAYER_1, playersNameMap);
+
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }).start();
+    }
+
 }
