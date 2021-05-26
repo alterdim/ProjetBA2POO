@@ -41,9 +41,8 @@ public final class Game {
         Map<PlayerId, Info> playerInfos = new EnumMap<>(PlayerId.class);
 
         for (PlayerId p : players.keySet()) {
-            Player player = players.get(p);
             playerInfos.put(p, new Info(playerNames.get(p)));
-            player.initPlayers(p, playerNames);
+            players.get(p).initPlayers(p, playerNames);
         }
 
         //Annoncer le premier joueur
@@ -51,17 +50,14 @@ public final class Game {
 
         //Générer les premiers tickets
         for (PlayerId p : players.keySet()) {
-            Player player = players.get(p);
-
-            player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
+            players.get(p).setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
             gameState = gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
             updateEveryone(players, gameState);
-            gameState = gameState.withInitiallyChosenTickets(p, player.chooseInitialTickets());
-
         }
 
         //Annoncer le nombre de tickets gardés
         for (PlayerId p : players.keySet()) {
+            gameState = gameState.withInitiallyChosenTickets(p, players.get(p).chooseInitialTickets());
             tellEveryone(players,
                     playerInfos.get(p).keptTickets(gameState.playerState(p).ticketCount()));
         }
