@@ -4,6 +4,7 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +23,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
+
     /**
      * @param id       L'identification unique de la route. Chaine de caractères, pas un int comme les stations !
      * @param station1 Station de départ
@@ -97,6 +99,7 @@ public final class Route {
 
     /**
      * Retourne la station opposée à celle donnée en argument
+     *
      * @param station La station de départ ou d'arrivée de la route.
      * @return Renvoie la station de départ si l'argument est la station d'arrivée et vice-versa.
      * @throws IllegalArgumentException si la station n'est ni l'arrivée ni le départ.
@@ -106,57 +109,39 @@ public final class Route {
         return station.equals(station1) ? station2 : station1;
     }
 
-
-//TODO correction lignes qui se ressemblent a double
     /**
      * @return Retourne toutes les combinaisons de cartes utilisables pour capturer la route dans une List de SortedBags
      */
     public List<SortedBag<Card>> possibleClaimCards() {
-        SortedBag.Builder<Card> cardsB;
-        boolean rainbow = color == null;
-        //Si la route ne possède pas le couleur, le flag rainbow s'active pour autoriser toutes les couleurs de cartes.
         List<SortedBag<Card>> bagList = new ArrayList<>();
-        SortedBag<Card> bag;
-        if (this.level.equals(Level.UNDERGROUND)) {
-            for (int i = 0; i <= length; i++) {
-                //A chaque itération, le builder ainsi que le bag sont remis à zéro.
-                cardsB = new SortedBag.Builder<>();
-                if (!rainbow) {
-                    cardsB.add(i, Card.LOCOMOTIVE);
-                    bag = cardsB.add(length - i, Card.of(color)).build();
-                    bagList.add(bag);
-                } else {
-                    for (Color c : Color.values()) {
-                        cardsB = new SortedBag.Builder<>();
-                        // pour éviter les doublons de mains à n locomotives, on arrête la fonction prématurément quand
-                        // arrive i = length.
-                        if (i == length) {
-                            bag = cardsB.add(i, Card.LOCOMOTIVE).build();
-                            bagList.add(bag);
-                            return bagList;
-                        }
-                        cardsB.add(i, Card.LOCOMOTIVE);
-                        bag = cardsB.add(length - i, Card.of(c)).build();
-                        bagList.add(bag);
-                    }
-                }
-
-            }
-        } else {
-            cardsB = new SortedBag.Builder<>();
-            if (!rainbow) {
-                cardsB.add(length, Card.of(color));
-                bag = cardsB.build();
-                bagList.add(bag);
-            } else {
-                for (Color c : Color.values()) {
-                    cardsB = new SortedBag.Builder<>();
-                    bag = cardsB.add(length, Card.of(c)).build();
-                    bagList.add(bag);
-                }
+        //Route sans couleurs
+        if (this.color==null){
+            //Rajoute toutes les cartes de couleurs
+            for (Card car : Card.CARS) {
+                bagList.add(SortedBag.of(length, car));
             }
         }
-        //On itère de 0 à la longueur pour commencer par les mains qui utilisent le moins de locomotives.
+        //Route avec couleur
+        else {
+            //Rajoute la carte avec la couleur de la route
+            bagList.add(SortedBag.of(length, Card.of(color)));
+        }
+
+        //Tunnel, remplace les cartes de couleurs avec des cartes locomotives
+        if (level.equals(Level.UNDERGROUND)){
+            for (SortedBag<Card> cards : List.copyOf(bagList)) {
+                for (int i = 1; i < length; i++) {
+                    bagList.add(SortedBag.of(length-i, cards.get(i), i, Card.LOCOMOTIVE));
+                }
+            }
+            bagList.add(SortedBag.of(length, Card.LOCOMOTIVE));
+        }
+
+        // Trie la liste en fonction du nombre de locomotives
+        bagList.sort(
+                Comparator.comparingInt(cs -> cs.countOf(Card.LOCOMOTIVE))
+        );
+
         return bagList;
     }
 
