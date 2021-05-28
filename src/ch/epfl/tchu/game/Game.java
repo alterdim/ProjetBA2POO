@@ -71,7 +71,6 @@ public final class Game {
         while (endingGameTrigger < 2) {
             Player currentPlayer = players.get(gameState.currentPlayerId());
             tellEveryone(players, playerInfos.get(gameState.currentPlayerId()).canPlay());
-            System.out.println(gameState.currentPlayerState().tickets());
 
             updateEveryone(players, gameState);
             switch (currentPlayer.nextTurn()) {
