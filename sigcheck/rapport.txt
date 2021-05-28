@@ -1,3 +1,5 @@
+*Ajout titre du jeu dans la fenêtre
+
 *Ajout de page de démarrage, permettant de modifier différents paramètres:
 -Client : choix du pseudo, adresse et port du serveur
 -Server : choix du pseudo
