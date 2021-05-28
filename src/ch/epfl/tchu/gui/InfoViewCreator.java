@@ -18,8 +18,12 @@ import java.util.Map;
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
  */
-abstract class InfoViewCreator {
+class InfoViewCreator {
     public static final int PLAYER_CIRCLE_RADIUS = 5;
+
+    private InfoViewCreator(){
+
+    }
 
     /**
      * Informations concernant l'état de la partie
