@@ -210,7 +210,7 @@ public class ObservableGameState {
     private void updateTickets(PlayerState playerState) {
         if (!tickets.equals(playerState.tickets().toList())) {
             for (Ticket ticket : playerState.tickets()) {
-                if (!tickets.contains(ticket)) {
+                if (playerState.tickets().countOf(ticket) != Collections.frequency(tickets, ticket)) {
                     tickets.add(ticket);
                 }
             }
