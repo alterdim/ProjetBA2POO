@@ -52,12 +52,17 @@ public final class Game {
         for (PlayerId p : players.keySet()) {
             players.get(p).setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
             gameState = gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
-            updateEveryone(players, gameState);
         }
 
-        //Annoncer le nombre de tickets gardés
+        updateEveryone(players, gameState);
+
+        //Demande aux joueurs quels tickets ils souhaitent conserver
         for (PlayerId p : players.keySet()) {
             gameState = gameState.withInitiallyChosenTickets(p, players.get(p).chooseInitialTickets());
+        }
+
+        //Annonce le nombre de tickets gardés
+        for (PlayerId p : players.keySet()) {
             tellEveryone(players,
                     playerInfos.get(p).keptTickets(gameState.playerState(p).ticketCount()));
         }
