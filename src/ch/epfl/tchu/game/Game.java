@@ -61,7 +61,7 @@ public final class Game {
             gameState = gameState.withInitiallyChosenTickets(p, players.get(p).chooseInitialTickets());
         }
 
-        //Annonce le nombre de tickets gardés
+        //Annonce le nombre de tickets gardés, une fois que tous les joueurs ont fait leurs choix
         for (PlayerId p : players.keySet()) {
             tellEveryone(players,
                     playerInfos.get(p).keptTickets(gameState.playerState(p).ticketCount()));
