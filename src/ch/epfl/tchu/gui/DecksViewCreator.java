@@ -23,7 +23,8 @@ import javafx.scene.text.Text;
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
  */
-abstract class DecksViewCreator {
+class DecksViewCreator {
+    private DecksViewCreator(){}
 
     /**
      * Gère le visuel de la main du joueur

@@ -18,12 +18,14 @@ import ch.epfl.tchu.gui.ActionHandlers.ClaimRouteHandler;
 /**
  * Permet de créer la vue de la carte
  */
-abstract class MapViewCreator {
+class MapViewCreator {
 
     /**
      * Constante qui régit la taille des cercles des wagons
      */
     public static final int CAR_CIRCLE_RADIUS = 3;
+
+    private MapViewCreator(){}
 
     /**
      * @param gameState L'état de jeu observable
