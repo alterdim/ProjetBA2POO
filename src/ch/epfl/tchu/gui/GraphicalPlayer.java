@@ -183,7 +183,7 @@ public class GraphicalPlayer {
 
         //Texte
         TextFlow chooseTicketsTextFlow = new TextFlow();
-        Text chooseTicketsText = new Text(String.format(StringsFr.CHOOSE_TICKETS, ticketCount, plural(ticketCount))); //TODO DEMANDER ASSITANT
+        Text chooseTicketsText = new Text(String.format(StringsFr.CHOOSE_TICKETS, ticketCount, plural(ticketCount)));
         chooseTicketsTextFlow.getChildren().add(chooseTicketsText);
 
         chooseTicketsVBox.getChildren().add(chooseTicketsTextFlow);
