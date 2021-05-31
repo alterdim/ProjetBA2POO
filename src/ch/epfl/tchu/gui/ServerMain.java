@@ -115,7 +115,7 @@ public class ServerMain extends Application {
     private void startGame() {
         try {
             ServerSocket serverSocket = new ServerSocket(5108);
-            for (int i = 0; i < ALL.size(); i++) {
+            for (int i = 0; i < COUNT; i++) {
                 if (i == 0) players.put(ALL.get(i), new GraphicalPlayerAdapter());
                 else addPlayer(serverSocket, ALL.get(i));
             }

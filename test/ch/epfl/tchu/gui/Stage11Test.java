@@ -21,23 +21,31 @@ import static ch.epfl.tchu.game.PlayerId.*;
  * @author Célien Muller (310777)
  */
 public final class Stage11Test extends Application {
-    public static void main(String[] args) { launch(args); }
     private List<Player> spectators;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) {
-        spectators=new ArrayList<>();
+        spectators = new ArrayList<>();
         SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
         Map<PlayerId, String> names = new EnumMap<>(PlayerId.class);
         names.put(PLAYER_1, "Ada");
         names.put(PLAYER_2, "Bob");
-        names.put(PLAYER_3, "Charles");
+        if (COUNT == 3) {
+            names.put(ALL.get(2), "Charles");
+        }
 
         Map<PlayerId, Player> players =
-                Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
-                        PLAYER_2, new GraphicalPlayerAdapter(),
-                        PLAYER_3, new GraphicalPlayerAdapter()
-                );
+                new HashMap<>(Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
+                        PLAYER_2, new GraphicalPlayerAdapter()
+                ));
+
+        if (COUNT == 3) {
+            players.put(ALL.get(2), new GraphicalPlayerAdapter());
+        }
         Random rng = new Random();
 
 
@@ -64,7 +72,7 @@ public final class Stage11Test extends Application {
         // create and set on action of event
         pseudoButton.setOnAction(e -> {
             // show the text input dialog
-            Optional<String> result =playerNameInputDialog.showAndWait();
+            Optional<String> result = playerNameInputDialog.showAndWait();
 
             if (result.isPresent()) {
                 // set the text of the label
