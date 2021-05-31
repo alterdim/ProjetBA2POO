@@ -7,6 +7,9 @@ import java.util.List;
 public final class Constants {
     private Constants() {}
 
+    public static final int PLAYER_NUMBER_MIN = 2;
+    public static final int PLAYER_NUMBER_MAX = 3;
+
     /**
      * Nombre de cartes wagon de chaque couleur.
      */

@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
 
 import java.util.*;
 
-import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
+import static ch.epfl.tchu.game.Constants.*;
 
 /**
  * Représente l' état observable d' une partie de tCHu.
@@ -243,7 +243,12 @@ public class ObservableGameState {
      * @return Boolean vrai si la route n appartient à personne et, dans le cas d une route double, sa voisine non plus.
      */
     private boolean checkClaimDoubleRoute(Route route) {
-        return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)).get() == null;
+        if (PlayerId.COUNT == PLAYER_NUMBER_MIN) {
+            return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)).get() == null;
+        }
+        else/* if (PlayerId.COUNT == PLAYER_NUMBER_MAX)*/ {
+            return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)).get() != player;
+        }
     }
 
     /**

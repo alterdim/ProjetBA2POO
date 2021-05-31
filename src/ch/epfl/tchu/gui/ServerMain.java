@@ -21,13 +21,15 @@ import static ch.epfl.tchu.gui.StringsFr.*;
 
 /**
  * Contient le programme principal du serveur tCHu.
- * <p>
+ *
  * Créé le 10.05.2021 à 16:20
  *
  * @author Louis Gerard (296782)
  * @author Célien Muller (310777)
  */
 public class ServerMain extends Application {
+    private final Map<PlayerId, Player> players = new EnumMap<>(PlayerId.class);
+    private final Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
     private List<Player> spectators;
 
     /**
@@ -49,17 +51,17 @@ public class ServerMain extends Application {
     public void start(Stage primaryStage) {
         Platform.setImplicitExit(false);
         List<String> parameters = getParameters().getRaw();
-        Map<PlayerId, String> playersNameMap = new EnumMap<>(PlayerId.class);
+//        Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
         this.spectators = new ArrayList<>();
-        playersNameMap.put(PLAYER_1, "Ada");
-        playersNameMap.put(PLAYER_2, "Charles");
+        playerNames.put(PLAYER_1, "Ada");
+        playerNames.put(PLAYER_2, "Charles");
         switch (parameters.size()) {
             case 2:
-                playersNameMap.put(PLAYER_1, parameters.get(0));
-                playersNameMap.put(PLAYER_2, parameters.get(1));
+                playerNames.put(PLAYER_1, parameters.get(0));
+                playerNames.put(PLAYER_2, parameters.get(1));
                 break;
             case 1:
-                playersNameMap.put(PLAYER_1, parameters.get(0));
+                playerNames.put(PLAYER_1, parameters.get(0));
                 break;
         }
 
@@ -78,7 +80,7 @@ public class ServerMain extends Application {
         playerNameInputDialog.setGraphic(null);
 
 
-        Label pseudoPlayer = new Label(playersNameMap.get(PLAYER_1));
+        Label pseudoPlayer = new Label(playerNames.get(PLAYER_1));
         Button pseudoButton = new Button(CHOOSE);
         pseudoButton.setOnAction(e -> {
             Optional<String> result = playerNameInputDialog.showAndWait();
@@ -86,7 +88,7 @@ public class ServerMain extends Application {
             if (result.isPresent()) {
                 String username = playerNameInputDialog.getEditor().getText();
                 if (username.length() > 0) {
-                    playersNameMap.put(PLAYER_1, username);
+                    playerNames.put(PLAYER_1, username);
                     pseudoPlayer.setText(username);
                 }
             }
@@ -98,8 +100,8 @@ public class ServerMain extends Application {
         Button startButton = new Button(START);
         startButton.setOnAction(e -> {
             mainWindow.hide();
-            new Thread(() -> startGame(playersNameMap)).start();
-            new Thread(() -> addSpectator(playersNameMap)).start();
+            new Thread(this::startGame).start();
+            new Thread(this::startSpectator).start();
         });
         pane.getChildren().add(startButton);
 
@@ -109,61 +111,46 @@ public class ServerMain extends Application {
         mainWindow.setOnCloseRequest(windowsEvent -> System.exit(0));
     }
 
-    private void startGame(Map<PlayerId, String> playersNameMap) {
+
+    private void startGame() {
         try {
             ServerSocket serverSocket = new ServerSocket(5108);
-            Socket socket = serverSocket.accept();
+            for (int i = 0; i < ALL.size(); i++) {
+                if (i == 0) players.put(ALL.get(i), new GraphicalPlayerAdapter());
+                else addPlayer(serverSocket, ALL.get(i));
+            }
+        } catch (IOException e) {
+            throw new Error(e);
+        }
 
-            Map<PlayerId, Player> playersMap = new EnumMap<>(PlayerId.class);
-            Player p1 = new GraphicalPlayerAdapter();
-            playersMap.put(PLAYER_1, p1);
-            RemotePlayerProxy p2 = new RemotePlayerProxy(socket);
-            playersMap.put(PLAYER_2, p2);
-            playersNameMap.put(PLAYER_2, p2.chooseUsername());
-
-            //Uncomment this line to activate spectator
-                /*Socket socket2 = serverSocket2.accept();
-                Player sp = new RemotePlayerProxy(socket2);
-                spectators.add(sp);
-                sp.initPlayers(PLAYER_1, playersNameMap);*/
+        Game.play(players, playerNames, SortedBag.of(ChMap.tickets()), new Random(), spectators);
+    }
 
 
-            Game.play(playersMap, playersNameMap, SortedBag.of(ChMap.tickets()), new Random(), spectators);
+    private void addPlayer(ServerSocket serverSocket, PlayerId playerId) throws IOException {
+        Socket socket = serverSocket.accept();
+        RemotePlayerProxy p = new RemotePlayerProxy(socket);
+        players.put(playerId, p);
+        playerNames.put(playerId, p.chooseUsername());
+    }
+
+    private void startSpectator() {
+        try {
+            ServerSocket serverSocket = new ServerSocket(5109);
+            while (true){
+                addSpectator(serverSocket);
+            }
         } catch (IOException e) {
             throw new Error(e);
         }
     }
 
-  /*  private void askSpectators(Map<PlayerId, String> playersNameMap) {
-        new Thread(() -> {
-            try {
-                ServerSocket serverSocket2 = new ServerSocket(5109);
-                Socket socket2 = serverSocket2.accept();
+    private void addSpectator(ServerSocket serverSocket) throws IOException {
+        Socket socket = serverSocket.accept();
 
-                Player sp = new RemotePlayerProxy(socket2);
-                spectators.add(sp);
-                sp.initPlayers(PLAYER_1, playersNameMap);
-
-            } catch (IOException e) {
-                throw new Error(e);
-            }
-        }).start();
-    }*/
-
-    private void addSpectator(Map<PlayerId, String> playersNameMap) {
-        try {
-            ServerSocket serverSocket2 = new ServerSocket(5109);
-            System.out.println("THREAD bed accept");
-            Socket socket2 = serverSocket2.accept();
-            System.out.println("THREAD");
-
-            Player sp = new RemotePlayerProxy(socket2);
-            spectators.add(sp);
-            sp.initPlayers(PLAYER_1, playersNameMap);
-
-        } catch (IOException e) {
-            throw new Error(e);
-        }
+        Player spec = new RemotePlayerProxy(socket);
+        spectators.add(spec);
+        spec.initPlayers(ALL.get(0), playerNames);
     }
 
 }

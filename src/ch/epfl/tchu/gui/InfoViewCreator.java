@@ -9,6 +9,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -79,7 +80,7 @@ class InfoViewCreator {
 
         //Permettrait d'ajouter plus de joueurs
         PlayerId lastPlayerId = ownerPlayerId;
-        for (int i = 0; i < PlayerId.COUNT; i++) {
+        for (int i = 0; i < playerNames.size(); i++) {
             playersBox.getChildren().add(playerProperties(lastPlayerId, playerNames, observableGameState));
             lastPlayerId=lastPlayerId.next();
         }

@@ -49,6 +49,10 @@ ImageView {
     visibility: visible;
 }
 
+.PLAYER_3 .car {
+    visibility: visible;
+}
+
 .station {
     -fx-fill: #ff0000;
     -fx-opacity: 0.3;

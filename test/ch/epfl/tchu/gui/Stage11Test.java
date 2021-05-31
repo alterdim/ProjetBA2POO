@@ -12,8 +12,7 @@ import javafx.stage.Stage;
 
 import java.util.*;
 
-import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
-import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
+import static ch.epfl.tchu.game.PlayerId.*;
 
 /**
  * Créé le 10.05.2021 à 16:12
@@ -31,11 +30,14 @@ public final class Stage11Test extends Application {
         SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
         Map<PlayerId, String> names = new EnumMap<>(PlayerId.class);
         names.put(PLAYER_1, "Ada");
-        names.put(PLAYER_2, "Charles");
+        names.put(PLAYER_2, "Bob");
+        names.put(PLAYER_3, "Charles");
 
         Map<PlayerId, Player> players =
                 Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
-                        PLAYER_2, new GraphicalPlayerAdapter());
+                        PLAYER_2, new GraphicalPlayerAdapter(),
+                        PLAYER_3, new GraphicalPlayerAdapter()
+                );
         Random rng = new Random();
 
 
@@ -79,9 +81,8 @@ public final class Stage11Test extends Application {
         pane.getChildren().add(pseudoPlayer);
 
         Player s1 = new GraphicalSpectatorAdapter(/*names,*/ true);
-//        s1.launchSpectator(names, true);
-//        s1.launchSpectator(names, false);
         spectators.add(s1);
+        s1.initPlayers(PLAYER_1, names);
 
         // create a button
         Button startButton = new Button("Start");
