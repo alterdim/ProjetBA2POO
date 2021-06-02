@@ -3,13 +3,17 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -60,7 +64,7 @@ public class ClientMain extends Application {
         //Titre du stage
         mainWindow.setTitle(GAME_CLIENT_NAME);
         //Création d'un pane
-        TilePane pane = new TilePane();
+        VBox pane = new VBox();
 
         //Création de l'inputDialog
         TextInputDialog addressInputDialog = new TextInputDialog();
@@ -69,7 +73,7 @@ public class ClientMain extends Application {
         addressInputDialog.setContentText(CHOOSE_ADDRESS_CONTENT);
         addressInputDialog.setGraphic(null);
 
-
+        HBox addressBox = new HBox();
         Label addressLabel = new Label(address.get());
         Button addessButton = new Button(CHOOSE);
         addessButton.setOnAction(e -> {
@@ -84,8 +88,9 @@ public class ClientMain extends Application {
                 }
             }
         });
-        pane.getChildren().add(addessButton);
-        pane.getChildren().add(addressLabel);
+        addressBox.getChildren().addAll(addessButton, addressLabel);
+//        pane.getChildren().add(addessButton);
+//        pane.getChildren().add(addressLabel);
 
         //Création de l'inputDialog
         TextInputDialog portInputDialog = new TextInputDialog();
@@ -95,6 +100,7 @@ public class ClientMain extends Application {
         portInputDialog.setGraphic(null);
 
 
+        HBox portBox = new HBox();
         Label portLabel = new Label(String.valueOf(port.get()));
         Button portButton = new Button(CHOOSE);
         portButton.setOnAction(e -> {
@@ -108,8 +114,9 @@ public class ClientMain extends Application {
                 }
             }
         });
-        pane.getChildren().add(portButton);
-        pane.getChildren().add(portLabel);
+        portBox.getChildren().addAll(portButton, portLabel);
+//        pane.getChildren().add(portButton);
+//        pane.getChildren().add(portLabel);
 
 
         TextInputDialog playerNameInputDialog = new TextInputDialog();
@@ -119,6 +126,7 @@ public class ClientMain extends Application {
         playerNameInputDialog.setGraphic(null);
 
 
+        HBox pseudoBox = new HBox();
         Label pseudoPlayer = new Label(username.get());
         Button pseudoButton = new Button(CHOOSE);
         pseudoButton.setOnAction(e -> {
@@ -132,9 +140,9 @@ public class ClientMain extends Application {
                 }
             }
         });
-        pane.getChildren().add(pseudoButton);
-        pane.getChildren().add(pseudoPlayer);
-
+//        pane.getChildren().add(pseudoButton);
+//        pane.getChildren().add(pseudoPlayer);
+        pseudoBox.getChildren().addAll(pseudoButton, pseudoPlayer);
 
         Scene scene = new Scene(pane, 500, 300);
 
@@ -144,8 +152,12 @@ public class ClientMain extends Application {
             mainWindow.hide();
             new Thread(remoteClient::run).start();
         });
+
+        pane.getChildren().addAll(addressBox, portBox, pseudoBox);
+
         pane.getChildren().add(startButton);
 
+        pane.setSpacing(5);
         mainWindow.setScene(scene);
         mainWindow.show();
 
