@@ -95,11 +95,9 @@ public final class Stage11Test extends Application {
         // create a button
         Button startButton = new Button("Start");
         startButton.setOnAction(e -> {
-            System.out.println("start");
             new Thread(() -> Game.play(players, names, tickets, rng, spectators))
                     .start();
-//            primaryStage.hide();
-
+            primaryStage.hide();
         });
         pane.getChildren().add(startButton);
 

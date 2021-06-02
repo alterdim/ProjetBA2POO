@@ -89,6 +89,10 @@ public final class StringsFr {
     public static final String GAME_CLIENT_NAME = "tCHu - client";
     public static final String GAME_SERVER_NAME = "tCHu - serveur";
 
+    public static final String EMPTY = "";
+    public static final String TICKET_POINT =
+            "Le ticket rapporte actuellement %s point%s.";
+
     //InputDialog
     public static final String NAME_CHOICE_TITLE = "Choix du pseudo";
     public static final String CHOOSE_NAME_HEADER =  "Choisissez votre pseudo :";

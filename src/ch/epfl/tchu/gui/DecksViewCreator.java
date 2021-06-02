@@ -9,7 +9,9 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -24,7 +26,8 @@ import javafx.scene.text.Text;
  * @author Célien Muller (310777)
  */
 class DecksViewCreator {
-    private DecksViewCreator(){}
+    private DecksViewCreator() {
+    }
 
     /**
      * Gère le visuel de la main du joueur
@@ -41,10 +44,39 @@ class DecksViewCreator {
         canvas.getStylesheets().add("decks.css");
         canvas.getStylesheets().add("colors.css");
 
-        ticketListView.setId("tickets");
         handPaneHBox.setId("hand-pane");
         ticketListView.setItems(observableGameState.tickets());
-        canvas.getChildren().add(ticketListView);
+
+        VBox ticketBox = new VBox();
+        ticketBox.setId("tickets");
+
+        Label label = new Label();
+
+        ticketListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ticketListView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        int point = observableGameState.getObservablePlayerState().get().ticketPoints(newValue);
+                        label.setText(String.format(StringsFr.TICKET_POINT, point, StringsFr.plural(point)));
+                    }
+                    else label.setText(StringsFr.EMPTY);
+                }
+        );
+
+        //Lorsque l'état du joueur change, met à jour le totale des points
+        observableGameState.getObservablePlayerState().addListener(
+                (observable, oldValue, newValue) -> {
+                    Ticket selectedTicket = ticketListView.getSelectionModel().getSelectedItem();
+                    if (selectedTicket != null) {
+                        int point = observableGameState.getObservablePlayerState().get().ticketPoints(selectedTicket);
+                        label.setText(String.format(StringsFr.TICKET_POINT, point, StringsFr.plural(point)));
+                    }
+                    else label.setText(StringsFr.EMPTY);
+                }
+        );
+        ticketBox.getChildren().addAll(ticketListView, label);
+
+        canvas.getChildren().add(ticketBox);
 
         for (Card card : Card.ALL) {
             StackPane stackPane = createCardStack(getColorString(card));
@@ -158,6 +190,7 @@ class DecksViewCreator {
 
     /**
      * Retourne le nom de la couleur de la carte, NEUTRAL si la carte est nulle
+     *
      * @param card Carte dont on veux obtenir le nom
      * @return String contenant le nom de la couleur associée à la carte
      */

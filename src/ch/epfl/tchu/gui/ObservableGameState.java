@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -33,11 +34,10 @@ public class ObservableGameState {
     private final ObservableList<Ticket> tickets;
     private final Map<Card, IntegerProperty> cards;
     private final Map<Route, BooleanProperty> routes;
-
-    private PublicGameState currentPublicGameState;
-    private PlayerState currentPlayerState;
-
     private final Map<Route, Route> doubleRoute;
+    private PublicGameState currentPublicGameState;
+    private ObjectProperty<PlayerState> observablePlayerState;
+    private PlayerState currentPlayerState;
 
     /**
      * Constructeur
@@ -46,6 +46,7 @@ public class ObservableGameState {
      */
     public ObservableGameState(PlayerId player) {
         this.player = player;
+        this.observablePlayerState = new SimpleObjectProperty<>(null);
         //groupe 1
         this.faceUpCards = createFaceUpCards();
         this.leftTicketsPercentage = new SimpleDoubleProperty(0);
@@ -121,7 +122,10 @@ public class ObservableGameState {
      */
     public void setState(PublicGameState newGameState, PlayerState newPlayerState) {
         this.currentPublicGameState = newGameState;
+        if (currentPlayerState!=newPlayerState) observablePlayerState.set(newPlayerState);
         this.currentPlayerState = newPlayerState;
+
+
         //Groupe 1, état publique de la partie
         updateFaceUpCards(newGameState.cardState());
         updateLeftCardsPercentage(newGameState.cardState());
@@ -245,8 +249,7 @@ public class ObservableGameState {
     private boolean checkClaimDoubleRoute(Route route) {
         if (PlayerId.COUNT == PLAYER_NUMBER_MIN) {
             return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)).get() == null;
-        }
-        else/* if (PlayerId.COUNT == PLAYER_NUMBER_MAX)*/ {
+        } else/* if (PlayerId.COUNT == PLAYER_NUMBER_MAX)*/ {
             return !doubleRoute.containsKey(route) || routesOwned.get(doubleRoute.get(route)).get() != player;
         }
     }
@@ -409,5 +412,12 @@ public class ObservableGameState {
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         return currentPlayerState.possibleClaimCards(route);
+    }
+
+    /**
+     * @return l'état observable du playerState
+     */
+    public ReadOnlyObjectProperty<PlayerState> getObservablePlayerState() {
+        return observablePlayerState;
     }
 }

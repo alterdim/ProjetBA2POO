@@ -165,24 +165,8 @@ public final class PlayerState extends PublicPlayerState {
      * @return Retourne le nombre de points obtenus par le joueur grâce à ses tickets.
      */
     public int ticketPoints() {
-        int highestId = -1;
         int points = 0;
-        for (Route r : routes()) {
-            if (r.station1().id() > highestId) {
-                highestId = r.station1().id();
-            }
-            if (r.station2().id() > highestId) {
-                highestId = r.station2().id();
-            }
-        }
-
-        StationPartition.Builder builder = new StationPartition.Builder(highestId + 1); //+1 car les arrays commencent à 0
-
-        for (Route r : routes()) {
-            builder.connect(r.station1(), r.station2());
-        }
-
-        StationPartition partition = builder.build();
+        StationPartition partition = computeStationPartition();
 
         for (Ticket t : tickets) {
             points += t.points(partition);
@@ -191,11 +175,35 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     /**
+     * Retourne les points que le joueur gagne/perd actuellement avec le ticket et les routes en ca possession
+     * @param ticket Ticket
+     * @return points
+     */
+    public int ticketPoints(Ticket ticket) {
+        return ticket.points(computeStationPartition());
+    }
+
+    private StationPartition computeStationPartition(){
+        int highestId = -1;
+        for (Route r : routes()) {
+            if (r.station1().id() > highestId) {
+                highestId = r.station1().id();
+            }
+            if (r.station2().id() > highestId) {
+                highestId = r.station2().id();
+            }
+        }
+        StationPartition.Builder builder = new StationPartition.Builder(highestId + 1); //+1 car les arrays commencent à 0
+        for (Route r : routes()) {
+            builder.connect(r.station1(), r.station2());
+        }
+        return builder.build();
+    }
+
+    /**
      * @return Retourne la somme des points des tickets et des bonus de routes.
      */
     public int finalPoints() {
         return ticketPoints() + claimPoints();
     }
-
-
 }
