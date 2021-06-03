@@ -9,7 +9,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -1,7 +1,5 @@
 package ch.epfl.tchu.game;
 
-import ch.epfl.tchu.Preconditions;
-
 import java.util.List;
 
 /**
@@ -14,8 +12,9 @@ import java.util.List;
  */
 public enum PlayerId {
     PLAYER_1,
-    PLAYER_2,
-    PLAYER_3;
+    PLAYER_2
+    //, PLAYER_3 //A commenter/décommenter pour activer/désactiver le 3 troisième joueur
+    ;
 
     /**
      * Liste des joueurs
